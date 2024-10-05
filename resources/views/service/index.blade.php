@@ -1,9 +1,9 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Staff')
+@section('title', 'Services')
 
 @section('buttons')
-    <a href="{{ route('staff.create') }}">
+    <a href="{{ route('services.create') }}">
         <button type="button" class="btn btn-primary">
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
@@ -31,10 +31,10 @@
                     <table class="table datatables" id="dataTable-1">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Name</th>
-                                <th>Gender</th>
-                                <th>Phone</th>
-                                <th>Email</th>
+                                <th>Description</th>
+                                <th>Price (EGY)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -54,27 +54,27 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('staff.all') }}", // URL to fetch data
+                url: "{{ route('services.all') }}", // URL to fetch data
                 type: 'GET',
                 error: function(xhr, error, code) {
                     console.log(xhr.responseText); // Log the error for debugging
                 }
             },
             columns: [{
+                    data: 'id',
+                    name: '#'
+                },
+                {
                     data: 'name',
                     name: 'name'
                 },
                 {
-                    data: 'gender',
-                    name: 'gender'
+                    data: 'description',
+                    name: 'description'
                 },
                 {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
+                    data: 'price',
+                    name: 'price (EGY)'
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically
@@ -83,9 +83,11 @@
                     searchable: false, // Action buttons are not searchable
                     render: function(data, type, row) {
                         // Use JavaScript to construct URLs
-                        var deleteUrl = '/staff/' + row.id;
+                        var editUrl = '/services/' + row.id + "/edit";
+                        var deleteUrl = '/services/' + row.id;
 
                         return `
+                            <a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">
                                 @csrf
                                 @method('DELETE')

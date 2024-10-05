@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Interfaces\IPatient;
 use App\Http\Requests\Patient\PatientStoreRequest;
+use App\Http\Requests\Patient\PatientUpdateRequest;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
@@ -73,17 +74,23 @@ class PatientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Patient $patient)
     {
-        //
+        $data = $this->service->findById($patient);
+
+        return $this->view("patient.edit", ['data' => $data]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PatientUpdateRequest $request, Patient $patient)
     {
-        //
+        $data = $request->validated();
+
+        $this->service->update($patient, $data);
+
+        return $this->backWithSuccess();
     }
 
     /**

@@ -24,7 +24,9 @@ class StaffStoreRequest extends FormRequest
         return [
             "name" => "required",
             "email" => "required|email:filter|unique:users,email",
-            "password" => "required|min:8|string|confirmed"
+            "password" => "required|min:8|string|confirmed",
+            "phone" => "required|string",
+            "gender" => "required|in:Male,Female"
         ];
     }
 }

@@ -6,7 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +50,12 @@ Route::middleware("auth")->group(function () {
     Route::resource('patients', PatientController::class)->missing(function () {
         return abort(404);
     });
+
+    Route::get("services/all", [ServiceController::class, 'all'])->name('services.all');
+    Route::resource('services', ServiceController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("user/profile", [UserController::class, "profile"])->name('user.profile');
+    Route::post("user/profile", [UserController::class, "update"])->name('user.profile.update');
 });

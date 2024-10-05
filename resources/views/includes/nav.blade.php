@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'doctors.index' ? 'active-link' : '' }}"
+                    <a class="nav-link {{ strpos($currentRouteName, 'doctors') !== false ? 'active-link' : '' }}"
                         href="{{ route('doctors.index') }}">
                         <span class="ml-lg-2">Doctors</span>
                     </a>
@@ -61,6 +61,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ strpos($currentRouteName, 'services') !== false ? 'active-link' : '' }}"
+                        href="{{ route('services.index') }}">
+                        <span class="ml-lg-2">Services</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ strpos($currentRouteName, 'staff') !== false ? 'active-link' : '' }}"
                         href="{{ route('staff.index') }}">
                         <span class="ml-lg-2">Staff</span>
@@ -76,8 +82,18 @@
         </div>
 
         <ul class="navbar-nav d-flex flex-row">
-            <li class="nav-item d-flex align-items-center">
-                <a href="{{ route('logout') }}"><button class="btn btn-danger">Logout</button></a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink"
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="avatar avatar-sm mt-2">
+                        <img src="{{ auth()->user()->getFirstMediaUrl('avatar') ?: env('APP_URL') . '/images/avatar.jpg' }}"
+                            alt="..." class="avatar-img rounded-circle">
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{{ route('user.profile') }}">Profile</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                </div>
             </li>
         </ul>
     </div>

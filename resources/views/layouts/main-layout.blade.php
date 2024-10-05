@@ -57,7 +57,7 @@
                         <div class="row align-items-center mb-2 p-2" id="header-path">
                             <div class="col">
                                 <h2 class="h5 mb-0 page-title">
-                                    /{{ strtoupper(rtrim(str_replace(['.', 'index'], ['/', ''], $currentRouteName), '/')) }}
+                                    {{ strtoupper(rtrim(str_replace(['.', 'index'], [' >> ', ''], $currentRouteName), ' >> ')) }}
                                 </h2>
                             </div>
                             <div class="col-auto">

@@ -1,9 +1,9 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Staff')
+@section('title', 'Doctor')
 
 @section('buttons')
-    <a href="{{ route('staff.index') }}"><button type="button" class="btn btn-dark"><span
+    <a href="{{ route('doctors.index') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <form action="{{ route('staff.store') }}" method="post">
+                    <form action="{{ route('doctors.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-12">
@@ -20,6 +20,15 @@
                                 <input type="text" class="form-control" id="name" value="{{ old('name') }}"
                                     name="name" dir="auto">
                                 @error('name')
+                                    <p style="color: red">* {{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label for="avatar">Profile Image</label>
+                                <input type="file" class="form-control" id="avatar" name="avatar" dir="auto">
+                                @error('avatar')
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>

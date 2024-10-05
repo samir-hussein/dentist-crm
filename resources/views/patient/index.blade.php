@@ -94,10 +94,12 @@
                     render: function(data, type, row) {
                         // Use JavaScript to construct URLs
                         var profileUrl = '/patients/' + row.id + '/profile';
+                        var editUrl = '/patients/' + row.id + '/edit';
                         var deleteUrl = '/patients/' + row.id;
 
                         return `
                             <a href="${profileUrl}" class="btn btn-sm btn-info">Profile</a>
+                            <a href="${editUrl}" class="btn btn-sm btn-warning">Edit</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">
                                 @csrf
                                 @method('DELETE')

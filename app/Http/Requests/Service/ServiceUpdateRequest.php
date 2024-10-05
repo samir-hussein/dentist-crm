@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests\Service;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PatientStoreRequest extends FormRequest
+class ServiceUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +21,11 @@ class PatientStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $serviceName = request()->route('service')?->name;
         return [
-            "name" => "required|string",
-            "phone" => "required|unique:patients,phone",
-            "age" => "required|numeric|min:1",
-            "gender" => "required|in:Male,Female",
-            "address" => "sometimes|string|nullable"
+            "name" => "required|unique:services,name,$serviceName,name",
+            "description" => "sometimes|string|nullable",
+            "price" => "required|numeric"
         ];
     }
 }
