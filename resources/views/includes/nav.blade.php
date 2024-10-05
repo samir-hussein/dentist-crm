@@ -31,7 +31,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'patients.index' ? 'active-link' : '' }}"
+                    <a class="nav-link {{ strpos($currentRouteName, 'patients') !== false ? 'active-link' : '' }}"
                         href="{{ route('patients.index') }}">
                         <span class="ml-lg-2">Patients</span>
                     </a>
@@ -61,13 +61,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'staff.index' ? 'active-link' : '' }}"
+                    <a class="nav-link {{ strpos($currentRouteName, 'staff') !== false ? 'active-link' : '' }}"
                         href="{{ route('staff.index') }}">
                         <span class="ml-lg-2">Staff</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'admins.index' ? 'active-link' : '' }}"
+                    <a class="nav-link {{ strpos($currentRouteName, 'admins') !== false ? 'active-link' : '' }}"
                         href="{{ route('admins.index') }}">
                         <span class="ml-lg-2">Admins</span>
                     </a>

@@ -27,6 +27,14 @@ class PatientController extends Controller
     }
 
     /**
+     * Get a listing of the resource.
+     */
+    public function profile(Patient $patient)
+    {
+        return $patient;
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
