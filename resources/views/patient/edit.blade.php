@@ -46,10 +46,10 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="age">Age</label>
-                                <input type="number" class="form-control" id="age" value="{{ $data->age }}"
-                                    name="age">
-                                @error('age')
+                                <label for="date_of_birth">Date Of Birth</label>
+                                <input type="date" class="form-control" id="date_of_birth"
+                                    value="{{ $data->date_of_birth }}" name="date_of_birth">
+                                @error('date_of_birth')
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>

@@ -16,11 +16,17 @@
             </svg>
         </a>
         <h1 class="h6 mb-3">Sign in</h1>
-        @session('error')
+        @if (session('error'))
             <div class="alert alert-danger" role="alert">
                 {{ session('error') }}
             </div>
-        @endsession
+        @endif
+
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="form-group">
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="email" id="inputEmail" class="form-control form-control-lg" placeholder="Email address"

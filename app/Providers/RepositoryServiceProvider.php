@@ -6,6 +6,7 @@ use App\Http\Interfaces\IAdmin;
 use App\Http\Interfaces\IAuth;
 use App\Http\Interfaces\IDoctor;
 use App\Http\Interfaces\IEloquent;
+use App\Http\Interfaces\ILab;
 use App\Http\Interfaces\IPatient;
 use App\Http\Interfaces\IService;
 use App\Http\Interfaces\IStaff;
@@ -15,6 +16,7 @@ use App\Http\Repositories\AuthRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Repositories\BaseRepository;
 use App\Http\Repositories\DoctorRepository;
+use App\Http\Repositories\LabRepository;
 use App\Http\Repositories\PatientRepository;
 use App\Http\Repositories\ServiceRepository;
 use App\Http\Repositories\StaffRepository;
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IDoctor::class, DoctorRepository::class);
         $this->app->bind(IService::class, ServiceRepository::class);
         $this->app->bind(IUser::class, UserRepository::class);
+        $this->app->bind(ILab::class, LabRepository::class);
     }
 
     /**

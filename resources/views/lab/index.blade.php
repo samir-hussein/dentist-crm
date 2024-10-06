@@ -1,9 +1,9 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Services')
+@section('title', 'Labs')
 
 @section('buttons')
-    <a href="{{ route('services.create') }}">
+    <a href="{{ route('labs.create') }}">
         <button type="button" class="btn btn-primary">
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
@@ -32,8 +32,6 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Description</th>
-                                <th>Price (EGY)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -53,7 +51,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('services.all') }}", // URL to fetch data
+                url: "{{ route('labs.all') }}", // URL to fetch data
                 type: 'GET',
                 error: function(xhr, error, code) {
                     console.log(xhr.responseText); // Log the error for debugging
@@ -64,22 +62,14 @@
                     name: 'name'
                 },
                 {
-                    data: 'description',
-                    name: 'description'
-                },
-                {
-                    data: 'price',
-                    name: 'price (EGY)'
-                },
-                {
                     data: null, // No field in the database for this, render buttons dynamically
                     name: 'action',
                     orderable: false, // Action buttons are not sortable
                     searchable: false, // Action buttons are not searchable
                     render: function(data, type, row) {
                         // Use JavaScript to construct URLs
-                        var editUrl = '/services/' + row.id + "/edit";
-                        var deleteUrl = '/services/' + row.id;
+                        var editUrl = '/labs/' + row.id + "/edit";
+                        var deleteUrl = '/labs/' + row.id;
 
                         return `
                             <a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>

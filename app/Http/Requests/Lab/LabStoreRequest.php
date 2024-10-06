@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests\Lab;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PatientStoreRequest extends FormRequest
+class LabStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,7 @@ class PatientStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string",
-            "phone" => "required|unique:patients,phone",
-            "date_of_birth" => "required|date",
-            "gender" => "required|in:Male,Female",
-            "address" => "sometimes|string|nullable"
+            "name" => "required|unique:labs,name",
         ];
     }
 }

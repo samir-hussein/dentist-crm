@@ -44,6 +44,8 @@
             background-color: rgb(235, 234, 234);
         }
     </style>
+
+    @yield('style')
 </head>
 
 <body class="horizontal light  ">

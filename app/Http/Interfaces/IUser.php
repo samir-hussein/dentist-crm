@@ -9,4 +9,5 @@ interface IUser
 {
     public function getProfile(Request $request);
     public function updateProfile(User $user, array $data);
+    public function deleteProfileImage(User $user);
 }

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Services\Patient;
+namespace App\Http\Services\Lab;
 
 use Illuminate\Http\Request;
 
-class PatientGetAllService extends PatientService
+class LabGetAllService extends LabService
 {
     public function boot(Request $request)
     {
         // Fetch all columns from your model's table
         $data = $this->model->latest()->select('*');
 
-        return $this->dataTableWithAgeColumn($data, "patients", $request);
+        return $this->dataTable($data, "labs", $request);
     }
 }

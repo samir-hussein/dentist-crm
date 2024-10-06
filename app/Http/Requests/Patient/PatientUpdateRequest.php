@@ -25,7 +25,7 @@ class PatientUpdateRequest extends FormRequest
         return [
             "name" => "required|string",
             "phone" => "required|unique:patients,phone,$patientPhone,phone",
-            "age" => "required|numeric|min:1",
+            "date_of_birth" => "required|date",
             "gender" => "required|in:Male,Female",
             "address" => "sometimes|string|nullable"
         ];

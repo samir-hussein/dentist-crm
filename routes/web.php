@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\LabController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
@@ -56,6 +57,12 @@ Route::middleware("auth")->group(function () {
         return abort(404);
     });
 
+    Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
+    Route::resource('labs', LabController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::delete("user/image", [UserController::class, "deleteProfileImage"])->name('user.image.delete');
+    Route::put("user/profile", [UserController::class, "update"])->name('user.profile.update');
     Route::get("user/profile", [UserController::class, "profile"])->name('user.profile');
-    Route::post("user/profile", [UserController::class, "update"])->name('user.profile.update');
 });
