@@ -43,14 +43,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'appointment.index' ? 'active-link' : '' }}"
-                        href="{{ route('doctors.index') }}">
+                    <a class="nav-link {{ strpos($currentRouteName, 'appointments') !== false ? 'active-link' : '' }}"
+                        href="{{ route('appointments.index') }}">
                         <span class="ml-lg-2">Appointment List</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'prescription.index' ? 'active-link' : '' }}"
-                        href="{{ route('doctors.index') }}">
+                    <a class="nav-link {{ strpos($currentRouteName, 'diagnosis') !== false ? 'active-link' : '' }}"
+                        href="{{ route('diagnosis.index') }}">
                         <span class="ml-lg-2">Diagnosis</span>
                     </a>
                 </li>

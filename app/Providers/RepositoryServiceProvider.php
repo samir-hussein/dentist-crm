@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Http\Interfaces\IAdmin;
+use App\Http\Interfaces\IAppointment;
 use App\Http\Interfaces\IAuth;
+use App\Http\Interfaces\IDiagnosis;
 use App\Http\Interfaces\IDoctor;
 use App\Http\Interfaces\IEloquent;
 use App\Http\Interfaces\ILab;
@@ -12,9 +14,11 @@ use App\Http\Interfaces\IService;
 use App\Http\Interfaces\IStaff;
 use App\Http\Interfaces\IUser;
 use App\Http\Repositories\AdminRepository;
+use App\Http\Repositories\AppointmentRepository;
 use App\Http\Repositories\AuthRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Repositories\BaseRepository;
+use App\Http\Repositories\DiagnosisRepository;
 use App\Http\Repositories\DoctorRepository;
 use App\Http\Repositories\LabRepository;
 use App\Http\Repositories\PatientRepository;
@@ -38,6 +42,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IService::class, ServiceRepository::class);
         $this->app->bind(IUser::class, UserRepository::class);
         $this->app->bind(ILab::class, LabRepository::class);
+        $this->app->bind(IDiagnosis::class, DiagnosisRepository::class);
+        $this->app->bind(IAppointment::class, AppointmentRepository::class);
     }
 
     /**

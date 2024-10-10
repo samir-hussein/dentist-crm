@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\LabController;
@@ -52,6 +54,11 @@ Route::middleware("auth")->group(function () {
         return abort(404);
     });
 
+    Route::get("diagnosis/all", [DiagnosisController::class, 'all'])->name('diagnosis.all');
+    Route::resource('diagnosis', DiagnosisController::class)->missing(function () {
+        return abort(404);
+    });
+
     Route::get("services/all", [ServiceController::class, 'all'])->name('services.all');
     Route::resource('services', ServiceController::class)->missing(function () {
         return abort(404);
@@ -59,6 +66,12 @@ Route::middleware("auth")->group(function () {
 
     Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
     Route::resource('labs', LabController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("appointments/all", [AppointmentController::class, 'all'])->name('appointments.all');
+    Route::get("appointments/{appointment}/completed", [AppointmentController::class, 'markCompleted'])->name('appointments.markCompleted');
+    Route::resource('appointments', AppointmentController::class)->missing(function () {
         return abort(404);
     });
 

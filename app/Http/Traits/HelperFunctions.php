@@ -52,6 +52,18 @@ trait HelperFunctions
                         foreach ($columns as $column) {
                             $query->orWhere($column, 'like', "%{$search}%");
                         }
+
+                        // Check if the search term is numeric and represents a valid age
+                        if (is_numeric($search) && (int)$search > 0) {
+                            $age = (int)$search; // Cast to integer
+
+                            // Calculate the date range for the specified age
+                            $dateFrom = Carbon::now()->subYears($age + 1)->startOfYear(); // Start of year before the age
+                            $dateTo = Carbon::now()->subYears($age)->endOfYear(); // End of the target age year
+
+                            // Filter based on date_of_birth
+                            $query->orWhereBetween('date_of_birth', [$dateFrom->toDateString(), $dateTo->toDateString()]);
+                        }
                     });
                 }
             })
