@@ -13,4 +13,5 @@ interface IAppointment
     public function delete(Appointment $appointment);
     public function findById(Appointment $appointment);
     public function markCompleted(Appointment $appointment);
+    public function necessaryData();
 }

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->time("time");
             $table->text("notes")->nullable();
             $table->boolean("completed")->default(false);
-            $table->foreign("patient_id")->references("id")->on("patients");
-            $table->foreign("doctor_id")->references("id")->on("users");
+            $table->foreign("patient_id")->references("id")->on("patients")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign("doctor_id")->references("id")->on("users")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
         });
     }

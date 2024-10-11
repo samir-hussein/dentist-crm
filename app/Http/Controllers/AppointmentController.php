@@ -48,7 +48,8 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        return $this->view("appointment.create");
+        $data = $this->service->necessaryData();
+        return $this->view("appointment.create", ['data' => $data]);
     }
 
     /**
@@ -58,7 +59,11 @@ class AppointmentController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->store($data);
+        $response = $this->service->store($data);
+
+        if ($response['status'] == "error") {
+            return $this->backWithError($response['errors']);
+        }
 
         return $this->redirectWithSuccess("appointments.index");
     }
@@ -77,7 +82,6 @@ class AppointmentController extends Controller
     public function edit(Appointment $appointment)
     {
         $data = $this->service->findById($appointment);
-
         return $this->view("appointment.edit", ['data' => $data]);
     }
 
@@ -88,7 +92,11 @@ class AppointmentController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->update($appointment, $data);
+        $response = $this->service->update($appointment, $data);
+
+        if ($response['status'] == "error") {
+            return $this->backWithError($response['errors']);
+        }
 
         return $this->backWithSuccess();
     }

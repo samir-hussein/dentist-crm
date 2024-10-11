@@ -21,7 +21,6 @@
         rel="stylesheet">
     <!-- Icons CSS -->
     <link rel="stylesheet" href="{{ asset('css/feather.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('css/uppy.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/jquery.steps.css') }}">
@@ -33,6 +32,7 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('css/app-light.css') }}" id="lightTheme">
     <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme" disabled>
+    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
 
     <style>
         .active-link {
@@ -48,7 +48,7 @@
     @yield('style')
 </head>
 
-<body class="horizontal light  ">
+<body class="horizontal light">
 
     <div class="wrapper">
         @include('includes.nav', ['currentRouteName' => $currentRouteName])
@@ -73,9 +73,9 @@
         </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/moment.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/simplebar.min.js') }}"></script>
     <script src='{{ asset('js/daterangepicker.js') }}'></script>
     <script src='{{ asset('js/jquery.stickOnScroll.js') }}'></script>
@@ -97,7 +97,6 @@
     <script src="{{ asset('js/apexcharts.min.js') }}"></script>
     <script src="{{ asset('js/apexcharts.custom.js') }}"></script>
     <script src='{{ asset('js/jquery.mask.min.js') }}'></script>
-    <script src='{{ asset('js/select2.min.js') }}'></script>
     <script src='{{ asset('js/jquery.steps.min.js') }}'></script>
     <script src='{{ asset('js/jquery.validate.min.js') }}'></script>
     <script src='{{ asset('js/jquery.timepicker.js') }}'></script>
@@ -106,6 +105,7 @@
     <script src='{{ asset('js/quill.min.js') }}'></script>
     <script src='{{ asset('js/jquery.dataTables.min.js') }}'></script>
     <script src='{{ asset('js/dataTables.bootstrap4.min.js') }}'></script>
+    <script src='{{ asset('js/select2.min.js') }}'></script>
     <script>
         $('.select2').select2({
             theme: 'bootstrap4',
@@ -278,6 +278,16 @@
         }
     </script>
     <script src="{{ asset('js/apps.js') }}"></script>
+
+    <script>
+        // $('.select2').select2({
+        //     theme: 'bootstrap4',
+        // });
+        $('.select2-multi').select2({
+            multiple: true,
+            theme: 'bootstrap4',
+        });
+    </script>
     <!-- Global site tag (gtag.js')}}) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
     <script>

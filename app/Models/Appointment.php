@@ -34,6 +34,15 @@ class Appointment extends Model
             // If there's no previous visit number for that date, start from 1, else increment by 1
             $appointment->visit_no = $lastVisitNo ? $lastVisitNo + 1 : 1;
         });
+
+        static::updating(function ($appointment) {
+            // Check if there's an existing appointment on the same date
+            $lastVisitNo = Appointment::where('date', $appointment->date)
+                ->max('visit_no');
+
+            // If there's no previous visit number for that date, start from 1, else increment by 1
+            $appointment->visit_no = $lastVisitNo ? $lastVisitNo + 1 : 1;
+        });
     }
 
     // Relationships
@@ -49,6 +58,11 @@ class Appointment extends Model
     public function services()
     {
         return $this->hasManyThrough(Service::class, AppointmentService::class, 'appointment_id', 'id', 'id', 'service_id');
+    }
+
+    public function appointment_services()
+    {
+        return $this->hasMany(AppointmentService::class);
     }
 
     /**

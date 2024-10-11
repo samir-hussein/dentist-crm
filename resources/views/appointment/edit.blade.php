@@ -1,74 +1,104 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Patients')
+@section('title', 'Appointment List')
+
+@section('style')
+    <style>
+        .select2 {
+            width: 100% !important;
+        }
+    </style>
+@endsection
 
 @section('buttons')
-    <a href="{{ route('patients.index') }}"><button type="button" class="btn btn-dark"><span
+    <a href="{{ route('appointments.index') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
 @section('content')
-    @if (session('error'))
-        <div class="alert alert-danger" role="alert">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="alert alert-success" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
     <div class="row">
         <div class="col-md-12">
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <form action="{{ route('patients.update', ['patient' => $data->id]) }}" method="post">
+                    <form action="{{ route('appointments.update', ['appointment' => $data->appointment->id]) }}"
+                        method="post">
                         @csrf
                         @method('put')
                         <div class="form-row">
                             <div class="form-group col-12">
-                                <label for="name">Full Name</label>
-                                <input type="text" class="form-control" id="name"
-                                    value="{{ old('name') ?? $data->name }}" name="name" dir="auto">
-                                @error('name')
-                                    <p style="color: red">* {{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress">Address</label>
-                            <input type="text" class="form-control" id="inputAddress" value="{{ $data->address }}"
-                                name="address">
-                            @error('address')
-                                <p style="color: red">* {{ $message }}</p>
-                            @enderror
+                                <label for="simple-select2">Patient</label>
+                                <select class="form-control select2" id="simple-select2" name="patient_id" disabled>
+                                    @foreach ($data->patients as $patient)
+                                        <option {{ $data->appointment->patient->id == $patient->id ? 'selected' : '' }}
+                                            value="{{ $patient->id }}">{{ $patient->name }} -
+                                            {{ $patient->phone }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div> <!-- form-group -->
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="date_of_birth">Date Of Birth</label>
-                                <input type="date" class="form-control" id="date_of_birth"
-                                    value="{{ $data->date_of_birth }}" name="date_of_birth">
-                                @error('date_of_birth')
-                                    <p style="color: red">* {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="gender">Gender</label>
-                                <select id="gender" name="gender" class="form-control">
-                                    <option {{ $data->gender == 'Male' ? 'selected' : '' }} value="Male">Male</option>
-                                    <option {{ $data->gender == 'Female' ? 'selected' : '' }} value="Female">Female
-                                    </option>
+                                <label for="doctor_id">Doctor</label>
+                                <select id="doctor_id" name="doctor_id" class="form-control">
+                                    @foreach ($data->doctors as $doctor)
+                                        <option
+                                            {{ old('doctor_id') ?? $data->appointment->doctor->id == $doctor->id ? 'selected' : '' }}
+                                            value="{{ $doctor->id }}">{{ $doctor->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
-                                @error('gender')
+                                @error('doctor_id')
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="phone">Phone</label>
-                                <input type="text" class="form-control" id="phone"
-                                    value="{{ old('phone') ?? $data->phone }}" name="phone">
-                                @error('phone')
+                                <label for="date">Appointment Date</label>
+                                <input type="date" class="form-control" id="date"
+                                    value="{{ old('date') ?? $data->appointment->date }}" name="date">
+                                @error('date')
+                                    <p style="color: red">* {{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="time">Appointment Time</label>
+                                <input type="time" class="form-control" id="time"
+                                    value="{{ old('time') ?? $data->appointment->time }}" name="time">
+                                @error('time')
+                                    <p style="color: red">* {{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label for="multi-select2" class="d-block">Services</label>
+                                <select multiple name="service_ids[]" class="form-control select2-multi d-block w-100"
+                                    id="multi-select2">
+                                    @foreach ($data->services as $service)
+                                        <option value="{{ $service->id }}"
+                                            {{ in_array($service->id, $data->appointment->selected_services) ? 'selected' : '' }}>
+                                            {{ $service->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label for="notes">Notes</label>
+                                <textarea name="notes" class="form-control" id="" cols="30" rows="5">{{ old('notes') ?? $data->appointment->notes }}</textarea>
+                                @error('notes')
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>

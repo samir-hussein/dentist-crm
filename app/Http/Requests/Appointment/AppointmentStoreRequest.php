@@ -30,7 +30,9 @@ class AppointmentStoreRequest extends FormRequest
             "doctor_id" => "required|exists:users,id",
             "notes" => "sometimes|nullable|string",
             "date" => "required|date",
-            "time" => "required"
+            "time" => "required",
+            "service_ids" => "required|array",
+            "service_ids.*" => "required|exists:services,id"
         ];
     }
 }

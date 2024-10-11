@@ -11,6 +11,7 @@ use App\Http\Services\Appointment\AppointmentGetAllService;
 use App\Http\Services\Appointment\AppointmentUpdateService;
 use App\Http\Services\Appointment\AppointmentFindByIdService;
 use App\Http\Services\Appointment\AppointmentCompletedService;
+use App\Http\Services\Appointment\AppointmentNecessaryDataService;
 
 class AppointmentRepository implements IAppointment
 {
@@ -20,6 +21,7 @@ class AppointmentRepository implements IAppointment
     private $appointmentUpdateService;
     private $appointmentFindByIdService;
     private $appointmentCompletedService;
+    private $appointmentNecessaryDataService;
 
     public function __construct(
         AppointmentGetAllService $appointmentGetAllService,
@@ -28,6 +30,7 @@ class AppointmentRepository implements IAppointment
         AppointmentUpdateService $appointmentUpdateService,
         AppointmentCompletedService $appointmentCompletedService,
         AppointmentFindByIdService $appointmentFindByIdService,
+        AppointmentNecessaryDataService $appointmentNecessaryDataService
     ) {
         $this->appointmentGetAllService = $appointmentGetAllService;
         $this->appointmentStoreService = $appointmentStoreService;
@@ -35,6 +38,7 @@ class AppointmentRepository implements IAppointment
         $this->appointmentUpdateService = $appointmentUpdateService;
         $this->appointmentFindByIdService = $appointmentFindByIdService;
         $this->appointmentCompletedService = $appointmentCompletedService;
+        $this->appointmentNecessaryDataService = $appointmentNecessaryDataService;
     }
 
     public function all(Request $request)
@@ -65,5 +69,10 @@ class AppointmentRepository implements IAppointment
     public function markCompleted(Appointment $appointment)
     {
         return $this->appointmentCompletedService->boot($appointment);
+    }
+
+    public function necessaryData()
+    {
+        return $this->appointmentNecessaryDataService->boot();
     }
 }
