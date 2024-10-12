@@ -55,9 +55,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $currentRouteName == 'treatment.index' ? 'active-link' : '' }}"
-                        href="{{ route('doctors.index') }}">
-                        <span class="ml-lg-2">Treatment</span>
+                    <a class="nav-link {{ strpos($currentRouteName, 'treatment-types') !== false ? 'active-link' : '' }}"
+                        href="{{ route('treatment-types.index') }}">
+                        <span class="ml-lg-2">Treatment Type</span>
                     </a>
                 </li>
                 <li class="nav-item">

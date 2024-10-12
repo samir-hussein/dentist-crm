@@ -11,6 +11,7 @@ use App\Http\Controllers\LabController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -66,6 +67,11 @@ Route::middleware("auth")->group(function () {
 
     Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
     Route::resource('labs', LabController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("treatment-types/all", [TreatmentTypeController::class, 'all'])->name('treatment-types.all');
+    Route::resource('treatment-types', TreatmentTypeController::class)->missing(function () {
         return abort(404);
     });
 

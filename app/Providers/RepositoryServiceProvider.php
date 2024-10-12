@@ -12,6 +12,7 @@ use App\Http\Interfaces\ILab;
 use App\Http\Interfaces\IPatient;
 use App\Http\Interfaces\IService;
 use App\Http\Interfaces\IStaff;
+use App\Http\Interfaces\ITrearmentType;
 use App\Http\Interfaces\IUser;
 use App\Http\Repositories\AdminRepository;
 use App\Http\Repositories\AppointmentRepository;
@@ -24,6 +25,7 @@ use App\Http\Repositories\LabRepository;
 use App\Http\Repositories\PatientRepository;
 use App\Http\Repositories\ServiceRepository;
 use App\Http\Repositories\StaffRepository;
+use App\Http\Repositories\TreatmentTypeRepository;
 use App\Http\Repositories\UserRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -44,6 +46,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ILab::class, LabRepository::class);
         $this->app->bind(IDiagnosis::class, DiagnosisRepository::class);
         $this->app->bind(IAppointment::class, AppointmentRepository::class);
+        $this->app->bind(ITrearmentType::class, TreatmentTypeRepository::class);
     }
 
     /**
