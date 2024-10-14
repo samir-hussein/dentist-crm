@@ -17,7 +17,7 @@ class TreatmentTypeFindByIdService extends TreatmentTypeService
     public function boot(TreatmentType $treatmentType)
     {
         $treatmentType = $treatmentType->load(["diagnosis", "sections", "sections.attributes", "sections.attributes.inputs"]);
-        $treatmentType->selected_diagnosis = $treatmentType->diagnosis->pluck('id')->toArray();
+        $treatmentType->selected_diagnosis = $treatmentType->diagnosis->pluck('diagnosis_id')->toArray();
         unset($treatmentType->diagnosis);
 
         $treatmentType->diagnosis = $this->treatmentTypeNecessaryData->boot()?->diagnosis;

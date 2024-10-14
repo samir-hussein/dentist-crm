@@ -85,7 +85,7 @@ class TreatmentTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PatientUpdateRequest $request, TreatmentType $treatmentType)
+    public function update(TreatmentTypeStoreRequest $request, TreatmentType $treatmentType)
     {
         $data = $request->validated();
 

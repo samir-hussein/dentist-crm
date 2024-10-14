@@ -12,8 +12,9 @@
         <div class="col-md-12">
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <form action="{{ route('treatment-types.store') }}" method="post">
+                    <form action="{{ route('treatment-types.update', ['treatment_type' => $data->id]) }}" method="post">
                         @csrf
+                        @method('put')
                         <div class="form-row">
                             <div class="form-group col-12">
                                 <label for="name">Treatment Name</label>
@@ -117,22 +118,22 @@
                                                                             for="sections[0][attributes][0][inputs][{{ $i }}][name]">Input
                                                                             Name</label>
                                                                         <input type="text" class="form-control"
-                                                                            name="sections[0][attributes][0][inputs][${input}][name]"
-                                                                            value="{{ old('sections.0.attributes.0.inputs.'$i'.name') ?? $data->sections[0]->attributes[0]->inputs[$i]->name }}">
-                                                                        @error('sections.0.attributes.0.inputs.'$i'.name')
+                                                                            name="sections[0][attributes][0][inputs][{{ $i }}][name]"
+                                                                            value="{{ old('sections.0.attributes.0.inputs.' . $i . '.name') ?? $data->sections[0]->attributes[0]->inputs[$i]->name }}">
+                                                                        @error("sections.0.attributes.0.inputs.$i.name")
                                                                             <p style="color: red">* {{ $message }}</p>
                                                                         @enderror
                                                                     </div>
                                                                     <div class="form-group col-md-5">
                                                                         <label
-                                                                            for="sections[0][attributes][0][inputs][${input}][value]">Input
+                                                                            for="sections[0][attributes][0][inputs][{{ $i }}][value]">Input
                                                                             Value
                                                                             (optional)
                                                                         </label>
                                                                         <input type="text" class="form-control"
-                                                                            name="sections[0][attributes][0][inputs][${input}][value]"
-                                                                            value="{{ old('sections.0.attributes.0.inputs.${input}.value') }}">
-                                                                        @error('sections.0.attributes.0.inputs.${input}.value')
+                                                                            name="sections[0][attributes][0][inputs][{{ $i }}][value]"
+                                                                            value="{{ old('sections.0.attributes.0.inputs.' . $i . '.value') ?? $data->sections[0]->attributes[0]->inputs[$i]->value }}">
+                                                                        @error("sections.0.attributes.0.inputs.$i.value")
                                                                             <p style="color: red">* {{ $message }}</p>
                                                                         @enderror
                                                                     </div>
@@ -146,18 +147,281 @@
                                                         @endif
                                                     </div>
                                                     <button type="button" data-attribute="0" data-section="0"
-                                                        data-input="0" class="add-input-btn btn btn-info">Add
+                                                        data-input="{{ $i }}"
+                                                        class="add-input-btn btn btn-info">Add
                                                         Input</button>
                                                 </div>
                                             </div>
+
+                                            @if (count($data->sections[0]->attributes) > 1)
+                                                @for ($a = 1; $a < count($data->sections[0]->attributes); $a++)
+                                                    <div class="attribute mb-5">
+                                                        <div class="form-row">
+                                                            <div class="form-group col-12">
+                                                                <label
+                                                                    for="sections[0][attributes][{{ $a }}][name]">Attribute
+                                                                    Name</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="sections[0][attributes][{{ $a }}][name]"
+                                                                    placeholder="Attribute Name"
+                                                                    value="{{ old('sections.0.attributes.' . $a . '.name') ?? $data->sections[0]->attributes[$a]->name }}">
+                                                                @error('sections.0.attributes.' . $a . '.name')
+                                                                    <p style="color: red">* {{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <h6>Inputs</h6>
+                                                            <div id="inputs-container-0-{{ $a }}">
+                                                                @if ($data->sections[0]->attributes[$a]->inputs)
+                                                                    @for ($i = 0; $i < count($data->sections[0]->attributes[$a]->inputs); $i++)
+                                                                        <div class="form-row">
+                                                                            <div class="form-group col-md-5">
+                                                                                <label
+                                                                                    for="sections[0][attributes][{{ $a }}][inputs][{{ $i }}][name]">Input
+                                                                                    Name</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    name="sections[0][attributes][{{ $a }}][inputs][{{ $i }}][name]"
+                                                                                    value="{{ old('sections.0.attributes.' . $a . '.inputs.' . $i . '.name') ?? $data->sections[0]->attributes[$a]->inputs[$i]->name }}">
+                                                                                @error("sections.0.attributes.$a.inputs.$i.name")
+                                                                                    <p style="color: red">*
+                                                                                        {{ $message }}</p>
+                                                                                @enderror
+                                                                            </div>
+                                                                            <div class="form-group col-md-5">
+                                                                                <label
+                                                                                    for="sections[0][attributes][{{ $a }}][inputs][{{ $i }}][value]">Input
+                                                                                    Value
+                                                                                    (optional)
+                                                                                </label>
+                                                                                <input type="text" class="form-control"
+                                                                                    name="sections[0][attributes][{{ $a }}][inputs][{{ $i }}][value]"
+                                                                                    value="{{ old('sections.0.attributes.' . $a . '.inputs.' . $i . '.value') ?? $data->sections[0]->attributes[$a]->inputs[$i]->value }}">
+                                                                                @error("sections.0.attributes.$a.inputs.$i.value")
+                                                                                    <p style="color: red">*
+                                                                                        {{ $message }}</p>
+                                                                                @enderror
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-2 d-flex align-items-center">
+                                                                                <button type="button"
+                                                                                    class="btn btn-danger btn-sm delete-input-btn">Remove
+                                                                                    Input</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endfor
+                                                                @endif
+                                                            </div>
+                                                            <button type="button" data-attribute="{{ $a }}"
+                                                                data-section="0" data-input="{{ $i }}"
+                                                                class="add-input-btn btn btn-info">Add
+                                                                Input</button>
+                                                            <button type="button"
+                                                                class="delete-attribute-btn btn btn-danger">Remove
+                                                                Attribute</button>
+                                                        </div>
+                                                    </div>
+                                                @endfor
+                                            @endif
                                         </div>
-                                        <button type="button" data-attribute="1" data-section="0"
+                                        <button type="button" data-attribute="{{ $a }}" data-section="0"
                                             class="add-attribute-btn btn btn-dark">Add Another
                                             Attribute</button>
                                     </div>
                                 </div>
+
+                                @if (count($data->sections) > 1)
+                                    @for ($i = 1; $i < count($data->sections); $i++)
+                                        <div class="section mb-5">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="sections[{{ $i }}][title]">Section
+                                                        Title</label>
+                                                    <input type="text" class="form-control"
+                                                        id="sections[{{ $i }}][title]"
+                                                        name="sections[{{ $i }}][title]"
+                                                        value="{{ old('sections.' . $i . '.title') ?? $data->sections[$i]->title }}">
+                                                    @error("sections.$i.title")
+                                                        <p style="color: red">* {{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="sections[{{ $i }}][multi_selection]">Multi
+                                                        Selection</label>
+                                                    <select id="sections[{{ $i }}][multi_selection]"
+                                                        name="sections[{{ $i }}][multi_selection]"
+                                                        class="form-control">
+                                                        <option value="1"
+                                                            {{ old('sections.' . $i . '.multi_selection') || $data->sections[$i]->multi_selection ? 'selected' : '' }}>
+                                                            Yes</option>
+                                                        <option value="0"
+                                                            {{ !$data->sections[$i]->multi_selection ? 'selected' : '' }}>
+                                                            No</option>
+                                                    </select>
+                                                    @error("sections.$i.multi_selection")
+                                                        <p style="color: red">* {{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <h5 class="mb-3">Attributes</h5>
+                                                <div id="attributes-container-{{ $i }}">
+                                                    <div class="attribute mb-5">
+                                                        <div class="form-row">
+                                                            <div class="form-group col-12">
+                                                                <label
+                                                                    for="sections[{{ $i }}][attributes][0][name]">Attribute
+                                                                    Name</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="sections[{{ $i }}][attributes][0][name]"
+                                                                    placeholder="Attribute Name"
+                                                                    value="{{ old('sections.' . $i . '.attributes.0.name') ?? $data->sections[$i]->attributes[0]->name }}">
+                                                                @error('sections.' . $i . '.attributes.0.name')
+                                                                    <p style="color: red">* {{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <h6>Inputs</h6>
+                                                            <div id="inputs-container-{{ $i }}-0">
+                                                                @if ($data->sections[$i]->attributes[0]->inputs)
+                                                                    @for ($j = 0; $j < count($data->sections[$i]->attributes[0]->inputs); $j++)
+                                                                        <div class="form-row">
+                                                                            <div class="form-group col-md-5">
+                                                                                <label
+                                                                                    for="sections[{{ $i }}][attributes][0][inputs][{{ $j }}][name]">Input
+                                                                                    Name</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    name="sections[{{ $i }}][attributes][0][inputs][{{ $j }}][name]"
+                                                                                    value="{{ old('sections.' . $i . '.attributes.0.inputs.' . $j . '.name') ?? $data->sections[$i]->attributes[0]->inputs[$j]->name }}">
+                                                                                @error("sections.$i.attributes.0.inputs.$j.name")
+                                                                                    <p style="color: red">*
+                                                                                        {{ $message }}</p>
+                                                                                @enderror
+                                                                            </div>
+                                                                            <div class="form-group col-md-5">
+                                                                                <label
+                                                                                    for="sections[{{ $i }}][attributes][0][inputs][{{ $j }}][value]">Input
+                                                                                    Value
+                                                                                    (optional)
+                                                                                </label>
+                                                                                <input type="text" class="form-control"
+                                                                                    name="sections[{{ $i }}][attributes][0][inputs][{{ $j }}][value]"
+                                                                                    value="{{ old('sections.' . $i . '.attributes.0.inputs.' . $j . '.value') ?? $data->sections[$i]->attributes[0]->inputs[$j]->value }}">
+                                                                                @error("sections.$i.attributes.0.inputs.$j.value")
+                                                                                    <p style="color: red">*
+                                                                                        {{ $message }}</p>
+                                                                                @enderror
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-2 d-flex align-items-center">
+                                                                                <button type="button"
+                                                                                    class="btn btn-danger btn-sm delete-input-btn">Remove
+                                                                                    Input</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endfor
+                                                                @endif
+                                                            </div>
+                                                            <button type="button" data-attribute="0"
+                                                                data-section="{{ $i }}"
+                                                                data-input="{{ $j }}"
+                                                                class="add-input-btn btn btn-info">Add
+                                                                Input</button>
+                                                        </div>
+                                                    </div>
+
+                                                    @if (count($data->sections[$i]->attributes) > 1)
+                                                        @for ($a = 1; $a < count($data->sections[$i]->attributes); $a++)
+                                                            <div class="attribute mb-5">
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-12">
+                                                                        <label
+                                                                            for="sections[{{ $i }}][attributes][{{ $a }}][name]">Attribute
+                                                                            Name</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="sections[{{ $i }}][attributes][{{ $a }}][name]"
+                                                                            placeholder="Attribute Name"
+                                                                            value="{{ old('sections.' . $i . '.attributes.' . $a . '.name') ?? $data->sections[$i]->attributes[$a]->name }}">
+                                                                        @error('sections.' . $i . '.attributes.' . $a .
+                                                                            '.name')
+                                                                            <p style="color: red">* {{ $message }}</p>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <h6>Inputs</h6>
+                                                                    <div
+                                                                        id="inputs-container-{{ $i }}-{{ $a }}">
+                                                                        @if ($data->sections[$i]->attributes[$a]->inputs)
+                                                                            @for ($j = 0; $j < count($data->sections[$i]->attributes[$a]->inputs); $j++)
+                                                                                <div class="form-row">
+                                                                                    <div class="form-group col-md-5">
+                                                                                        <label
+                                                                                            for="sections[{{ $i }}][attributes][{{ $a }}][inputs][{{ $j }}][name]">Input
+                                                                                            Name</label>
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            name="sections[{{ $i }}][attributes][{{ $a }}][inputs][{{ $j }}][name]"
+                                                                                            value="{{ old('sections.' . $i . '.attributes.' . $a . '.inputs.' . $j . '.name') ?? $data->sections[$i]->attributes[$a]->inputs[$j]->name }}">
+                                                                                        @error("sections.$i.attributes.$a.inputs.$j.name")
+                                                                                            <p style="color: red">*
+                                                                                                {{ $message }}</p>
+                                                                                        @enderror
+                                                                                    </div>
+                                                                                    <div class="form-group col-md-5">
+                                                                                        <label
+                                                                                            for="sections[{{ $i }}][attributes][{{ $a }}][inputs][{{ $j }}][value]">Input
+                                                                                            Value
+                                                                                            (optional)
+                                                                                        </label>
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            name="sections[{{ $i }}][attributes][{{ $a }}][inputs][{{ $j }}][value]"
+                                                                                            value="{{ old('sections.' . $i . '.attributes.' . $a . '.inputs.' . $j . '.value') ?? $data->sections[$i]->attributes[$a]->inputs[$j]->value }}">
+                                                                                        @error("sections.$i.attributes.$a.inputs.$j.value")
+                                                                                            <p style="color: red">*
+                                                                                                {{ $message }}</p>
+                                                                                        @enderror
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="col-md-2 d-flex align-items-center">
+                                                                                        <button type="button"
+                                                                                            class="btn btn-danger btn-sm delete-input-btn">Remove
+                                                                                            Input</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endfor
+                                                                        @endif
+                                                                    </div>
+                                                                    <button type="button"
+                                                                        data-attribute="{{ $a }}"
+                                                                        data-section="{{ $i }}"
+                                                                        data-input="{{ $j }}"
+                                                                        class="add-input-btn btn btn-info">Add
+                                                                        Input</button>
+                                                                    <button type="button"
+                                                                        class="delete-attribute-btn btn btn-danger">Remove
+                                                                        Attribute</button>
+                                                                </div>
+                                                            </div>
+                                                        @endfor
+                                                    @endif
+                                                </div>
+                                                <button type="button" data-attribute="{{ $a }}"
+                                                    data-section="{{ $i }}"
+                                                    class="add-attribute-btn btn btn-dark">Add Another
+                                                    Attribute</button>
+                                                <button type="button" class="delete-section-btn btn btn-danger">Remove
+                                                    Section</button>
+                                            </div>
+                                        </div>
+                                    @endfor
+                                @endif
                             </div>
-                            <button type="button" data-section="1" class="add-section-btn btn btn-warning mb-2">Add
+                            <button type="button" data-section="{{ $i }}"
+                                class="add-section-btn btn btn-warning mb-2">Add
                                 Another
                                 Section</button>
                         </div>

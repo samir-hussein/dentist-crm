@@ -39,10 +39,6 @@
             background-color: rgb(130, 130, 130) !important;
             color: white !important;
         }
-
-        #header-path {
-            background-color: rgb(235, 234, 234);
-        }
     </style>
 
     @yield('style')

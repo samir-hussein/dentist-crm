@@ -22,7 +22,7 @@ class TreatmentTypeStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string|unique:treatment_types,name",
+            "name" => "required|string",
             "need_labs" => "required|boolean",
             "description" => "sometimes|nullable|string",
             "diagnosis_ids" => "required|array",
