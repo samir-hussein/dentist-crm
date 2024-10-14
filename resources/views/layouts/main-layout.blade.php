@@ -66,6 +66,7 @@
                     </div> <!-- .col-12 -->
                 </div> <!-- .row -->
             </div> <!-- .container-fluid -->
+            @include('includes.shortcut')
         </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
