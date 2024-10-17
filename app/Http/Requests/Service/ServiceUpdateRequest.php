@@ -25,7 +25,6 @@ class ServiceUpdateRequest extends FormRequest
         return [
             "name" => "required|unique:services,name,$serviceName,name",
             "description" => "sometimes|string|nullable",
-            "price" => "required|numeric"
         ];
     }
 }

@@ -9,7 +9,7 @@ class StaffGetAllService extends StaffService
     public function boot(Request $request)
     {
         // Fetch all columns from your model's table
-        $data = $this->model->where("is_admin", false)->latest()->select('*');
+        $data = $this->model->where("is_admin", false)->where("is_doctor", false)->latest()->select('*');
 
         return $this->dataTable($data, "users", $request);
     }

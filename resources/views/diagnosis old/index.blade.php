@@ -1,17 +1,12 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Admins')
-
-@section('page-path-prefix', 'SETTINGS >> ')
+@section('title', 'Diagnosis')
 
 @section('buttons')
-    <a href="{{ route('admins.create') }}">
+    <a href="{{ route('diagnosis.create') }}">
         <button type="button" class="btn btn-primary">
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
-
-        <a href="{{ route('settings') }}"><button type="button" class="btn btn-dark"><span
-                    class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
     </a>
 @endsection
 
@@ -37,7 +32,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Email</th>
+                                <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -57,7 +52,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('admins.all') }}", // URL to fetch data
+                url: "{{ route('diagnosis.all') }}", // URL to fetch data
                 type: 'GET',
                 error: function(xhr, error, code) {
                     console.log(xhr.responseText); // Log the error for debugging
@@ -68,8 +63,8 @@
                     name: 'name'
                 },
                 {
-                    data: 'email',
-                    name: 'email'
+                    data: 'description',
+                    name: 'description'
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically
@@ -78,9 +73,11 @@
                     searchable: false, // Action buttons are not searchable
                     render: function(data, type, row) {
                         // Use JavaScript to construct URLs
-                        var deleteUrl = '/admins/' + row.id;
+                        var editUrl = '/diagnosis/' + row.id + '/edit';
+                        var deleteUrl = '/diagnosis/' + row.id;
 
                         return `
+                            <a href="${editUrl}" class="btn btn-sm btn-warning">Edit</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">
                                 @csrf
                                 @method('DELETE')

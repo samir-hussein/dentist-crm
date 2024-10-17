@@ -2,6 +2,8 @@
 
 @section('title', 'Doctor')
 
+@section('page-path-prefix', 'SETTINGS >> ')
+
 @section('buttons')
     <!-- Search Input and Button -->
     <div class="d-inline-block mr-2">
@@ -21,6 +23,9 @@
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
     </a>
+
+    <a href="{{ route('settings') }}"><button type="button" class="btn btn-dark"><span
+                class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
 @section('content')

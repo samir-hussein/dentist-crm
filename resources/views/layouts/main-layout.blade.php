@@ -44,10 +44,11 @@
     @yield('style')
 </head>
 
-<body class="horizontal light">
+<body class="vertical light">
 
     <div class="wrapper">
         @include('includes.nav', ['currentRouteName' => $currentRouteName])
+        @include('includes.aside', ['currentRouteName' => $currentRouteName])
         <main role="main" class="main-content">
             <div class="container-fluid">
                 <div class="row justify-content-center">
@@ -55,6 +56,7 @@
                         <div class="row align-items-center mb-2 p-2" id="header-path">
                             <div class="col">
                                 <h2 class="h5 mb-0 page-title">
+                                    @yield('page-path-prefix')
                                     {{ strtoupper(rtrim(str_replace(['.', 'index'], [' >> ', ''], $currentRouteName), ' >> ')) }}
                                 </h2>
                             </div>
@@ -66,7 +68,7 @@
                     </div> <!-- .col-12 -->
                 </div> <!-- .row -->
             </div> <!-- .container-fluid -->
-            @include('includes.shortcut')
+            {{-- @include('includes.shortcut') --}}
         </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>

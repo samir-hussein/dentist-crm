@@ -2,6 +2,8 @@
 
 @section('title', 'Services')
 
+@section('page-path-prefix', 'SETTINGS >> ')
+
 @section('buttons')
     <a href="{{ route('services.index') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
@@ -42,16 +44,6 @@
                             @error('description')
                                 <p style="color: red">* {{ $message }}</p>
                             @enderror
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-12">
-                                <label for="price">Price (EGY)</label>
-                                <input type="number" class="form-control" id="price" value="{{ $data->price }}"
-                                    name="price" dir="auto">
-                                @error('price')
-                                    <p style="color: red">* {{ $message }}</p>
-                                @enderror
-                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>

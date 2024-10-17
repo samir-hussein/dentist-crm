@@ -33,6 +33,10 @@ Route::middleware("guest")->controller(AuthController::class)->group(function ()
 Route::middleware("auth")->group(function () {
     Route::get("/logout", [AuthController::class, "logout"])->name('logout');
 
+    Route::get("/settings", function () {
+        return view('settings', ["currentRouteName" => Route::currentRouteName()]);
+    })->name('settings');
+
     Route::get("/home", [HomePageController::class, "index"])->name('home');
 
     Route::get("admins/all", [AdminController::class, 'all'])->name('admins.all');

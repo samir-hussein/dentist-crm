@@ -27,7 +27,9 @@ class PatientUpdateRequest extends FormRequest
             "phone" => "required|unique:patients,phone,$patientPhone,phone",
             "date_of_birth" => "required|date",
             "gender" => "required|in:Male,Female",
-            "address" => "sometimes|string|nullable"
+            "nationality" => "required|string",
+            "phone2" => "sometimes|string|nullable",
+            "need_invoice" => "required|boolean"
         ];
     }
 }

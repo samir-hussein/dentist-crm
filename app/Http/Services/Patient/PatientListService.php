@@ -6,7 +6,7 @@ class PatientListService extends PatientService
 {
     public function boot()
     {
-        $data = $this->model->get(['id', 'name', 'phone']);
+        $data = $this->model->get(['id', 'name', 'phone', 'phone2']);
 
         return $data;
     }

@@ -26,8 +26,6 @@ class DiagnosisUpdateRequest extends FormRequest
         return [
             "name" => "required|unique:diagnoses,name,$diagnosisId",
             "description" => "sometimes|nullable|string",
-            "tooths" => "required|array",
-            "tooths.*" => "required|numeric"
         ];
     }
 }

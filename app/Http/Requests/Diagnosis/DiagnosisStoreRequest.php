@@ -24,8 +24,6 @@ class DiagnosisStoreRequest extends FormRequest
         return [
             "name" => "required|string|unique:diagnoses,name",
             "description" => "sometimes|nullable|string",
-            "tooths" => "required|array",
-            "tooths.*" => "required|numeric"
         ];
     }
 }

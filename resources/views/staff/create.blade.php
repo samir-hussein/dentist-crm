@@ -2,6 +2,8 @@
 
 @section('title', 'Staff')
 
+@section('page-path-prefix', 'SETTINGS >> ')
+
 @section('buttons')
     <a href="{{ route('staff.index') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>

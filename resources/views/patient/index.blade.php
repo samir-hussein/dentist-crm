@@ -36,7 +36,9 @@
                                 <th>Gender</th>
                                 <th>Age</th>
                                 <th>Phone</th>
-                                <th>Address</th>
+                                <th>Phone 2</th>
+                                <th>Nationality</th>
+                                <th>Need Invoice</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -83,8 +85,24 @@
                     name: 'phone'
                 },
                 {
-                    data: 'address',
-                    name: 'address'
+                    data: 'phone2',
+                    name: 'phone 2'
+                },
+                {
+                    data: 'nationality',
+                    name: 'Nationality'
+                },
+                {
+                    data: null,
+                    name: 'Need Invoice',
+                    orderable: false, // Action buttons are not sortable
+                    searchable: false, // Action buttons are not searchable
+                    render: function(data, type, row) {
+                        if (row.need_invoice) {
+                            return `<span class="badge badge-warning">Yes</span>`;
+                        }
+                        return `<span class="badge badge-success">No</span>`;
+                    }
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically

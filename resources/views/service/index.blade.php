@@ -2,12 +2,17 @@
 
 @section('title', 'Services')
 
+@section('page-path-prefix', 'SETTINGS >> ')
+
 @section('buttons')
     <a href="{{ route('services.create') }}">
         <button type="button" class="btn btn-primary">
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
     </a>
+
+    <a href="{{ route('settings') }}"><button type="button" class="btn btn-dark"><span
+                class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
 @section('content')
@@ -33,7 +38,6 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>Price (EGY)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -66,10 +70,6 @@
                 {
                     data: 'description',
                     name: 'description'
-                },
-                {
-                    data: 'price',
-                    name: 'price (EGY)'
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically

@@ -23,8 +23,7 @@ class ServiceStoreRequest extends FormRequest
     {
         return [
             "name" => "required|unique:services,name",
-            "descritption" => "sometimes|string|nullable",
-            "price" => "required|numeric"
+            "description" => "sometimes|string|nullable",
         ];
     }
 }

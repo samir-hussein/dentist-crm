@@ -9,9 +9,5 @@ class Diagnosis extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "description", "tooths"];
-
-    protected $casts = [
-        'tooths' => 'array',
-    ];
+    protected $fillable = ["name", "description"];
 }

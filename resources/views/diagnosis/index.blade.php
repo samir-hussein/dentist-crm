@@ -2,12 +2,17 @@
 
 @section('title', 'Diagnosis')
 
+@section('page-path-prefix', 'SETTINGS >> ')
+
 @section('buttons')
     <a href="{{ route('diagnosis.create') }}">
         <button type="button" class="btn btn-primary">
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
     </a>
+
+    <a href="{{ route('settings') }}"><button type="button" class="btn btn-dark"><span
+                class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
 @section('content')

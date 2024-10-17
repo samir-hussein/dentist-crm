@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string("gender");
             $table->date("date_of_birth");
             $table->string("phone");
-            $table->string("address")->nullable();
+            $table->string("phone2")->nullable();
+            $table->string("nationality");
+            $table->boolean('need_invoice')->default(false);
             $table->timestamps();
         });
     }
