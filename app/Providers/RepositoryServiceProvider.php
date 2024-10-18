@@ -11,6 +11,7 @@ use App\Http\Interfaces\IDose;
 use App\Http\Interfaces\IEloquent;
 use App\Http\Interfaces\ILab;
 use App\Http\Interfaces\ILabService;
+use App\Http\Interfaces\IMedicine;
 use App\Http\Interfaces\IMedicineType;
 use App\Http\Interfaces\IPatient;
 use App\Http\Interfaces\IService;
@@ -27,6 +28,7 @@ use App\Http\Repositories\DoctorRepository;
 use App\Http\Repositories\DoseRepository;
 use App\Http\Repositories\LabRepository;
 use App\Http\Repositories\LabServiceRepository;
+use App\Http\Repositories\MedicineRepository;
 use App\Http\Repositories\MedicineTypeRepository;
 use App\Http\Repositories\PatientRepository;
 use App\Http\Repositories\ServiceRepository;
@@ -56,6 +58,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ILabService::class, LabServiceRepository::class);
         $this->app->bind(IDose::class, DoseRepository::class);
         $this->app->bind(IMedicineType::class, MedicineTypeRepository::class);
+        $this->app->bind(IMedicine::class, MedicineRepository::class);
     }
 
     /**

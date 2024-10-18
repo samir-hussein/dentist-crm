@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Interfaces\ITrearmentType;
-use App\Http\Requests\Patient\PatientUpdateRequest;
 use App\Http\Requests\TreatmentType\TreatmentTypeStoreRequest;
 use App\Models\TreatmentType;
 use Illuminate\Http\Request;

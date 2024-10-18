@@ -2,6 +2,10 @@
 
 @section('title', 'Treatment Type')
 
+@section('page-path-prefix', 'SETTINGS >> ')
+
+@section('settings-active', 'active-link')
+
 @section('buttons')
     <a href="{{ route('treatment-types.index') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>

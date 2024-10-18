@@ -2,16 +2,9 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Patient;
 use Illuminate\Http\Request;
 use App\Models\TreatmentType;
-use Illuminate\Support\Collection;
 use App\Http\Interfaces\ITrearmentType;
-use App\Http\Services\Patient\PatientStoreService;
-use App\Http\Services\Patient\PatientDeleteService;
-use App\Http\Services\Patient\PatientGetAllService;
-use App\Http\Services\Patient\PatientUpdateService;
-use App\Http\Services\Patient\PatientFindByIdService;
 use App\Http\Services\TreatmentType\TreatmentTypeStoreService;
 use App\Http\Services\TreatmentType\TreatmentTypeDeleteService;
 use App\Http\Services\TreatmentType\TreatmentTypeGetAllService;

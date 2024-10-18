@@ -12,4 +12,5 @@ interface IMedicine
     public function update(Medicine $medicine, array $requestData);
     public function delete(Medicine $medicine);
     public function findById(Medicine $medicine);
+    public function necessaryData();
 }

@@ -6,6 +6,18 @@
         a:hover {
             color: inherit;
         }
+
+        .bg-calendar {
+            background-color: #a569bd;
+        }
+
+        .bg-medicine {
+            background-color: #ec7063;
+        }
+
+        .bg-medicine-type {
+            background-color: #6495ED;
+        }
     </style>
 @endsection
 
@@ -80,12 +92,36 @@
         <div class="col-6 col-md-4 text-center">
             <div>
                 <a href="{{ route('settings.medicine-settings') }}"
-                    class="squircle bg-primary justify-content-center text-decoration-none">
+                    class="squircle bg-medicine justify-content-center text-decoration-none">
                     <i class="fe fe-thermometer fe-32 align-self-center text-white"></i>
                 </a>
             </div>
             <a href="{{ route('settings.medicine-settings') }}" class="text-decoration-none">
                 <p>Medicine Settings</p>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 text-center">
+            <div>
+                <a href="{{ route('settings.medicine-settings') }}"
+                    class="squircle bg-calendar justify-content-center text-decoration-none">
+                    <i class="fe fe-calendar fe-32 align-self-center text-white"></i>
+                </a>
+            </div>
+            <a href="{{ route('settings.medicine-settings') }}" class="text-decoration-none">
+                <p>Schdule Settings</p>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 text-center">
+            <div>
+                <a href="{{ route('treatment-types.index') }}"
+                    class="squircle bg-medicine-type justify-content-center text-decoration-none">
+                    <i class="fe fe-database fe-32 align-self-center text-white"></i>
+                </a>
+            </div>
+            <a href="{{ route('treatment-types.index') }}" class="text-decoration-none">
+                <p>Treatment Types</p>
             </a>
         </div>
     </div>

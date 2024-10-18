@@ -1,19 +1,26 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Medicine Types')
+@section('title', 'Medicines')
 
-@section('page-path-prefix', 'SETTINGS >> MEDICINE SETTINGS >> ')
+@php
+    $backPath = request('searchKey') ? 'medicine-types.index' : 'settings.medicine-settings';
+    $prefix = request('searchKey')
+        ? 'SETTINGS >> MEDICINE SETTINGS >> MEDICINE TYPES >> '
+        : 'SETTINGS >> MEDICINE SETTINGS >> ';
+@endphp
+
+@section('page-path-prefix', $prefix)
 
 @section('settings-active', 'active-link')
 
 @section('buttons')
-    <a href="{{ route('medicine-types.create') }}">
+    <a href="{{ route('medicines.create') }}">
         <button type="button" class="btn btn-primary">
             <span class="fe fe-plus fe-12 mr-2"></span>Create
         </button>
     </a>
 
-    <a href="{{ route('settings.medicine-settings') }}"><button type="button" class="btn btn-dark"><span
+    <a href="{{ route($backPath) }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
@@ -38,7 +45,8 @@
                     <table class="table datatables" id="dataTable-1">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Medicine Name</th>
+                                <th>Medicine Type</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -58,7 +66,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('medicine-types.all') }}", // URL to fetch data
+                url: "{{ route('medicines.all', ['searchKey' => request('searchKey')]) }}", // URL to fetch data
                 type: 'GET',
                 error: function(xhr, error, code) {
                     console.log(xhr.responseText); // Log the error for debugging
@@ -66,7 +74,11 @@
             },
             columns: [{
                     data: 'name',
-                    name: 'Name'
+                    name: 'Medicine Name'
+                },
+                {
+                    data: 'medicine_type.name',
+                    name: 'Medicine Type'
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically
@@ -75,13 +87,11 @@
                     searchable: false, // Action buttons are not searchable
                     render: function(data, type, row) {
                         // Use JavaScript to construct URLs
-                        var editUrl = '/medicine-types/' + row.id + "/edit";
-                        var deleteUrl = '/medicine-types/' + row.id;
-                        var medicineListUrl = '/medicines?searchKey=' + row.name;
+                        var editUrl = '/medicines/' + row.id + "/edit";
+                        var deleteUrl = '/medicines/' + row.id;
 
                         return `
                             <a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>
-                            <a href="${medicineListUrl}" class="btn btn-sm btn-warning">Medicine List</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">
                                 @csrf
                                 @method('DELETE')

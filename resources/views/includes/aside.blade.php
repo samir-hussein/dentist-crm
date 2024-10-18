@@ -26,17 +26,17 @@
             </li>
 
             <li class="nav-item w-100">
-                <a class="nav-link @yield('settings-active', $currentRouteName == 'settings' ? 'active-link' : '')" href="{{ route('settings') }}">
-                    <i class="fe fe-settings fe-16"></i>
-                    <span class="ml-3 item-text">Settings</span>
-                </a>
-            </li>
-
-            <li class="nav-item w-100">
                 <a class="nav-link {{ strpos($currentRouteName, 'patients') !== false ? 'active-link' : '' }}"
                     href="{{ route('patients.index') }}">
                     <i class="fe fe-users fe-16"></i>
                     <span class="ml-3 item-text">Patients</span>
+                </a>
+            </li>
+
+            <li class="nav-item w-100">
+                <a class="nav-link @yield('settings-active', $currentRouteName == 'settings' ? 'active-link' : '')" href="{{ route('settings') }}">
+                    <i class="fe fe-settings fe-16"></i>
+                    <span class="ml-3 item-text">Settings</span>
                 </a>
             </li>
         </ul>

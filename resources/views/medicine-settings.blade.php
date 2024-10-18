@@ -41,11 +41,12 @@
         </div>
         <div class="col-4 text-center">
             <div>
-                <a href="{{ route('labs.index') }}" class="squircle bg-success justify-content-center text-decoration-none">
+                <a href="{{ route('medicines.index') }}"
+                    class="squircle bg-success justify-content-center text-decoration-none">
                     <i class="fe fe-thermometer fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="{{ route('labs.index') }}" class="text-decoration-none">
+            <a href="{{ route('medicines.index') }}" class="text-decoration-none">
                 <p>Medicines</p>
             </a>
         </div>
