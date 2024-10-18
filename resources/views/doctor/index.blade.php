@@ -4,6 +4,8 @@
 
 @section('page-path-prefix', 'SETTINGS >> ')
 
+@section('settings-active', 'active-link')
+
 @section('buttons')
     <!-- Search Input and Button -->
     <div class="d-inline-block mr-2">

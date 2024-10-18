@@ -4,6 +4,8 @@
 
 @section('page-path-prefix', 'SETTINGS >> ')
 
+@section('settings-active', 'active-link')
+
 @section('buttons')
     <a href="{{ route('services.create') }}">
         <button type="button" class="btn btn-primary">

@@ -17,7 +17,7 @@
                     <i class="fe fe-users fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="" class="text-decoration-none">
+            <a href="{{ route('admins.index') }}" class="text-decoration-none">
                 <p>Admins</p>
             </a>
         </div>
@@ -28,7 +28,7 @@
                     <i class="fe fe-users fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="" class="text-decoration-none">
+            <a href="{{ route('doctors.index') }}" class="text-decoration-none">
                 <p>Doctors</p>
             </a>
         </div>
@@ -39,7 +39,7 @@
                     <i class="fe fe-users fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="" class="text-decoration-none">
+            <a href="{{ route('staff.index') }}" class="text-decoration-none">
                 <p>Staff</p>
             </a>
         </div>
@@ -50,7 +50,7 @@
                     <i class="fe fe-archive fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="" class="text-decoration-none">
+            <a href="{{ route('services.index') }}" class="text-decoration-none">
                 <p>Services</p>
             </a>
         </div>
@@ -61,18 +61,31 @@
                     <i class="fe fe-sliders fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="" class="text-decoration-none">
+            <a href="{{ route('diagnosis.index') }}" class="text-decoration-none">
                 <p>Diagnosis</p>
             </a>
         </div>
         <div class="col-6 col-md-4 text-center">
             <div>
-                <a href="" class="squircle bg-success justify-content-center text-decoration-none">
-                    <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
+                <a href="{{ route('settings.lab-settings') }}"
+                    class="squircle bg-secondary justify-content-center text-decoration-none">
+                    <i class="fe fe-filter fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="" class="text-decoration-none">
-                <p>Control area</p>
+            <a href="{{ route('settings.lab-settings') }}" class="text-decoration-none">
+                <p>Labs Settings</p>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 text-center">
+            <div>
+                <a href="{{ route('settings.medicine-settings') }}"
+                    class="squircle bg-primary justify-content-center text-decoration-none">
+                    <i class="fe fe-thermometer fe-32 align-self-center text-white"></i>
+                </a>
+            </div>
+            <a href="{{ route('settings.medicine-settings') }}" class="text-decoration-none">
+                <p>Medicine Settings</p>
             </a>
         </div>
     </div>

@@ -7,8 +7,11 @@ use App\Http\Interfaces\IAppointment;
 use App\Http\Interfaces\IAuth;
 use App\Http\Interfaces\IDiagnosis;
 use App\Http\Interfaces\IDoctor;
+use App\Http\Interfaces\IDose;
 use App\Http\Interfaces\IEloquent;
 use App\Http\Interfaces\ILab;
+use App\Http\Interfaces\ILabService;
+use App\Http\Interfaces\IMedicineType;
 use App\Http\Interfaces\IPatient;
 use App\Http\Interfaces\IService;
 use App\Http\Interfaces\IStaff;
@@ -21,7 +24,10 @@ use Illuminate\Support\ServiceProvider;
 use App\Http\Repositories\BaseRepository;
 use App\Http\Repositories\DiagnosisRepository;
 use App\Http\Repositories\DoctorRepository;
+use App\Http\Repositories\DoseRepository;
 use App\Http\Repositories\LabRepository;
+use App\Http\Repositories\LabServiceRepository;
+use App\Http\Repositories\MedicineTypeRepository;
 use App\Http\Repositories\PatientRepository;
 use App\Http\Repositories\ServiceRepository;
 use App\Http\Repositories\StaffRepository;
@@ -47,6 +53,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IDiagnosis::class, DiagnosisRepository::class);
         $this->app->bind(IAppointment::class, AppointmentRepository::class);
         $this->app->bind(ITrearmentType::class, TreatmentTypeRepository::class);
+        $this->app->bind(ILabService::class, LabServiceRepository::class);
+        $this->app->bind(IDose::class, DoseRepository::class);
+        $this->app->bind(IMedicineType::class, MedicineTypeRepository::class);
     }
 
     /**

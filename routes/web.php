@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\DoseController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\LabController;
+use App\Http\Controllers\LabServiceController;
+use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
@@ -36,6 +39,14 @@ Route::middleware("auth")->group(function () {
     Route::get("/settings", function () {
         return view('settings', ["currentRouteName" => Route::currentRouteName()]);
     })->name('settings');
+
+    Route::get("/settings/lab", function () {
+        return view('lab-settings', ["currentRouteName" => Route::currentRouteName()]);
+    })->name('settings.lab-settings');
+
+    Route::get("/settings/medicine", function () {
+        return view('medicine-settings', ["currentRouteName" => Route::currentRouteName()]);
+    })->name('settings.medicine-settings');
 
     Route::get("/home", [HomePageController::class, "index"])->name('home');
 
@@ -71,6 +82,21 @@ Route::middleware("auth")->group(function () {
 
     Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
     Route::resource('labs', LabController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("doses/all", [DoseController::class, 'all'])->name('doses.all');
+    Route::resource('doses', DoseController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("medicine-types/all", [MedicineTypeController::class, 'all'])->name('medicine-types.all');
+    Route::resource('medicine-types', MedicineTypeController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("lab-services/all", [LabServiceController::class, 'all'])->name('lab-services.all');
+    Route::resource('lab-services', LabServiceController::class)->missing(function () {
         return abort(404);
     });
 

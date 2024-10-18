@@ -120,6 +120,7 @@
     <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
         <i class="fe fe-menu navbar-toggler-icon"></i>
     </button>
+    <h5 class="mr-auto text-muted mb-0">{{ auth()->user()->name }}</h5>
     <ul class="nav">
         <li class="nav-item">
             <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="dark">

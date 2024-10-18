@@ -26,8 +26,7 @@
             </li>
 
             <li class="nav-item w-100">
-                <a class="nav-link {{ $currentRouteName == 'settings' ? 'active-link' : '' }}"
-                    href="{{ route('settings') }}">
+                <a class="nav-link @yield('settings-active', $currentRouteName == 'settings' ? 'active-link' : '')" href="{{ route('settings') }}">
                     <i class="fe fe-settings fe-16"></i>
                     <span class="ml-3 item-text">Settings</span>
                 </a>
