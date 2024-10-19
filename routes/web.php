@@ -13,6 +13,8 @@ use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\SchduleDateController;
+use App\Http\Controllers\SchduleDayController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TreatmentTypeController;
@@ -49,6 +51,10 @@ Route::middleware("auth")->group(function () {
         return view('medicine-settings', ["currentRouteName" => Route::currentRouteName()]);
     })->name('settings.medicine-settings');
 
+    Route::get("/settings/schdule", function () {
+        return view('schdule-settings', ["currentRouteName" => Route::currentRouteName()]);
+    })->name('settings.schdule-settings');
+
     Route::get("/home", [HomePageController::class, "index"])->name('home');
 
     Route::get("admins/all", [AdminController::class, 'all'])->name('admins.all');
@@ -83,6 +89,16 @@ Route::middleware("auth")->group(function () {
 
     Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
     Route::resource('labs', LabController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("schdule-days/all", [SchduleDayController::class, 'all'])->name('schdule-days.all');
+    Route::resource('schdule-days', SchduleDayController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("schdule-dates/all", [SchduleDateController::class, 'all'])->name('schdule-dates.all');
+    Route::resource('schdule-dates', SchduleDateController::class)->missing(function () {
         return abort(404);
     });
 

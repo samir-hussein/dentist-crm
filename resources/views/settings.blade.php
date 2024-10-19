@@ -103,12 +103,12 @@
 
         <div class="col-6 col-md-4 text-center">
             <div>
-                <a href="{{ route('settings.medicine-settings') }}"
+                <a href="{{ route('settings.schdule-settings') }}"
                     class="squircle bg-calendar justify-content-center text-decoration-none">
                     <i class="fe fe-calendar fe-32 align-self-center text-white"></i>
                 </a>
             </div>
-            <a href="{{ route('settings.medicine-settings') }}" class="text-decoration-none">
+            <a href="{{ route('settings.schdule-settings') }}" class="text-decoration-none">
                 <p>Schdule Settings</p>
             </a>
         </div>

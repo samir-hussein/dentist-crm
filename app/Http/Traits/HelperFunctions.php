@@ -107,4 +107,32 @@ trait HelperFunctions
             })
             ->make(true);
     }
+
+    public function getDatesForDay(string $day)
+    {
+        $yesterday = Carbon::yesterday();
+        $dates = [];
+
+        $daysMap = [
+            'monday' => Carbon::MONDAY,
+            'tuesday' => Carbon::TUESDAY,
+            'wednesday' => Carbon::WEDNESDAY,
+            'thursday' => Carbon::THURSDAY,
+            'friday' => Carbon::FRIDAY,
+            'saturday' => Carbon::SATURDAY,
+            'sunday' => Carbon::SUNDAY,
+        ];
+
+        // Loop through the next 30 days
+        for ($i = 0; $i <= 30; $i++) {
+            $date = $yesterday->copy()->addDays($i);
+
+            if ($date->dayOfWeek === $daysMap[$day]) {
+                $dates[] = $date->toDateString();
+            }
+        }
+
+        // Output the dates
+        return $dates;
+    }
 }
