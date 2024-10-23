@@ -98,9 +98,13 @@ Route::middleware("auth")->group(function () {
     });
 
     Route::get("schdule-dates/all", [SchduleDateController::class, 'all'])->name('schdule-dates.all');
+    Route::get("schdule-dates/{schdule_date}/make-holiday", [SchduleDateController::class, 'makeHoliday'])->name('schdule-dates.make-holiday');
     Route::resource('schdule-dates', SchduleDateController::class)->missing(function () {
         return abort(404);
-    });
+    })->except(['destroy']);
+    Route::resource('times', SchduleDateController::class)->missing(function () {
+        return abort(404);
+    })->only(['destroy', 'update']);
 
     Route::get("doses/all", [DoseController::class, 'all'])->name('doses.all');
     Route::resource('doses', DoseController::class)->missing(function () {

@@ -35,6 +35,49 @@ trait HelperFunctions
             ->make(true);
     }
 
+    public function dataTableForSchduleDate($data, string $tableName, Request $request)
+    {
+        return DataTables::of($data)
+            ->addColumn('formated_date', function ($row) {
+                return $row->date->format("Y-m-d");
+            })
+            ->addColumn('day', function ($row) {
+                return $row->schduleDay->day;
+            })
+            ->filter(function ($query) use ($request, $tableName) {
+                if ($request->has('search') && !empty($request->search['value'])) {
+                    $search = $request->search['value'];
+
+                    // Loop through all columns and apply search to each column
+                    $columns = Schema::getColumnListing($tableName); // Fetch the table columns
+
+                    $query->where(function ($query) use ($columns, $search) {
+                        $skippedColumns = ["id", "schdule_day_id", "created_at", "updated_at"];
+                        foreach ($columns as $column) {
+                            if (in_array($column, $skippedColumns)) continue;
+                            if ($column !== 'day') {
+                                $query->orWhere($column, 'like', "%{$search}%");
+                            }
+                        }
+
+                        // Additional search for related 'day' field (assuming relationship is 'schduleDay')
+                        $query->orWhereHas('schduleDay', function ($query) use ($search) {
+                            $query->where('day', 'like', "%{$search}%");
+                        });
+                    });
+                }
+            })
+
+            ->order(function ($query) use ($request) {
+                if ($request->has('order')) {
+                    $orderColumn = $request->order[0]['column'];
+                    $orderDir = $request->order[0]['dir'];
+                    $query->orderBy($request->columns[$orderColumn]['data'], $orderDir);
+                }
+            })
+            ->make(true);
+    }
+
     public function dataTableForMedicine($data, string $tableName, Request $request)
     {
         return DataTables::of($data)
@@ -110,7 +153,7 @@ trait HelperFunctions
 
     public function getDatesForDay(string $day)
     {
-        $yesterday = Carbon::yesterday();
+        $today = Carbon::now();
         $dates = [];
 
         $daysMap = [
@@ -125,7 +168,7 @@ trait HelperFunctions
 
         // Loop through the next 30 days
         for ($i = 0; $i <= 30; $i++) {
-            $date = $yesterday->copy()->addDays($i);
+            $date = $today->copy()->addDays($i);
 
             if ($date->dayOfWeek === $daysMap[$day]) {
                 $dates[] = $date->toDateString();

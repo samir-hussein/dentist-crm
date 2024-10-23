@@ -34,6 +34,8 @@
     <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme" disabled>
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
         .active-link {
             background-color: rgb(130, 130, 130) !important;
@@ -297,6 +299,12 @@
         }
         gtag('js', new Date());
         gtag('config', 'UA-56159088-1');
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
     </script>
 
     @yield('script')

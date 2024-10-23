@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('schdule_date_times', function (Blueprint $table) {
             $table->id();
-            $table->timestamp("time")->unique();
+            $table->timestamp("time")->unique()->nullable();
             $table->timestamp("manually_updated_time")->nullable();
             $table->boolean("is_manually_updated")->default(false);
             $table->boolean("is_deleted")->default(false);

@@ -19,10 +19,8 @@ class SchduleDateGetAllService extends SchduleDateService
     {
         $this->schduleDateStoreService->boot();
         // Fetch all columns from your model's table
-        $data = $this->model->latest()->with(["schduleDay" => function ($q) {
-            $q->select(['id', 'day']);
-        }])->select('*');
+        $data = $this->model->select('*')->orderBy("date");
 
-        return $this->dataTable($data, "schdule_days", $request);
+        return $this->dataTableForSchduleDate($data, "schdule_dates", $request);
     }
 }

@@ -30,4 +30,14 @@ class SchduleDate extends Model
     {
         return $this->belongsTo(SchduleDay::class);
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(SchduleDateTime::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
 }

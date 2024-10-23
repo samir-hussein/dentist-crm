@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SchduleDay;
+use App\Models\SchduleDate;
+use Illuminate\Http\Request;
 use App\Http\Interfaces\ISchduleDate;
+use App\Http\Requests\TimeUpdateRequest;
 use App\Http\Requests\SchduleDay\SchduleDayStoreRequest;
 use App\Http\Requests\SchduleDay\SchduleDayUpdateRequest;
-use App\Models\SchduleDate;
-use App\Models\SchduleDay;
-use Illuminate\Http\Request;
 
 class SchduleDateController extends Controller
 {
@@ -59,21 +60,21 @@ class SchduleDateController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SchduleDate $schduleDay)
+    public function show(SchduleDate $schduleDate)
     {
-        $data = $this->service->findById($schduleDay);
+        $data = $this->service->findById($schduleDate);
 
-        return $this->view("schdule-day.edit", ['data' => $data]);
+        return $this->view("schdule-date.show", ['data' => $data]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(SchduleDayUpdateRequest $request, SchduleDate $schduleDay)
+    public function update(TimeUpdateRequest $request, int $appointmentId)
     {
         $data = $request->validated();
 
-        $this->service->update($schduleDay, $data);
+        $this->service->update($appointmentId, $data);
 
         return $this->backWithSuccess();
     }
@@ -81,9 +82,16 @@ class SchduleDateController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SchduleDate $schduleDay)
+    public function makeHoliday(SchduleDate $schduleDate)
     {
-        $this->service->delete($schduleDay);
-        return $this->redirectWithSuccess("schdule-days.index");
+        $this->service->makeHoliday($schduleDate);
+        return $this->redirectWithSuccess("schdule-dates.index");
+    }
+
+    public function destroy(int $appointmentId)
+    {
+        $this->service->destroyAppointment($appointmentId);
+
+        return $this->backWithSuccess();
     }
 }

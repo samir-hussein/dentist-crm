@@ -9,7 +9,8 @@ interface ISchduleDate
 {
     public function all(Request $request);
     public function store();
-    public function update(SchduleDate $schduleDate, array $requestData);
-    public function delete(SchduleDate $schduleDate);
+    public function update(int $appointmentId, array $requestData);
+    public function makeHoliday(SchduleDate $schduleDate);
     public function findById(SchduleDate $schduleDate);
+    public function destroyAppointment(int $appointmentId);
 }

@@ -7,12 +7,6 @@
 @section('settings-active', 'active-link')
 
 @section('buttons')
-    <a href="{{ route('schdule-dates.create') }}">
-        <button type="button" class="btn btn-primary">
-            <span class="fe fe-plus fe-12 mr-2"></span>Create
-        </button>
-    </a>
-
     <a href="{{ route('settings.schdule-settings') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
@@ -39,6 +33,8 @@
                         <thead>
                             <tr>
                                 <th>Day</th>
+                                <th>Date</th>
+                                <th>Holiday</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -65,8 +61,24 @@
                 }
             },
             columns: [{
-                    data: 'schdule_day.day',
+                    data: 'day',
                     name: 'Day'
+                },
+                {
+                    data: 'formated_date',
+                    name: 'Date'
+                },
+                {
+                    data: null, // No field in the database for this, render buttons dynamically
+                    name: 'Holiday',
+                    orderable: false, // Action buttons are not sortable
+                    searchable: false, // Action buttons are not searchable
+                    render: function(data, type, row) {
+                        if (row.is_holiday) {
+                            return `<span class="badge badge-warning">Yes</span>`;
+                        }
+                        return `<span class="badge badge-success">No</span>`;
+                    }
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically
@@ -75,16 +87,17 @@
                     searchable: false, // Action buttons are not searchable
                     render: function(data, type, row) {
                         // Use JavaScript to construct URLs
-                        var editUrl = '/schdule-dates/' + row.id + "/edit";
-                        var deleteUrl = '/schdule-dates/' + row.id;
+                        var editUrl = '/schdule-dates/' + row.id + "/make-holiday";
+                        var showUrl = '/schdule-dates/' + row.id;
 
+                        if (row.is_holiday) {
+                            return `
+                            <a href="${editUrl}" class="btn btn-sm btn-warning">Make Work Day</a>
+                        `;
+                        }
                         return `
-                            <a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>
-                            <form method="POST" action="${deleteUrl}" class="d-inline"">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                            <a href="${editUrl}" class="btn btn-sm btn-info">Make Holiday</a>
+                            <a href="${showUrl}" class="btn btn-sm btn-dark">Show Appointments</a>
                         `;
                     }
                 }
