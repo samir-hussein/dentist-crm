@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 interface IAppointment
 {
-    public function all(Request $request);
+    public function all();
     public function store(array $requestData);
     public function update(Appointment $appointment, array $requestData);
     public function delete(Appointment $appointment);

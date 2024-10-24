@@ -18,6 +18,13 @@ class TreatmentSectionAttributeInput extends Model
         'name',
         'value',
         'treatment_section_attribute_id',
+        'adultTooths',
+        'childTooths',
+    ];
+
+    protected $casts = [
+        'adultTooths' => 'array',
+        'childTooths' => 'array',
     ];
 
     /**

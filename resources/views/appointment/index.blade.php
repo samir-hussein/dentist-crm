@@ -42,7 +42,31 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($data as $appointment)
+                                <tr>
+                                    <td># {{ $appointment->visit_no }}</td>
+                                    <td>{{ $appointment->patient->name }}</td>
+                                    <td>{{ $appointment->patient->phone }}</td>
+                                    <td>{{ $appointment->patient->phone2 }}</td>
+                                    <td>{{ $appointment->doctor->name }}</td>
+                                    <td>{{ $appointment->selectedServices }}</td>
+                                    <td>{{ $appointment->formatedTime }}</td>
+                                    <td>
+                                        <a class="btn mb-1 btn-sm btn-info"
+                                            href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
 
+                                        <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
+                                            class="btn mb-1 btn-sm btn-success">Completed</a>
+
+                                        <form class="d-inline mb-1" method="POST"
+                                            action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -54,72 +78,7 @@
 @section('script')
     <script>
         $('#dataTable-1').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('appointments.all') }}", // URL to fetch data
-                type: 'GET',
-                error: function(xhr, error, code) {
-                    console.log(xhr.responseText); // Log the error for debugging
-                }
-            },
-            columns: [{
-                    data: 'visit_no',
-                    name: 'Visit No.'
-                },
-                {
-                    data: 'patientName',
-                    name: 'Patient Name'
-                },
-                {
-                    data: 'patientPhone',
-                    name: 'Patient Phone'
-                },
-                {
-                    data: 'patientPhone2',
-                    name: 'Patient Phone 2'
-                },
-                {
-                    data: 'doctorName',
-                    name: 'Doctor Name'
-                },
-                {
-                    data: 'servicesNames',
-                    name: 'Services'
-                },
-                {
-                    data: 'appointment',
-                    name: 'Appointment'
-                },
-                {
-                    data: null, // No field in the database for this, render buttons dynamically
-                    name: 'action',
-                    orderable: false, // Action buttons are not sortable
-                    searchable: false, // Action buttons are not searchable
-                    render: function(data, type, row) {
-                        // Use JavaScript to construct URLs
-                        var completedUrl = '/appointments/' + row.id + '/completed';
-                        var editUrl = '/appointments/' + row.id + '/edit';
-                        var deleteUrl = '/appointments/' + row.id;
-
-                        if (row.completed) {
-                            return `<span class="text-success">Completed</span>`;
-                        }
-
-                        return `
-                            <a href="${completedUrl}" class="mb-1 btn btn-sm btn-success">Mark as completed</a>
-                            <a href="${editUrl}" class="btn mb-1 btn-sm btn-warning">Edit</a>
-                            <form method="POST" action="${deleteUrl}" class="mb-1 d-inline"">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        `;
-                    }
-                }
-            ],
-            pageLength: 10, // You can change the default page size here
-            order: [] // Optional: Default sorting
+            order: []
         });
     </script>
 @endsection

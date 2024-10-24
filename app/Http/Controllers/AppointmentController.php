@@ -20,16 +20,6 @@ class AppointmentController extends Controller
     /**
      * Get a listing of the resource.
      */
-    public function all(Request $request)
-    {
-        $data = $this->service->all($request);
-
-        return $data;
-    }
-
-    /**
-     * Get a listing of the resource.
-     */
     public function profile(Appointment $appointment)
     {
         return $appointment;
@@ -40,7 +30,9 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        return $this->view('appointment.index');
+        $data = $this->service->all();
+
+        return $this->view('appointment.index', ['data' => $data]);
     }
 
     /**

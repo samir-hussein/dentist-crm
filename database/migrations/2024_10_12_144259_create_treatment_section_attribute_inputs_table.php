@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string("name");
             $table->string("value")->nullable();
             $table->unsignedBigInteger('treatment_section_attribute_id');
+            $table->json("adultTooths")->nullable();
+            $table->json("childTooths")->nullable();
             $table->foreign("treatment_section_attribute_id", "fk_treatment_section_attr_id")->references("id")->on("treatment_section_attributes")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
         });

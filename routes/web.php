@@ -137,7 +137,6 @@ Route::middleware("auth")->group(function () {
         return abort(404);
     });
 
-    Route::get("appointments/all", [AppointmentController::class, 'all'])->name('appointments.all');
     Route::get("appointments/{appointment}/completed", [AppointmentController::class, 'markCompleted'])->name('appointments.markCompleted');
     Route::resource('appointments', AppointmentController::class)->missing(function () {
         return abort(404);

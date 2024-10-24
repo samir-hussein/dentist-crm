@@ -38,6 +38,8 @@ class TreatmentTypeStoreRequest extends FormRequest
             "sections.*.attributes.*.inputs.*" => "required|array",
             "sections.*.attributes.*.inputs.*.name" => "required|string",
             "sections.*.attributes.*.inputs.*.value" => "sometimes|nullable|string",
+            "sections.*.attributes.*.inputs.*.adultTooths" => "sometimes|nullable|array",
+            "sections.*.attributes.*.inputs.*.childTooths" => "sometimes|nullable|array",
         ];
     }
 }
