@@ -10,6 +10,7 @@ use App\Http\Controllers\DoseController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\LabController;
 use App\Http\Controllers\LabServiceController;
+use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PatientController;
@@ -108,6 +109,11 @@ Route::middleware("auth")->group(function () {
 
     Route::get("doses/all", [DoseController::class, 'all'])->name('doses.all');
     Route::resource('doses', DoseController::class)->missing(function () {
+        return abort(404);
+    });
+
+    Route::get("medical-histories/all", [MedicalHistoryController::class, 'all'])->name('medical-histories.all');
+    Route::resource('medical-histories', MedicalHistoryController::class)->missing(function () {
         return abort(404);
     });
 

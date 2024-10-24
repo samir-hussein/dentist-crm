@@ -24,13 +24,14 @@ class AppointmentStoreRequest extends FormRequest
         return [
             "name" => "string|required_with:phone",
             "phone" => "unique:patients,phone|required_without:patient_id",
+            "phone2" => "sometimes|string|nullable",
             "date_of_birth" => "required_with:phone|date",
+            "nationality" => "sometimes|nullable|string",
             "gender" => "required_with:phone|in:Male,Female",
             "patient_id" => "exists:patients,id|required_without:phone",
             "doctor_id" => "required|exists:users,id",
             "notes" => "sometimes|nullable|string",
-            "date" => "required|date",
-            "time" => "required",
+            "time_id" => "required|exists:schdule_date_times,id",
             "service_ids" => "required|array",
             "service_ids.*" => "required|exists:services,id"
         ];

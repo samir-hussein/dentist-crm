@@ -10,6 +10,6 @@ class SchduleDateFindByIdService extends SchduleDateService
     {
         return $model->load(['schduleDay', 'appointments' => function ($q) {
             $q->where('is_deleted', false)->orderBy("time");
-        }, 'patient']);
+        }, 'appointments.patient']);
     }
 }

@@ -2,7 +2,7 @@
 
 @section('title', 'Admins')
 
-@section('page-path-prefix', 'SETTINGS >> ')
+@section('page-path-prefix', 'SETTINGS > ')
 
 @section('settings-active', 'active-link')
 

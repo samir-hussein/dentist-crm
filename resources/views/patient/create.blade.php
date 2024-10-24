@@ -15,13 +15,23 @@
                     <form action="{{ route('patients.store') }}" method="post">
                         @csrf
                         <div class="form-row">
-                            <div class="form-group col-12">
+                            <div class="form-group col-6">
                                 <label for="name">Full Name</label>
                                 <input type="text" class="form-control" id="name" value="{{ old('name') }}"
                                     name="name" dir="auto">
                                 @error('name')
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="multi-select2" class="d-block">Medical History</label>
+                                <select multiple name="medical_history[]" class="form-control select2-multi d-block w-100"
+                                    id="multi-select2">
+                                    @foreach ($data->medicalHistory as $medicalHistory)
+                                        <option value="{{ $medicalHistory->name }}">{{ $medicalHistory->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-row">
@@ -66,8 +76,8 @@
 
                         <div class="form-row">
                             <div class="form-group col-6">
-                                <label for="simple-select2">Nationality</label>
-                                <select class="form-control select2" id="simple-select2" name="nationality">
+                                <label for="simple-select3">Nationality</label>
+                                <select class="form-control select2" id="simple-select3" name="nationality">
                                     <option {{ old('nationality') == 'afghan' ? 'selected' : '' }} value="afghan">Afghan
                                     </option>
                                     <option {{ old('nationality') == 'albanian' ? 'selected' : '' }} value="albanian">
@@ -140,11 +150,14 @@
                                         value="cape_verdean">Cape Verdean</option>
                                     <option {{ old('nationality') == 'central_african' ? 'selected' : '' }}
                                         value="central_african">Central African</option>
-                                    <option {{ old('nationality') == 'chadian' ? 'selected' : '' }} value="chadian">Chadian
+                                    <option {{ old('nationality') == 'chadian' ? 'selected' : '' }} value="chadian">
+                                        Chadian
                                     </option>
-                                    <option {{ old('nationality') == 'chilean' ? 'selected' : '' }} value="chilean">Chilean
+                                    <option {{ old('nationality') == 'chilean' ? 'selected' : '' }} value="chilean">
+                                        Chilean
                                     </option>
-                                    <option {{ old('nationality') == 'chinese' ? 'selected' : '' }} value="chinese">Chinese
+                                    <option {{ old('nationality') == 'chinese' ? 'selected' : '' }} value="chinese">
+                                        Chinese
                                     </option>
                                     <option {{ old('nationality') == 'colombian' ? 'selected' : '' }} value="colombian">
                                         Colombian</option>

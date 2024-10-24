@@ -4,6 +4,7 @@ namespace App\Http\Services\Appointment;
 
 use App\Http\Services\Patient\PatientStoreService;
 use App\Models\Appointment;
+use App\Models\SchduleDateTime;
 
 class AppointmentStoreService extends AppointmentService
 {
@@ -21,6 +22,8 @@ class AppointmentStoreService extends AppointmentService
             $patient = $this->patientStoreService->boot([
                 'phone' => $data['phone'],
                 'name' => $data['name'],
+                'nationality' => $data['nationality'],
+                'phone2' => isset($data['phone2']) ? $data['phone2'] : null,
                 'gender' => $data['gender'],
                 'date_of_birth' => $data['date_of_birth'],
             ]);
@@ -28,7 +31,7 @@ class AppointmentStoreService extends AppointmentService
             $data['patient_id'] = $patient->id;
         }
 
-        $check_appointment = $this->model->where("patient_id", $data['patient_id'])->where("doctor_id", $data['doctor_id'])->where("date", $data['date'])->first();
+        $check_appointment = $this->model->where("patient_id", $data['patient_id'])->where("doctor_id", $data['doctor_id'])->where("time_id", $data['time_id'])->first();
 
         if ($check_appointment) {
             return $this->error("This appointment already exists.", 400);
@@ -44,6 +47,10 @@ class AppointmentStoreService extends AppointmentService
         }, $data['service_ids']);
 
         $appointment->appointment_services()->insert($services);
+
+        SchduleDateTime::where("id", $data['time_id'])->update([
+            'patient_id' => $data['patient_id'],
+        ]);
 
         return $this->success();
     }

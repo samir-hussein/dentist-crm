@@ -12,6 +12,10 @@ class SchduleDateMakeHolidayService extends SchduleDateService
             "is_holiday" => !$model->is_holiday,
         ]);
 
+        $model->appointments()->update([
+            "is_deleted" => $model->is_holiday,
+        ]);
+
         return $this->success();
     }
 }

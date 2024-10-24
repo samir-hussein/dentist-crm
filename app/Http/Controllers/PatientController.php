@@ -48,7 +48,9 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return $this->view("patient.create");
+        $data = $this->service->necessaryData();
+
+        return $this->view("patient.create", ['data' => $data]);
     }
 
     /**

@@ -12,19 +12,7 @@ class AppointmentGetAllService extends AppointmentService
     public function boot(Request $request)
     {
         // Fetch all columns from your model's table
-        $data = $this->model->with(
-            [
-                "doctor" => function ($q) {
-                    $q->select(['id', 'name']);
-                },
-                "services" => function ($q) {
-                    $q->select(['services.id', 'services.name']);
-                },
-                "patient" => function ($q) {
-                    $q->select(['id', 'name', 'phone']);
-                }
-            ]
-        )->latest()->select('*');
+        $data = $this->model->latest()->select('*');
 
         $tableName = "appointments";
 
@@ -35,6 +23,9 @@ class AppointmentGetAllService extends AppointmentService
             ->addColumn('patientPhone', function ($row) {
                 return $row->patient->phone;
             })
+            ->addColumn('patientPhone2', function ($row) {
+                return $row->patient->phone2;
+            })
             ->addColumn('doctorName', function ($row) {
                 return $row->doctor->name;
             })
@@ -43,29 +34,23 @@ class AppointmentGetAllService extends AppointmentService
                     return $service->name;
                 })->implode(' - ');
             })
-            ->addColumn('formattedTime', function ($row) {
-                return Carbon::parse($row->time)->format('h:i a');
+            ->addColumn('appointment', function ($row) {
+                return Carbon::parse($row->time->time)->format('l Y-m-d h:i a');
             })
             ->filter(function ($query) use ($request, $tableName) {
                 if ($request->has('search') && !empty($request->search['value'])) {
                     $search = $request->search['value'];
 
-                    try {
-                        $formattedTimeSearch = Carbon::createFromFormat('h:i a', $search)->format('H:i');
-                    } catch (\Exception $e) {
-                        $formattedTimeSearch = null;
-                    }
-
                     // Loop through all columns and apply search to each column
                     $columns = Schema::getColumnListing($tableName); // Replace with your table name
-                    $query->where(function ($query) use ($columns, $search, $formattedTimeSearch) {
+                    $query->where(function ($query) use ($columns, $search) {
                         foreach ($columns as $column) {
                             $query->orWhere($column, 'like', "%{$search}%");
                         }
 
                         // Add search for the added columns
                         $query->orWhereHas('patient', function ($q) use ($search) {
-                            $q->where('name', 'like', "%{$search}%")->orWhere("phone", "like", "%{$search}%");
+                            $q->where('name', 'like', "%{$search}%")->orWhere("phone", "like", "%{$search}%")->orWhere("phone2", "like", "%{$search}%");
                         });
 
                         $query->orWhereHas('doctor', function ($q) use ($search) {
@@ -75,12 +60,6 @@ class AppointmentGetAllService extends AppointmentService
                         $query->orWhereHas('services', function ($q) use ($search) {
                             $q->where('name', 'like', "%{$search}%");
                         });
-
-                        // Search for the formatted time if $formattedTimeSearch is valid
-                        if ($formattedTimeSearch) {
-                            // Match the time as "08:33" (exact match with H:i format)
-                            $query->orWhereRaw("DATE_FORMAT(time, '%H:%i') = ?", [$formattedTimeSearch]);
-                        }
                     });
                 }
             })

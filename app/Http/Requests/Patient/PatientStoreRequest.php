@@ -28,7 +28,9 @@ class PatientStoreRequest extends FormRequest
             "gender" => "required|in:Male,Female",
             "nationality" => "required|string",
             "phone2" => "sometimes|string|nullable",
-            "need_invoice" => "required|boolean"
+            "need_invoice" => "required|boolean",
+            "medical_history" => "sometimes|nullable|array",
+            "medical_history.*" => "required|string"
         ];
     }
 }

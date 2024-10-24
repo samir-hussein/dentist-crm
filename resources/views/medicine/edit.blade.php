@@ -2,7 +2,7 @@
 
 @section('title', 'Medicines')
 
-@section('page-path-prefix', 'SETTINGS >> MEDICINE SETTINGS >> ')
+@section('page-path-prefix', 'SETTINGS > MEDICINE SETTINGS > ')
 
 @section('settings-active', 'active-link')
 

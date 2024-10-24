@@ -12,4 +12,5 @@ interface IPatient
     public function update(Patient $patient, array $requestData);
     public function delete(Patient $patient);
     public function findById(Patient $patient);
+    public function necessaryData();
 }

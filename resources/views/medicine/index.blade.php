@@ -5,8 +5,8 @@
 @php
     $backPath = request('searchKey') ? 'medicine-types.index' : 'settings.medicine-settings';
     $prefix = request('searchKey')
-        ? 'SETTINGS >> MEDICINE SETTINGS >> MEDICINE TYPES >> '
-        : 'SETTINGS >> MEDICINE SETTINGS >> ';
+        ? 'SETTINGS > MEDICINE SETTINGS > MEDICINE TYPES > '
+        : 'SETTINGS > MEDICINE SETTINGS > ';
 @endphp
 
 @section('page-path-prefix', $prefix)

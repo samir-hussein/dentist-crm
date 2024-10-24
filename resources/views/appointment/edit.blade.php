@@ -41,15 +41,16 @@
                                 <select class="form-control select2" id="simple-select2" name="patient_id" disabled>
                                     @foreach ($data->patients as $patient)
                                         <option {{ $data->appointment->patient->id == $patient->id ? 'selected' : '' }}
-                                            value="{{ $patient->id }}">{{ $patient->name }} -
-                                            {{ $patient->phone }}
+                                            value="{{ $patient->id }}">#{{ $patient->id }} |
+                                            {{ $patient->name }} |
+                                            {{ $patient->phone }} | {{ $patient->phone2 }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div> <!-- form-group -->
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="doctor_id">Doctor</label>
                                 <select id="doctor_id" name="doctor_id" class="form-control">
                                     @foreach ($data->doctors as $doctor)
@@ -63,21 +64,19 @@
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="date">Appointment Date</label>
-                                <input type="date" class="form-control" id="date"
-                                    value="{{ old('date') ?? $data->appointment->date }}" name="date">
-                                @error('date')
-                                    <p style="color: red">* {{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="time">Appointment Time</label>
-                                <input type="time" class="form-control" id="time"
-                                    value="{{ old('time') ?? $data->appointment->time }}" name="time">
-                                @error('time')
-                                    <p style="color: red">* {{ $message }}</p>
-                                @enderror
+                            <div class="form-group col-md-6">
+                                <label for="simple-select4">Appointment</label>
+                                <select class="form-control select2" id="simple-select4" name="time_id">
+                                    <option value="{{ $data->appointment->time_id }}">
+                                        {{ $data->appointment->time->time->format('l Y-m-d h:i a') }}
+                                    </option>
+                                    @foreach ($data->times as $time)
+                                        <option {{ old('time_id') == $time->id ? 'selected' : '' }}
+                                            value="{{ $time->id }}">
+                                            {{ $time->time->format('l Y-m-d h:i a') }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-row">

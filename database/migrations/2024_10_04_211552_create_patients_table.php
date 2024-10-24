@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("phone");
             $table->string("phone2")->nullable();
             $table->string("nationality");
+            $table->text("medical_history")->nullable();
             $table->boolean('need_invoice')->default(false);
             $table->timestamps();
         });

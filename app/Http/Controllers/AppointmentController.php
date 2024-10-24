@@ -82,6 +82,7 @@ class AppointmentController extends Controller
     public function edit(Appointment $appointment)
     {
         $data = $this->service->findById($appointment);
+
         return $this->view("appointment.edit", ['data' => $data]);
     }
 

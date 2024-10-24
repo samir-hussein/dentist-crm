@@ -2,7 +2,7 @@
 
 @section('title', 'Schdule Dates')
 
-@section('page-path-prefix', 'SETTINGS >> SCHDULE SETTINGS >> ')
+@section('page-path-prefix', 'SETTINGS > SCHDULE SETTINGS > ')
 
 @section('settings-active', 'active-link')
 
@@ -55,9 +55,9 @@
                                                 class="btn btn-primary btn-sm">Save</button>
                                         </form>
                                     </td>
-                                    <td>{{ $data->patient?->name }}</td>
-                                    <td>{{ $data->patient?->phone }}</td>
-                                    <td>{{ $data->patient?->phone2 }}</td>
+                                    <td>{{ $appointment->patient?->name }}</td>
+                                    <td>{{ $appointment->patient?->phone }}</td>
+                                    <td>{{ $appointment->patient?->phone2 }}</td>
                                     <td>
                                         <button data-id="time{{ $appointment->id }}"
                                             data-url="{{ route('times.update', ['time' => $appointment->id]) }}"

@@ -34,10 +34,10 @@
                                 <th>Visit No.</th>
                                 <th>Patient Name</th>
                                 <th>Patient Phone</th>
+                                <th>Patient Phone 2</th>
                                 <th>Doctor Name</th>
                                 <th>Services</th>
-                                <th>Date</th>
-                                <th>Time</th>
+                                <th>Appointment</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -76,6 +76,10 @@
                     name: 'Patient Phone'
                 },
                 {
+                    data: 'patientPhone2',
+                    name: 'Patient Phone 2'
+                },
+                {
                     data: 'doctorName',
                     name: 'Doctor Name'
                 },
@@ -84,12 +88,8 @@
                     name: 'Services'
                 },
                 {
-                    data: 'date',
-                    name: 'Date'
-                },
-                {
-                    data: 'formattedTime',
-                    name: 'Time'
+                    data: 'appointment',
+                    name: 'Appointment'
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically
@@ -107,9 +107,9 @@
                         }
 
                         return `
-                            <a href="${completedUrl}" class="btn btn-sm btn-success">Mark as completed</a>
-                            <a href="${editUrl}" class="btn btn-sm btn-warning">Edit</a>
-                            <form method="POST" action="${deleteUrl}" class="d-inline"">
+                            <a href="${completedUrl}" class="mb-1 btn btn-sm btn-success">Mark as completed</a>
+                            <a href="${editUrl}" class="btn mb-1 btn-sm btn-warning">Edit</a>
+                            <form method="POST" action="${deleteUrl}" class="mb-1 d-inline"">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>

@@ -17,7 +17,8 @@ class Patient extends Model
         'phone2',
         'phone',
         'nationality',
-        'need_invoice'
+        'need_invoice',
+        'medical_history'
     ];
 
     // Accessor to calculate age

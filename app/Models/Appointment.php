@@ -13,8 +13,7 @@ class Appointment extends Model
     protected $fillable = [
         'patient_id',
         'doctor_id',
-        'date',
-        'time',
+        'time_id',
         'notes',
         'completed',
         'visit_no'
@@ -27,18 +26,20 @@ class Appointment extends Model
 
         // Before creating an appointment, set the visit_no
         static::creating(function ($appointment) {
-            // Check if there's an existing appointment on the same date
-            $lastVisitNo = Appointment::where('date', $appointment->date)
-                ->max('visit_no');
+            // Check if there's an existing appointment on the same date and time
+            $lastVisitNo = Appointment::join('schdule_date_times', 'appointments.time_id', '=', 'schdule_date_times.id')
+                ->whereDate('schdule_date_times.time', '=', $appointment->time->time->format('Y-m-d'))
+                ->max('appointments.visit_no');
 
             // If there's no previous visit number for that date, start from 1, else increment by 1
             $appointment->visit_no = $lastVisitNo ? $lastVisitNo + 1 : 1;
         });
 
         static::updating(function ($appointment) {
-            // Check if there's an existing appointment on the same date
-            $lastVisitNo = Appointment::where('date', $appointment->date)
-                ->max('visit_no');
+            // Check if there's an existing appointment on the same date and time
+            $lastVisitNo = Appointment::join('schdule_date_times', 'appointments.time_id', '=', 'schdule_date_times.id')
+                ->whereDate('schdule_date_times.time', '=', $appointment->time->time->format('Y-m-d'))
+                ->max('appointments.visit_no');
 
             // If there's no previous visit number for that date, start from 1, else increment by 1
             $appointment->visit_no = $lastVisitNo ? $lastVisitNo + 1 : 1;
@@ -63,6 +64,11 @@ class Appointment extends Model
     public function appointment_services()
     {
         return $this->hasMany(AppointmentService::class);
+    }
+
+    public function time()
+    {
+        return $this->belongsTo(SchduleDateTime::class, 'time_id');
     }
 
     /**

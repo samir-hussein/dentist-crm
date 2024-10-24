@@ -2,7 +2,7 @@
 
 @section('title', 'Lab Services')
 
-@section('page-path-prefix', 'SETTINGS >> LAB SETTINGS >> ')
+@section('page-path-prefix', 'SETTINGS > LAB SETTINGS > ')
 
 @section('settings-active', 'active-link')
 
