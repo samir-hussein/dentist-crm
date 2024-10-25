@@ -236,7 +236,7 @@
 
                 selectedTooth = toothNumber;
 
-                if (selectedTeeth.length > 0) {
+                if (selectedTooth != 0) {
                     $("#div-diagnosis").removeClass("invisible");
                 } else {
                     $("#div-diagnosis").addClass("invisible");
@@ -251,23 +251,16 @@
         })
 
         function clearDataTeeth() {
-            selectedTooth = [];
+            selectedTooth = 0;
             $("polygon").removeClass("selected");
             $("path").removeClass("selected");
-            $(".tooth-chart").each(function() {
-                $(this).data('selectedTeeth', []);
-            });
-            $(".hidden-tooth-inputs").empty();
             $("#div-diagnosis").addClass("invisible");
         }
 
         function getTreatmentsTabs() {
             const diagnose = $("#simple-select2").val();
 
-            if (diagnose != 0 && selectedTooth.length > 0) {
-                console.log(diagnose);
-                console.log(selectedTooth);
-
+            if (diagnose != 0 && selectedTooth != 0) {
                 $.ajax({
                     url: "{{ route('treatment.tabs') }}",
                     type: "GET",

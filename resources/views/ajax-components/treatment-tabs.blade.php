@@ -27,56 +27,120 @@
             @if ($loop->first)
                 <div class="tab-pane fade show active" id="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
                     role="tabpanel" aria-labelledby="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}-tab">
-                    @foreach ($treatment->treatmentType->sections as $section)
-                        <div class="card-body">
-                            <h6>{{ $section->title }}</h6>
-
-                            @if ($section->multi_selection)
-                                @foreach ($section->attributes as $attribute)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input"
-                                            id="{{ $section->id }}-{{ $attribute->id }}">
-                                        <label class="custom-control-label"
-                                            for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="{{ $section->id }}-{{ $attribute->id }}"
-                                        name="customRadio" class="custom-control-input">
-                                    <label class="custom-control-label"
-                                        for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
+                    <div class="row">
+                        @foreach ($treatment->treatmentType->sections as $section)
+                            <div class="card-body col-12 col-md-6">
+                                <h6>{{ $section->title }}</h6>
+                                @if ($section->multi_selection)
+                                    @foreach ($section->attributes as $attribute)
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input"
+                                                id="{{ $section->id }}-{{ $attribute->id }}">
+                                            <label class="custom-control-label"
+                                                for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
+                                        </div>
+                                        @if ($attribute->has_inputs && count($attribute->inputs) > 0)
+                                            <div class="mt-2 d-none">
+                                                @foreach ($attribute->inputs as $input)
+                                                    <div class="form-group row">
+                                                        <label for="{{ $input->id }}"
+                                                            class="col-sm-3 col-form-label">{{ $input->name }}</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control"
+                                                                id="{{ $input->id }}" value="{{ $input->value }}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @foreach ($section->attributes as $attribute)
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="{{ $section->id }}-{{ $attribute->id }}"
+                                                name="customRadio" class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
+                                        </div>
+                                        @if ($attribute->has_inputs && count($attribute->inputs) > 0)
+                                            <div class="mt-2 d-none">
+                                                @foreach ($attribute->inputs as $input)
+                                                    <div class="form-group row">
+                                                        <label for="{{ $input->id }}"
+                                                            class="col-sm-3 col-form-label">{{ $input->name }}</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control"
+                                                                id="{{ $input->id }}" value="{{ $input->value }}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @else
                 <div class="tab-pane fade" id="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
                     role="tabpanel" aria-labelledby="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}-tab">
-                    @foreach ($treatment->treatmentType->sections as $section)
-                        <div class="card-body">
-                            <h6>{{ $section->title }}</h6>
+                    <div class="row">
+                        @foreach ($treatment->treatmentType->sections as $section)
+                            <div class="card-body col-12 col-md-6">
+                                <h6>{{ $section->title }}</h6>
 
-                            @if ($section->multi_selection)
-                                @foreach ($section->attributes as $attribute)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input"
-                                            id="{{ $section->id }}-{{ $attribute->id }}">
-                                        <label class="custom-control-label"
-                                            for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="{{ $section->id }}-{{ $attribute->id }}"
-                                        name="customRadio" class="custom-control-input">
-                                    <label class="custom-control-label"
-                                        for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
+                                @if ($section->multi_selection)
+                                    @foreach ($section->attributes as $attribute)
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input"
+                                                id="{{ $section->id }}-{{ $attribute->id }}">
+                                            <label class="custom-control-label"
+                                                for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
+                                        </div>
+                                        @if ($attribute->has_inputs && count($attribute->inputs) > 0)
+                                            <div class="mt-2 d-none">
+                                                @foreach ($attribute->inputs as $input)
+                                                    <div class="form-group row">
+                                                        <label for="{{ $input->id }}"
+                                                            class="col-sm-3 col-form-label">{{ $input->name }}</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control"
+                                                                id="{{ $input->id }}" value="{{ $input->value }}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @foreach ($section->attributes as $attribute)
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="{{ $section->id }}-{{ $attribute->id }}"
+                                                name="customRadio" class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
+                                        </div>
+                                        @if ($attribute->has_inputs && count($attribute->inputs) > 0)
+                                            <div class="mt-2 d-none">
+                                                @foreach ($attribute->inputs as $input)
+                                                    <div class="form-group row">
+                                                        <label for="{{ $input->id }}"
+                                                            class="col-sm-3 col-form-label">{{ $input->name }}</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control"
+                                                                id="{{ $input->id }}"
+                                                                value="{{ $input->value }}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @endif
         @endforeach
