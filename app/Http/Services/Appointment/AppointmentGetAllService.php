@@ -2,10 +2,25 @@
 
 namespace App\Http\Services\Appointment;
 
+use App\Models\Appointment;
+use App\Http\Services\SchduleDate\SchduleDateStoreService;
+
 class AppointmentGetAllService extends AppointmentService
 {
+    private $schduleDateStoreService;
+
+    public function __construct(
+        SchduleDateStoreService $schduleDateStoreService,
+        Appointment $model,
+    ) {
+        parent::__construct($model);
+        $this->schduleDateStoreService = $schduleDateStoreService;
+    }
+
     public function boot()
     {
+        $this->schduleDateStoreService->boot();
+
         // Fetch all columns from your model's table
         $data = $this->model->with([
             "patient" => function ($q) {
@@ -24,6 +39,7 @@ class AppointmentGetAllService extends AppointmentService
             ->orderBy('schdule_date_times.time')
             ->select("appointments.*")
             ->where("completed", false)
+            ->where("schdule_date_times.is_deleted", false)
             ->get()->map(function ($appointment) {
                 $appointment->selectedServices = $appointment->services->map(function ($service) {
                     return $service->name;

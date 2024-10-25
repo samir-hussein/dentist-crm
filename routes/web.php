@@ -18,6 +18,7 @@ use App\Http\Controllers\SchduleDateController;
 use App\Http\Controllers\SchduleDayController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TreatmentSessionController;
 use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\UserController;
 
@@ -141,6 +142,9 @@ Route::middleware("auth")->group(function () {
     Route::resource('appointments', AppointmentController::class)->missing(function () {
         return abort(404);
     });
+
+    Route::get("appointments/{appointment}/treatment-session", [TreatmentSessionController::class, 'index'])->name('appointments.treatment');
+    Route::get("treatment-tabs", [TreatmentSessionController::class, 'getTreatmentTabs'])->name('treatment.tabs');
 
     Route::delete("user/image", [UserController::class, "deleteProfileImage"])->name('user.image.delete');
     Route::put("user/profile", [UserController::class, "update"])->name('user.profile.update');

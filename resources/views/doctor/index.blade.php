@@ -55,14 +55,13 @@
                         <div class="card-text my-2">
                             <strong class="card-title my-0">{{ $row->name }}</strong>
                             <p class="text-muted mb-0">{{ $row->gender }}</p>
+                            <p class="text-muted mb-0">{{ $row->email }}</p>
                             <p><span class="badge badge-light text-muted">{{ $row->phone }}</span></p>
                         </div>
                     </div> <!-- ./card-text -->
                     <div class="card-footer">
                         <div class="row align-items-center justify-content-between">
-                            <div class="col-auto">
-                                <a href=""><button class="btn btn-sm btn-info">Profile</button></a>
-                            </div>
+
                             <div class="col-auto">
                                 <form action="{{ route('doctors.destroy', ['doctor' => $row->id]) }}" method="post">
                                     @csrf

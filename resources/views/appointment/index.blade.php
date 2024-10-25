@@ -58,6 +58,10 @@
                                         <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
                                             class="btn mb-1 btn-sm btn-success">Completed</a>
 
+                                        <a href="#" class="btn mb-1 btn-sm btn-warning"
+                                            onclick="window.open('{{ route('appointments.treatment', ['appointment' => $appointment->id]) }}', 'fullscreenWindow', 'width=' + screen.width + ',height=' + screen.height + ',left=0,top=0'); return false;">Treatment
+                                            Session</a>
+
                                         <form class="d-inline mb-1" method="POST"
                                             action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">
                                             @csrf

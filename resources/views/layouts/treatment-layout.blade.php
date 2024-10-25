@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="{{ asset('css/app-light.css') }}" id="lightTheme">
     <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme" disabled>
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/splide.min.css') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -41,31 +42,24 @@
             background-color: rgb(130, 130, 130) !important;
             color: white !important;
         }
+
+        body,
+        html {
+            overflow-x: hidden
+        }
     </style>
 
     @yield('style')
 </head>
 
-<body class="vertical dark">
+<body class="horizontal dark">
 
     <div class="wrapper">
-        @include('includes.nav', ['currentRouteName' => $currentRouteName])
-        @include('includes.aside', ['currentRouteName' => $currentRouteName])
-        <main role="main" class="main-content">
+        {{-- @include('includes.nav', ['currentRouteName' => $currentRouteName]) --}}
+        <main role="main" class="main-content mt-1">
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-12">
-                        <div class="row align-items-center mb-2 p-2" id="header-path">
-                            <div class="col">
-                                <h2 class="h5 mb-0 page-title">
-                                    @yield('page-path-prefix')
-                                    {{ strtoupper(rtrim(str_replace(['.', '-', 'index'], [' > ', ' ', ''], $currentRouteName), ' > ')) }}
-                                </h2>
-                            </div>
-                            <div class="col-auto">
-                                @yield('buttons')
-                            </div>
-                        </div>
                         @yield('content')
                     </div> <!-- .col-12 -->
                 </div> <!-- .row -->
@@ -108,6 +102,7 @@
     <script src='{{ asset('js/jquery.dataTables.min.js') }}'></script>
     <script src='{{ asset('js/dataTables.bootstrap4.min.js') }}'></script>
     <script src='{{ asset('js/select2.min.js') }}'></script>
+    <script src='{{ asset('js/splide.min.js') }}'></script>
     <script>
         $('.select2').select2({
             theme: 'bootstrap4',
