@@ -16,12 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger("patient_id");
             $table->unsignedBigInteger("doctor_id");
             $table->integer("visit_no");
-            $table->unsignedBigInteger("time_id");
+            $table->unsignedBigInteger("time_id")->nullable();
             $table->text("notes")->nullable();
             $table->boolean("completed")->default(false);
             $table->foreign("patient_id")->references("id")->on("patients")->onDelete("cascade")->onUpdate("cascade");
             $table->foreign("doctor_id")->references("id")->on("users")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreign("time_id")->references("id")->on("schdule_date_times")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign("time_id")->references("id")->on("schdule_date_times")->onDelete("set null")->onUpdate("cascade");
             $table->timestamps();
         });
     }

@@ -3,6 +3,8 @@
 namespace App\Http\Services\TreatmentSession;
 
 use App\Models\DiagnosisTreatment;
+use App\Models\Lab;
+use App\Models\LabService;
 
 class TreatmentSessionTabsService extends TreatmentSessionService
 {
@@ -13,6 +15,9 @@ class TreatmentSessionTabsService extends TreatmentSessionService
                 ->orWhereJsonContains('childTooths', $data['teeth']);
         }])->get();
 
-        return view("ajax-components.treatment-tabs", ['treatments' => $treatments])->render();
+        $labs = Lab::all();
+        $labsServices = LabService::all();
+
+        return view("ajax-components.treatment-tabs", ['treatments' => $treatments, 'labs' => $labs, 'labsServices' => $labsServices])->render();
     }
 }

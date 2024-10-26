@@ -34,6 +34,14 @@
             </li>
 
             <li class="nav-item w-100">
+                <a class="nav-link {{ strpos($currentRouteName, 'prescription') !== false ? 'active-link' : '' }}"
+                    href="{{ route('prescription.index') }}">
+                    <i class="fe fe-calendar fe-16"></i>
+                    <span class="ml-3 item-text">Prescription</span>
+                </a>
+            </li>
+
+            <li class="nav-item w-100">
                 <a class="nav-link {{ strpos($currentRouteName, 'patients') !== false ? 'active-link' : '' }}"
                     href="{{ route('patients.index') }}">
                     <i class="fe fe-users fe-16"></i>

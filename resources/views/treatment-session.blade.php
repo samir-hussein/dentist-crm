@@ -42,6 +42,10 @@
             height: 100%;
             object-fit: contain;
         }
+
+        .select2 {
+            width: 100% !important;
+        }
     </style>
 @endsection
 
@@ -118,7 +122,12 @@
         <div class="col-12 col-md-7">
             <div class="mb-2">
                 <div class="card shadow">
-                    <div class="card-body"></div>
+                    <div class="card-body">
+                        <button class="btn btn-danger">Save & Close</button>
+                        <button class="btn btn-primary">Save & Start New Session</button>
+                        <button class="btn btn-warning">Prescription</button>
+                        <button class="btn btn-info">Selected Tooth History</button>
+                    </div>
                 </div>
             </div>
             <div>
@@ -154,22 +163,8 @@
                         <h5 class="card-title">Tooth</h5>
                         <div id="teeth" class="splide" role="group" aria-label="Splide">
                             <div class="splide__track">
-                                <ul class="splide__list">
-                                    <li class="splide__slide"><img src="{{ asset('images/female_avatar.jpg') }}"
-                                            alt="">
-                                    </li>
-                                    <li class="splide__slide"><img src="{{ asset('images/female_avatar.jpg') }}"
-                                            alt="">
-                                    </li>
-                                    <li class="splide__slide"><img src="{{ asset('images/female_avatar.jpg') }}"
-                                            alt="">
-                                    </li>
-                                    <li class="splide__slide"><img src="{{ asset('images/female_avatar.jpg') }}"
-                                            alt="">
-                                    </li>
-                                    <li class="splide__slide"><img src="{{ asset('images/female_avatar.jpg') }}"
-                                            alt="">
-                                    </li>
+                                <ul class="splide__list" id="tooth-panorama-slider">
+
                                 </ul>
                             </div>
                         </div>
@@ -196,6 +191,10 @@
             </div> <!-- small modal -->
         @endforeach
     @endif
+
+    <div id="tooth-modals">
+
+    </div>
 @endsection
 
 @section('script')
@@ -243,6 +242,7 @@
                 }
 
                 getTreatmentsTabs();
+                getToothPanorama(toothNumber);
             });
         });
 
@@ -269,12 +269,61 @@
                         teeth: selectedTooth
                     },
                     success: function(response) {
-                        console.log(response.html);
-
                         $("#treatment-tabs").html(response.html);
+
+                        // Initialize Select2 on newly loaded elements
+                        $('.select2').select2({
+                            theme: 'bootstrap4',
+                        });
+
+                        $('.select2-multi').select2({
+                            multiple: true,
+                            theme: 'bootstrap4',
+                        });
                     }
                 });
             }
         }
+
+        function getToothPanorama(toothNumber) {
+            $.ajax({
+                url: `/patient/{{ $data->appointment->patient->id }}/tooth-panorama/${toothNumber}`,
+                type: "GET",
+                success: function(response) {
+                    $("#tooth-panorama-slider").html(response.html.slider);
+                    $("#tooth-modals").html(response.html.modals);
+                }
+            });
+        }
+
+        $(document).on('click', ".checkbox-inp", function() {
+            const id = $(this).data('id');
+            const checked = $(this).is(':checked');
+
+            if (checked) {
+                $('#' + id).removeClass('d-none');
+            } else {
+                $('#' + id).addClass('d-none');
+            }
+        })
+
+        let lastChecked = null;
+
+        // Use event delegation on the document or a static container
+        document.addEventListener('click', function(event) {
+            if (event.target.matches('input[type="radio"]')) {
+                const id = $(event.target).data('id');
+                const section = id.split('-')[0];
+                if (lastChecked === event.target) {
+                    $('#' + id).addClass('d-none');
+                    event.target.checked = false;
+                    lastChecked = null;
+                } else {
+                    $('.' + section).addClass('d-none');
+                    $('#' + id).removeClass('d-none');
+                    lastChecked = event.target;
+                }
+            }
+        });
     </script>
 @endsection

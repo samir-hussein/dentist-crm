@@ -1,26 +1,27 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DiagnosisController;
-use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\DoseController;
-use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\LabController;
-use App\Http\Controllers\LabServiceController;
-use App\Http\Controllers\MedicalHistoryController;
-use App\Http\Controllers\MedicineController;
-use App\Http\Controllers\MedicineTypeController;
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\SchduleDateController;
-use App\Http\Controllers\SchduleDayController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\StaffController;
-use App\Http\Controllers\TreatmentSessionController;
-use App\Http\Controllers\TreatmentTypeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DoseController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\DiagnosisController;
+use App\Http\Controllers\LabServiceController;
+use App\Http\Controllers\SchduleDayController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\SchduleDateController;
+use App\Http\Controllers\MedicineTypeController;
+use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\TreatmentTypeController;
+use App\Http\Controllers\MedicalHistoryController;
+use App\Http\Controllers\TreatmentSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,8 +144,11 @@ Route::middleware("auth")->group(function () {
         return abort(404);
     });
 
+    Route::get("prescription", [PrescriptionController::class, 'index'])->name('prescription.index');
+
     Route::get("appointments/{appointment}/treatment-session", [TreatmentSessionController::class, 'index'])->name('appointments.treatment');
     Route::get("treatment-tabs", [TreatmentSessionController::class, 'getTreatmentTabs'])->name('treatment.tabs');
+    Route::get("patient/{patient}/tooth-panorama/{tooth_number}", [TreatmentSessionController::class, 'getToothPanorama'])->name('tooth.panorama');
 
     Route::delete("user/image", [UserController::class, "deleteProfileImage"])->name('user.image.delete');
     Route::put("user/profile", [UserController::class, "update"])->name('user.profile.update');

@@ -3,16 +3,16 @@
         @foreach ($treatments as $treatment)
             @if ($loop->first)
                 <li class="nav-item">
-                    <a class="nav-link active" id="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}-tab"
-                        data-toggle="pill" href="#{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
-                        role="tab" aria-controls="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
+                    <a class="nav-link active" id="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}-tab"
+                        data-toggle="pill" href="#{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
+                        role="tab" aria-controls="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
                         aria-selected="true">{{ $treatment->treatmentType->name }}</a>
                 </li>
             @else
                 <li class="nav-item">
-                    <a class="nav-link" id="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}-tab"
-                        data-toggle="pill" href="#{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
-                        role="tab" aria-controls="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
+                    <a class="nav-link" id="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}-tab"
+                        data-toggle="pill" href="#{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
+                        role="tab" aria-controls="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
                         aria-selected="false">{{ $treatment->treatmentType->name }}</a>
                 </li>
             @endif
@@ -25,8 +25,8 @@
     <div class="tab-content mb-1" id="pills-tabContent">
         @foreach ($treatments as $treatment)
             @if ($loop->first)
-                <div class="tab-pane fade show active" id="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
-                    role="tabpanel" aria-labelledby="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}-tab">
+                <div class="tab-pane fade show active" id="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
+                    role="tabpanel" aria-labelledby="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}-tab">
                     <div class="row">
                         @foreach ($treatment->treatmentType->sections as $section)
                             <div class="card-body col-12 col-md-6">
@@ -34,13 +34,16 @@
                                 @if ($section->multi_selection)
                                     @foreach ($section->attributes as $attribute)
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input"
+                                            <input type="checkbox"
+                                                data-id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}"
+                                                class="checkbox-inp custom-control-input"
                                                 id="{{ $section->id }}-{{ $attribute->id }}">
                                             <label class="custom-control-label"
                                                 for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                         </div>
                                         @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                            <div class="mt-2 d-none">
+                                            <div class="mt-2 d-none"
+                                                id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}">
                                                 @foreach ($attribute->inputs as $input)
                                                     <div class="form-group row">
                                                         <label for="{{ $input->id }}"
@@ -57,13 +60,16 @@
                                 @else
                                     @foreach ($section->attributes as $attribute)
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" id="{{ $section->id }}-{{ $attribute->id }}"
-                                                name="customRadio" class="custom-control-input">
+                                            <input type="radio"
+                                                data-id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}"
+                                                id="{{ $section->id }}-{{ $attribute->id }}" name="customRadio"
+                                                class="custom-control-input">
                                             <label class="custom-control-label"
                                                 for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                         </div>
                                         @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                            <div class="mt-2 d-none">
+                                            <div class="mt-2 d-none {{ str_replace(' ', '_', $section->title) }}"
+                                                id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}">
                                                 @foreach ($attribute->inputs as $input)
                                                     <div class="form-group row">
                                                         <label for="{{ $input->id }}"
@@ -81,10 +87,40 @@
                             </div>
                         @endforeach
                     </div>
+                    @if ($treatment->treatmentType->need_labs)
+                        <h6>Lab Service</h6>
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label for="select{{ $treatment->treatmentType->id }}" class="d-block">Services</label>
+                                <select multiple class="form-control select2-multi d-block w-100"
+                                    id="select{{ $treatment->treatmentType->id }}">
+                                    @foreach ($labsServices as $service)
+                                        <option value="{{ $service->id }}">{{ $service->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12 col-md-6">
+                                <label for="simple-select{{ $treatment->treatmentType->id }}">Labs</label>
+                                <select class="form-control select2"
+                                    id="simple-select{{ $treatment->treatmentType->id }}">
+                                    @foreach ($labs as $lab)
+                                        <option value="{{ $lab->id }}">{{ $lab->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div> <!-- form-group -->
+                            <div class="form-group col-12 col-md-6">
+                                <label>Date</label>
+                                <input type="date" class="form-control">
+                            </div> <!-- form-group -->
+                        </div>
+                    @endif
                 </div>
             @else
-                <div class="tab-pane fade" id="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}"
-                    role="tabpanel" aria-labelledby="{{ str_replace(' ', '-', $treatment->treatmentType->name) }}-tab">
+                <div class="tab-pane fade" id="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
+                    role="tabpanel" aria-labelledby="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}-tab">
                     <div class="row">
                         @foreach ($treatment->treatmentType->sections as $section)
                             <div class="card-body col-12 col-md-6">
@@ -93,20 +129,24 @@
                                 @if ($section->multi_selection)
                                     @foreach ($section->attributes as $attribute)
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input"
+                                            <input type="checkbox"
+                                                data-id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}"
+                                                class="checkbox-inp custom-control-input"
                                                 id="{{ $section->id }}-{{ $attribute->id }}">
                                             <label class="custom-control-label"
                                                 for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                         </div>
                                         @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                            <div class="mt-2 d-none">
+                                            <div class="mt-2 d-none"
+                                                id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}">
                                                 @foreach ($attribute->inputs as $input)
                                                     <div class="form-group row">
                                                         <label for="{{ $input->id }}"
                                                             class="col-sm-3 col-form-label">{{ $input->name }}</label>
                                                         <div class="col-sm-9">
                                                             <input type="text" class="form-control"
-                                                                id="{{ $input->id }}" value="{{ $input->value }}">
+                                                                id="{{ $input->id }}"
+                                                                value="{{ $input->value }}">
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -116,13 +156,16 @@
                                 @else
                                     @foreach ($section->attributes as $attribute)
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" id="{{ $section->id }}-{{ $attribute->id }}"
-                                                name="customRadio" class="custom-control-input">
+                                            <input type="radio"
+                                                data-id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}"
+                                                id="{{ $section->id }}-{{ $attribute->id }}" name="customRadio"
+                                                class="custom-control-input">
                                             <label class="custom-control-label"
                                                 for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                         </div>
                                         @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                            <div class="mt-2 d-none">
+                                            <div class="mt-2 d-none {{ str_replace(' ', '_', $section->title) }}"
+                                                id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}">
                                                 @foreach ($attribute->inputs as $input)
                                                     <div class="form-group row">
                                                         <label for="{{ $input->id }}"
@@ -141,6 +184,37 @@
                             </div>
                         @endforeach
                     </div>
+                    @if ($treatment->treatmentType->need_labs)
+                        <h6>Lab Service</h6>
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label for="select{{ $treatment->treatmentType->id }}"
+                                    class="d-block">Services</label>
+                                <select multiple class="form-control select2-multi d-block w-100"
+                                    id="select{{ $treatment->treatmentType->id }}">
+                                    @foreach ($labsServices as $service)
+                                        <option value="{{ $service->id }}">{{ $service->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12 col-md-6">
+                                <label for="simple-select{{ $treatment->treatmentType->id }}">Labs</label>
+                                <select class="form-control select2"
+                                    id="simple-select{{ $treatment->treatmentType->id }}">
+                                    @foreach ($labs as $lab)
+                                        <option value="{{ $lab->id }}">{{ $lab->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div> <!-- form-group -->
+                            <div class="form-group col-12 col-md-6">
+                                <label>Date</label>
+                                <input type="date" class="form-control">
+                            </div> <!-- form-group -->
+                        </div>
+                    @endif
                 </div>
             @endif
         @endforeach

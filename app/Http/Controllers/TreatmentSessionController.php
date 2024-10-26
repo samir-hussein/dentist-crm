@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Interfaces\ITreatmentSession;
-use App\Http\Requests\TreatmentSession\TreatmentTabsRequest;
+use App\Models\Patient;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Http\Interfaces\ITreatmentSession;
+use App\Http\Requests\TreatmentSession\TreatmentTabsRequest;
 
 class TreatmentSessionController extends Controller
 {
@@ -27,6 +28,13 @@ class TreatmentSessionController extends Controller
         $data = $request->validated();
 
         $html = $this->service->tabs($data);
+
+        return response()->json(['html' => $html]);
+    }
+
+    public function getToothPanorama(Patient $patient, string $toothNumber)
+    {
+        $html = $this->service->toothPanorama($patient, $toothNumber);
 
         return response()->json(['html' => $html]);
     }
