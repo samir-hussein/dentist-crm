@@ -2,9 +2,11 @@
 
 namespace App\Http\Services\TreatmentSession;
 
-use App\Models\Diagnosis;
-use Illuminate\Database\Eloquent\Model;
 use stdClass;
+use App\Models\Dose;
+use App\Models\Diagnosis;
+use App\Models\MedicineType;
+use Illuminate\Database\Eloquent\Model;
 
 class TreatmentSessionStartService extends TreatmentSessionService
 {
@@ -19,6 +21,14 @@ class TreatmentSessionStartService extends TreatmentSessionService
             ];
         });
         $data->diagnosis = Diagnosis::all();
+
+        $data->medicines = MedicineType::with('medicines')->get()->map(function ($row) {
+            $row->medicine = $row->medicines->pluck('name'); // Use pluck to directly get an array of names
+            unset($row->medicines);
+            return $row;
+        });
+
+        $data->doses = Dose::pluck("dose");
 
         unset($data->appointment->patient->media);
 

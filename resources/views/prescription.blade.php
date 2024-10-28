@@ -11,9 +11,9 @@
                     <div class="form-row">
                         <div class="form-group col-12">
                             <label>Patient</label>
-                            <select class="form-control select2" name="patient_id">
+                            <select class="form-control select2" name="patient">
                                 @foreach ($data->patients as $patient)
-                                    <option value="{{ $patient->id }}">#{{ $patient->id }} |
+                                    <option value="{{ $patient->name }}">#{{ $patient->id }} |
                                         {{ $patient->name }} |
                                         {{ $patient->phone }} | {{ $patient->phone2 }}
                                     </option>
@@ -25,7 +25,7 @@
                     <div class="form-row">
                         <div class="form-group col-12">
                             <label>Diagnose</label>
-                            <select class="form-control select2" name="patient_id">
+                            <select class="form-control select2" name="diagnose">
                                 @foreach ($data->diagnosis as $diagnose)
                                     <option value="{{ $diagnose }}">
                                         {{ $diagnose }}
@@ -50,7 +50,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Medicine</label>
-                                <select class="form-control select2 medicines-options" name="patient_id">
+                                <select class="form-control select2 medicines-options" name="medicines">
                                     @foreach ($data->medicines[0]->medicine as $medicine)
                                         <option value="{{ $medicine }}">
                                             {{ $medicine }}
@@ -60,7 +60,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Dose</label>
-                                <select class="form-control select2" name="patient_id">
+                                <select class="form-control select2 dose" name="doses">
                                     @foreach ($data->doses as $dose)
                                         <option value="{{ $dose }}">
                                             {{ $dose }}
@@ -74,7 +74,39 @@
                     <div class="mb-2">
                         <button type="button" id="add-medicine" class="btn btn-warning">Add Medicine</button>
                     </div>
-                    <button type="button" class="btn btn-primary">Print</button>
+                    <div id="print-area" style="display:none">
+                        <table style="width: 80%; margin-top:110px">
+                            <tbody>
+                                <tr>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Date</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                        {{ date('Y-m-d') }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Name</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive"
+                                        id="print-patient-name"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Diagnosis</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive"
+                                        id="print-diagnosis"></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 60px;font-family:cursive;font-weight:bolder">R/</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="width: 85%;margin:auto;margin-top:15px">
+                            <tbody id="print-medicines-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" id="generate-print" class="btn btn-primary">Print</button>
                 </div> <!-- /. card-body -->
             </div> <!-- /. card -->
         </div> <!-- /. col -->
@@ -119,7 +151,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Medicine</label>
-                                <select class="form-control medicines-options select2" name="patient_id">
+                                <select class="form-control medicines-options select2" name="medicines">
                                     @foreach ($data->medicines[0]->medicine as $medicine)
                                         <option value="{{ $medicine }}">
                                             {{ $medicine }}
@@ -129,7 +161,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Dose</label>
-                                <select class="form-control select2" name="patient_id">
+                                <select class="form-control select2 dose" name="doses">
                                     @foreach ($data->doses as $dose)
                                         <option value="{{ $dose }}">
                                             {{ $dose }}
@@ -142,6 +174,45 @@
                                 </div>
                         </div>
             `);
+        });
+
+        $(document).ready(function() {
+            $("#generate-print").click(function() {
+                // Gather data for printing
+                const patientName = $("select[name='patient'] option:selected").val().trim();
+                const diagnosis = $("select[name='diagnose']").find('option:selected').text()
+                    .trim(); // Diagnose select
+
+                // Fill in data in print section
+                $("#print-patient-name").text(patientName);
+                $("#print-diagnosis").text(diagnosis);
+
+                // Medicines and doses
+                let medicineList = "";
+                $("#medicines .form-row").each(function() {
+                    const medicine = $(this).find(".medicines-options option:selected").text()
+                        .trim();
+                    const dose = $(this).find(".dose option:selected").text().trim();
+                    medicineList +=
+                        `<tr><td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">${medicine}</td><td style="font-size: 19px;font-family: cursive"> ${dose}</td></tr>`;
+                });
+                $("#print-medicines-list").html(medicineList);
+
+                // Create an iFrame for printing
+                let printWindow = window.open('', '_blank', 'width=1200,height=600');
+                printWindow.document.write(`
+                <html>
+                <head></head>
+                <body>${document.getElementById("print-area").innerHTML}</body>
+                </html>
+            `);
+                printWindow.document.close(); // Finish writing to iFrame
+                printWindow.focus();
+                printWindow.print();
+                printWindow.onafterprint = function() {
+                    printWindow.close();
+                };
+            });
         });
     </script>
 @endsection
