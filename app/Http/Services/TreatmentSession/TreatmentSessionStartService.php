@@ -13,13 +13,14 @@ class TreatmentSessionStartService extends TreatmentSessionService
     public function boot(Model $model)
     {
         $data = new stdClass;
-        $data->appointment = $model->load(['patient']);
-        $data->panorama = $data->appointment->patient->getMedia('panorama')->map(function ($media) {
+        $data->patient = $model;
+        $data->panorama = $data->patient->getMedia('panorama')->sortByDesc('created_at')->map(function ($media) {
             return [
                 "id" => $media->id,
                 "url" => $media->getUrl()
             ];
         });
+
         $data->diagnosis = Diagnosis::all();
 
         $data->medicines = MedicineType::with('medicines')->get()->map(function ($row) {
@@ -30,7 +31,7 @@ class TreatmentSessionStartService extends TreatmentSessionService
 
         $data->doses = Dose::pluck("dose");
 
-        unset($data->appointment->patient->media);
+        unset($data->patient->media);
 
         return $data;
     }

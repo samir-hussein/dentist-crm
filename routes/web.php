@@ -146,9 +146,13 @@ Route::middleware("auth")->group(function () {
 
     Route::get("prescription", [PrescriptionController::class, 'index'])->name('prescription.index');
 
-    Route::get("appointments/{appointment}/treatment-session", [TreatmentSessionController::class, 'index'])->name('appointments.treatment');
+    Route::get("appointments/{patient}/treatment-session", [TreatmentSessionController::class, 'index'])->name('appointments.treatment');
     Route::get("treatment-tabs", [TreatmentSessionController::class, 'getTreatmentTabs'])->name('treatment.tabs');
     Route::get("patient/{patient}/tooth-panorama/{tooth_number}", [TreatmentSessionController::class, 'getToothPanorama'])->name('tooth.panorama');
+    Route::post("panorama/{patient}/upload-files", [TreatmentSessionController::class, 'panoramaUploadFiles'])->name('panorama.uploadFiles');
+    Route::delete("panorama/{patient}/{id}", [TreatmentSessionController::class, 'panoramaDelete'])->name('panorama.delete');
+    Route::post("tooth/{patient}/upload-files/{toothNumber}", [TreatmentSessionController::class, 'toothUploadFiles'])->name('tooth.uploadFiles');
+    Route::delete("tooth/{patient}/{id}/{toothNumber}", [TreatmentSessionController::class, 'toothDelete'])->name('tooth.delete');
 
     Route::delete("user/image", [UserController::class, "deleteProfileImage"])->name('user.image.delete');
     Route::put("user/profile", [UserController::class, "update"])->name('user.profile.update');

@@ -50,10 +50,10 @@
 @endsection
 
 @section('content')
-    @if ($data->appointment->patient->medical_history)
+    @if ($data->patient->medical_history)
         <div class="alert alert-danger" role="alert">
             <span class="fe fe-minus-circle fe-16 mr-2"></span>Medical History >>
-            {{ $data->appointment->patient->medical_history }}
+            {{ $data->patient->medical_history }}
         </div>
     @endif
 
@@ -63,13 +63,13 @@
                 <span class="fe fe-16 fe-clock"></span>
                 <span id="counter" class="ml-2">00:00:00</span>
             </p>
-            <p class="col-8 mb-0">#{{ $data->appointment->patient->id }} | {{ $data->appointment->patient->name }} |
-                {{ $data->appointment->patient->age }} years old | {{ $data->appointment->patient->nationality }} |
-                {{ $data->appointment->patient->phone }} | {{ $data->appointment->patient->phone2 }}</p>
+            <p class="col-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
+                {{ $data->patient->age }} years old | {{ $data->patient->nationality }} |
+                {{ $data->patient->phone }} | {{ $data->patient->phone2 }}</p>
             <div class="col-2">
                 <span class="d-flex align-items-center justify-content-center">
                     Take Invoice :
-                    @if ($data->appointment->patient->need_invoice)
+                    @if ($data->patient->need_invoice)
                         <span class="ml-2 fe fe-16 fe-check-circle"></span>
                     @else
                         <span class="ml-2 fe fe-16 fe-x-circle"></span>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body invisible" id="div-diagnosis">
+                <div class="card-body invisible pt-0 pb-0" id="div-diagnosis">
                     <div class="form-group">
                         <label for="doctor_id">Diagnosis</label>
                         <select class="form-control select2" id="simple-select2" name="patient_id">
@@ -116,6 +116,16 @@
                         </select>
                     </div>
                 </div>
+                <div class="card-body form-row pt-0 pb-0">
+                    <div class="form-group col-12 invisible" id="div-upload-tooth">
+                        <button class="btn btn-secondary" id="tooth-btn">Upload Tooth Panorama</button>
+                        <input type="file" hidden id="tooth-inp" multiple>
+                    </div>
+                    <div class="form-group col-12">
+                        <button class="btn btn-info" id="panorama-btn">Upload Panorama</button>
+                        <input type="file" hidden id="panorama-inp" multiple>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -123,11 +133,23 @@
             <div class="mb-2">
                 <div class="card shadow">
                     <div class="card-body">
-                        <button class="btn btn-danger">Save & Close</button>
-                        <button class="btn btn-primary">Save & Start New Session</button>
-                        <button class="btn btn-warning" data-toggle="modal"
-                            data-target=".prescription-modal">Prescription</button>
-                        <button class="btn btn-info">Selected Tooth History</button>
+                        <div class="form-row">
+                            <div class="form-group col-12 col-md-4">
+                                <label for="fees">Fees</label>
+                                <input type="number" id="fees" class="form-control" min="0">
+                            </div>
+                            <div class="form-group col-12 col-md-4">
+                                <label for="paid">Down Payment</label>
+                                <input type="number" id="paid" class="form-control" min="0">
+                            </div>
+                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn btn-warning" data-toggle="modal"
+                                    data-target=".prescription-modal">Prescription</button>
+                            </div>
+                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn btn-danger">Save & Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,11 +165,11 @@
         <div class="col-12 col-md-3">
             <div class="card shadow">
                 <div class="card-body">
-                    <div class="mb-4">
+                    <div class="mb-4" id="panorama-img">
                         <h5 class="card-title">Panorama</h5>
                         <div id="panorama" class="splide" role="group" aria-label="Splide Basic HTML Example">
                             <div class="splide__track">
-                                <ul class="splide__list">
+                                <ul class="splide__list" id="panorama-slider">
                                     @if (count($data->panorama) > 0)
                                         @foreach ($data->panorama as $img)
                                             <li class="splide__slide" data-toggle="modal"
@@ -160,7 +182,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div id="tooth-img">
                         <h5 class="card-title">Tooth</h5>
                         <div id="teeth" class="splide" role="group" aria-label="Splide">
                             <div class="splide__track">
@@ -175,23 +197,26 @@
         </div>
     </div>
 
-    @if (count($data->panorama) > 0)
-        @foreach ($data->panorama as $img)
-            <div class="modal fade" id="panorama{{ $img['id'] }}" tabindex="-1" role="dialog"
-                aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <button aria-label="" type="button" class="close px-2" data-dismiss="modal" aria-hidden="true">
-                    <span aria-hidden="true">×</span>
-                </button>
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body text-center">
-                            <img src="{{ $img['url'] }}" alt="">
+    <div id="panorama-modals">
+        @if (count($data->panorama) > 0)
+            @foreach ($data->panorama as $img)
+                <div class="modal fade" id="panorama{{ $img['id'] }}" tabindex="-1" role="dialog"
+                    aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <button aria-label="" type="button" class="close px-2" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body text-center">
+                                <img src="{{ $img['url'] }}" alt="">
+                            </div>
+                            <button class="btn btn-danger del-panorama" data-id="{{ $img['id'] }}">Delete</button>
                         </div>
                     </div>
-                </div>
-            </div> <!-- small modal -->
-        @endforeach
-    @endif
+                </div> <!-- small modal -->
+            @endforeach
+        @endif
+    </div>
 
     <div id="tooth-modals">
 
@@ -263,7 +288,7 @@
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
                                                     </td>
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
-                                                        {{ $data->appointment->patient->name }}
+                                                        {{ $data->patient->name }}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -299,8 +324,123 @@
 
 @section('script')
     <script>
+        $("#panorama-btn").click(function() {
+            $("#panorama-inp").trigger("click");
+        })
+
+        $("#tooth-btn").click(function() {
+            $("#tooth-inp").trigger("click");
+        })
+
+        $("#panorama-inp").on("change", function() {
+            let formData = new FormData();
+
+            // Get files from both inputs
+            let panoramaFiles = $("#panorama-inp")[0].files;
+
+            // Append files to the FormData object
+            for (let i = 0; i < panoramaFiles.length; i++) {
+                formData.append("panorama_files[]", panoramaFiles[i]);
+            }
+
+            // Send the data via AJAX
+            $.ajax({
+                url: "/panorama/{{ $data->patient->id }}/upload-files", // Replace with your route URL
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    $("#panorama-img").html(response.html.slider);
+                    $("#panorama-modals").html(response.html.modals);
+                    new Splide('#panorama-uploaded').mount();
+                },
+                error: function(xhr) {
+                    console.error("Error uploading files:", xhr.responseText);
+                }
+            });
+        });
+
+        $("#tooth-inp").on("change", function() {
+            let formData = new FormData();
+
+            // Get files from both inputs
+            let panoramaFiles = $("#tooth-inp")[0].files;
+
+            // Append files to the FormData object
+            for (let i = 0; i < panoramaFiles.length; i++) {
+                formData.append("panorama_files[]", panoramaFiles[i]);
+            }
+
+            // Send the data via AJAX
+            $.ajax({
+                url: "/tooth/{{ $data->patient->id }}/upload-files/" +
+                    selectedTooth, // Replace with your route URL
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    $("#tooth-img").html(response.html.slider);
+                    $("#tooth-modals").html(response.html.modals);
+                    new Splide('#tooth-uploaded').mount();
+                },
+                error: function(xhr) {
+                    console.error("Error uploading files:", xhr.responseText);
+                }
+            });
+        });
+
+        $(document).on('click', '.del-panorama', function() {
+            let id = $(this).data("id");
+            $.ajax({
+                url: "/panorama/{{ $data->patient->id }}/" + id,
+                type: "DELETE",
+                success: function(response) {
+                    $("#panorama-img").html(response.html.slider);
+                    $("#panorama-modals").html(response.html.modals);
+                    new Splide('#panorama-uploaded').mount();
+
+                    let modal = $('#panorama' + id);
+                    modal.modal('hide'); // Try the Bootstrap hide method
+                    modal.removeClass('show'); // Remove Bootstrap's 'show' class
+                    $('body').removeClass('modal-open'); // Remove modal-open class from body
+                    $('.modal-backdrop').remove(); // Remove the backdrop explicitly
+                },
+                error: function(xhr) {
+                    console.error("Error deleting file:", xhr.responseText);
+                }
+            });
+        })
+
+        $(document).on('click', '.del-tooth', function() {
+            let id = $(this).data("id");
+            $.ajax({
+                url: "/tooth/{{ $data->patient->id }}/" + id + "/" + selectedTooth,
+                type: "DELETE",
+                success: function(response) {
+                    $("#tooth-img").html(response.html.slider);
+                    $("#tooth-modals").html(response.html.modals);
+                    new Splide('#tooth-uploaded').mount();
+
+                    let modal = $('#panorama' + id);
+                    modal.modal('hide'); // Try the Bootstrap hide method
+                    modal.removeClass('show'); // Remove Bootstrap's 'show' class
+                    $('body').removeClass('modal-open'); // Remove modal-open class from body
+                    $('.modal-backdrop').remove(); // Remove the backdrop explicitly
+                },
+                error: function(xhr) {
+                    console.error("Error deleting file:", xhr.responseText);
+                }
+            });
+        })
+
         let totalSeconds = 0;
         let selectedTooth = 0;
+        let selectedAttr = [];
+        let diagnose = null;
+        let labWork = [];
+        let attrInputs = {};
 
         setInterval(() => {
             totalSeconds++;
@@ -331,30 +471,60 @@
 
                     // Toggle the selected class to change the color
                     $(this).toggleClass("selected");
+
+                    selectedTooth = toothNumber;
+
+                    if (selectedTooth != 0) {
+                        $("#div-diagnosis").removeClass("invisible");
+                        $("#div-upload-tooth").removeClass("invisible");
+                    } else {
+                        $("#div-upload-tooth").addClass("invisible");
+                        $("#div-diagnosis").addClass("invisible");
+                    }
+
+                    getTreatmentsTabs();
+                    getToothPanorama(toothNumber);
                 }
-
-                selectedTooth = toothNumber;
-
-                if (selectedTooth != 0) {
-                    $("#div-diagnosis").removeClass("invisible");
-                } else {
-                    $("#div-diagnosis").addClass("invisible");
-                }
-
-                getTreatmentsTabs();
-                getToothPanorama(toothNumber);
             });
         });
 
         $(document).on("change", "#simple-select2", function() {
+            diagnose = $(this).val();
             getTreatmentsTabs();
+            console.log(diagnose);
+
         })
+
+        $(document).on("change", ".lab-work", function() {
+            selectElement = $(this)[0];
+            labWork = Array.from(selectElement.selectedOptions).map(option => option.value);
+
+            // Display the selected values
+            console.log(labWork);
+        })
+
+        $(document).on("keyup", ".attr-inputs", function() {
+            // Set the value in attrInputs using the data-id as the key
+            attrInputs[$(this).data("id")] = $(this).val();
+
+            // Display the updated attrInputs object
+            console.log(attrInputs);
+        });
+
+        $(document).on("focus", ".attr-inputs", function() {
+            attrInputs[$(this).data("id")] = $(this).val();
+            console.log(attrInputs); // Display the updated attrInputs object
+        });
 
         function clearDataTeeth() {
             selectedTooth = 0;
+            diagnose = null;
             $("polygon").removeClass("selected");
             $("path").removeClass("selected");
             $("#div-diagnosis").addClass("invisible");
+            $("#div-upload-tooth").addClass("invisible");
+            console.log(diagnose);
+
         }
 
         function getTreatmentsTabs() {
@@ -387,24 +557,31 @@
 
         function getToothPanorama(toothNumber) {
             $.ajax({
-                url: `/patient/{{ $data->appointment->patient->id }}/tooth-panorama/${toothNumber}`,
+                url: `/patient/{{ $data->patient->id }}/tooth-panorama/${toothNumber}`,
                 type: "GET",
                 success: function(response) {
-                    $("#tooth-panorama-slider").html(response.html.slider);
+                    $("#tooth-img").html(response.html.slider);
                     $("#tooth-modals").html(response.html.modals);
+                    new Splide('#tooth-uploaded').mount();
                 }
             });
         }
 
         $(document).on('click', ".checkbox-inp", function() {
             const id = $(this).data('id');
+            const attrId = $(this).data('attr');
             const checked = $(this).is(':checked');
 
             if (checked) {
                 $('#' + id).removeClass('d-none');
+                selectedAttr.push(attrId);
             } else {
                 $('#' + id).addClass('d-none');
+                selectedAttr = selectedAttr.filter(attr => attr != attrId);
             }
+
+            console.log(selectedAttr);
+
         })
 
         let lastChecked = null;
@@ -413,17 +590,23 @@
         document.addEventListener('click', function(event) {
             if (event.target.matches('input[type="radio"]')) {
                 const id = $(event.target).data('id');
+                const attrId = $(event.target).data('attr');
                 const section = id.split('-')[0];
                 if (lastChecked === event.target) {
                     $('#' + id).addClass('d-none');
                     event.target.checked = false;
                     lastChecked = null;
+                    selectedAttr = selectedAttr.filter(attr => attr != attrId);
                 } else {
                     $('.' + section).addClass('d-none');
                     $('#' + id).removeClass('d-none');
                     lastChecked = event.target;
+                    selectedAttr.push(attrId);
                 }
             }
+
+            console.log(selectedAttr);
+
         });
     </script>
 

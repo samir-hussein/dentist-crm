@@ -10,7 +10,7 @@
                     <div class="modal-body text-center">
                         <img src="{{ $img['url'] }}" alt="">
                     </div>
-                    <button class="btn btn-danger del-tooth" data-id="{{ $img['id'] }}">Delete</button>
+                    <button class="btn btn-danger del-panorama" data-id="{{ $img['id'] }}">Delete</button>
                 </div>
             </div>
         </div> <!-- small modal -->
