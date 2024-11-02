@@ -37,4 +37,14 @@ class TreatmentDetail extends Model
     {
         return $this->belongsTo(Diagnosis::class);
     }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
+    public function labOrder()
+    {
+        return $this->hasOne(LabOrder::class);
+    }
 }

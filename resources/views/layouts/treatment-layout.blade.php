@@ -45,7 +45,9 @@
 
         body,
         html {
-            overflow-x: hidden
+            overflow-x: hidden;
+            padding: 0% !important;
+            margin: 0% !important;
         }
     </style>
 

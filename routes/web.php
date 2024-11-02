@@ -153,6 +153,9 @@ Route::middleware("auth")->group(function () {
     Route::delete("panorama/{patient}/{id}", [TreatmentSessionController::class, 'panoramaDelete'])->name('panorama.delete');
     Route::post("tooth/{patient}/upload-files/{toothNumber}", [TreatmentSessionController::class, 'toothUploadFiles'])->name('tooth.uploadFiles');
     Route::delete("tooth/{patient}/{id}/{toothNumber}", [TreatmentSessionController::class, 'toothDelete'])->name('tooth.delete');
+    Route::post("treatment-session/{patient}", [TreatmentSessionController::class, 'storeTreatmentSession'])->name("treatment.session.store");
+    Route::get("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'edit'])->name("treatment.session.edit");
+    Route::put("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'update'])->name("treatment.session.update");
 
     Route::delete("user/image", [UserController::class, "deleteProfileImage"])->name('user.image.delete');
     Route::put("user/profile", [UserController::class, "update"])->name('user.profile.update');

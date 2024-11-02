@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Interfaces\ITreatmentSession;
 use App\Http\Requests\TreatmentSession\TreatmentTabsRequest;
 use App\Http\Requests\TreatmentSession\PanoramaUploadFilesRequest;
+use App\Http\Requests\TreatmentSession\TreatmentSessionStoreRequest;
+use App\Http\Requests\TreatmentSession\TreatmentSessionUpdateRequest;
+use App\Models\TreatmentDetail;
 
 class TreatmentSessionController extends Controller
 {
@@ -20,7 +23,14 @@ class TreatmentSessionController extends Controller
     public function index(Patient $patient)
     {
         $data = $this->service->start($patient);
-        return view('treatment-session', ['data' => $data]);
+        return view('treatment-session.create', ['data' => $data]);
+    }
+
+    public function edit(TreatmentDetail $treatmentDetail, Patient $patient)
+    {
+        $data = $this->service->showById($treatmentDetail, $patient);
+
+        return view('treatment-session.edit', ['data' => $data, 'treatments' => $data->treatments, 'labs' => $data->labs, 'labsServices' => $data->labsServices]);
     }
 
     public function getTreatmentTabs(TreatmentTabsRequest $request)
@@ -71,5 +81,19 @@ class TreatmentSessionController extends Controller
         $html = $this->service->toothDelete($patient, $id, $toothNumber);
 
         return response()->json(['html' => $html]);
+    }
+
+    public function storeTreatmentSession(TreatmentSessionStoreRequest $request, Patient $patient)
+    {
+        $data = $request->validated();
+
+        return $this->service->storeTreatmentSession($patient, $data);
+    }
+
+    public function update(TreatmentSessionUpdateRequest $request, TreatmentDetail $treatmentDetail, Patient $patient)
+    {
+        $data = $request->validated();
+
+        return $this->service->updateTreatmentSession($treatmentDetail, $patient, $data);
     }
 }

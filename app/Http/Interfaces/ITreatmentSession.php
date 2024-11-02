@@ -3,6 +3,7 @@
 namespace App\Http\Interfaces;
 
 use App\Models\Patient;
+use App\Models\TreatmentDetail;
 use Illuminate\Http\Request;
 
 interface ITreatmentSession
@@ -14,4 +15,7 @@ interface ITreatmentSession
     public function panoramaDelete(Patient $patient, int $id);
     public function toothUploadFiles(Patient $patient, array $data, string $toothNumber);
     public function toothDelete(Patient $patient, int $id, string $toothNumber);
+    public function storeTreatmentSession(Patient $patient, array $data);
+    public function updateTreatmentSession(TreatmentDetail $treatmentDetail, Patient $patient, array $data);
+    public function showById(TreatmentDetail $treatmentDetail, Patient $patient);
 }

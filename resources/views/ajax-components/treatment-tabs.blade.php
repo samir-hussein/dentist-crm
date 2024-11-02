@@ -49,8 +49,12 @@
                                                         <label for="{{ $input->id }}"
                                                             class="col-sm-3 col-form-label">{{ $input->name }}</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" class="form-control attr-inputs"
-                                                                id="{{ $input->id }}" data-id="{{ $input->id }}"
+                                                            <input type="text"
+                                                                class="form-control attr-inputs {{ $treatment->treatmentType->need_labs ? 'lab-inputs' : '' }}"
+                                                                id="{{ $input->id }}"
+                                                                data-name="{{ $input->name }}"
+                                                                data-attr="{{ $attribute->id }}"
+                                                                data-id="{{ $input->id }}"
                                                                 value="{{ $input->value }}">
                                                         </div>
                                                     </div>
@@ -76,8 +80,11 @@
                                                         <label for="{{ $input->id }}"
                                                             class="col-sm-3 col-form-label">{{ $input->name }}</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" class="form-control attr-inputs"
+                                                            <input type="text"
+                                                                class="form-control attr-inputs {{ $treatment->treatmentType->need_labs ? 'lab-inputs' : '' }}"
                                                                 id="{{ $input->id }}" data-id="{{ $input->id }}"
+                                                                data-name="{{ $input->name }}"
+                                                                data-attr="{{ $attribute->id }}"
                                                                 value="{{ $input->value }}">
                                                         </div>
                                                     </div>
@@ -95,7 +102,7 @@
                             <div class="form-group col-12 col-md-6">
                                 <label for="select{{ $treatment->treatmentType->id }}" class="d-block">Services</label>
                                 <select multiple class="form-control select2-multi lab-work d-block w-100"
-                                    id="select{{ $treatment->treatmentType->id }}">
+                                    id="select{{ $treatment->treatmentType->id }}" autocomplete="off">
                                     @foreach ($labsServices as $service)
                                         <option value="{{ $service->name }}">{{ $service->name }}
                                         </option>
@@ -106,6 +113,7 @@
                                 <label for="simple-select{{ $treatment->treatmentType->id }}">Labs</label>
                                 <select class="form-control select2 lab"
                                     id="simple-select{{ $treatment->treatmentType->id }}">
+                                    <option value="">select lab</option>
                                     @foreach ($labs as $lab)
                                         <option value="{{ $lab->id }}">{{ $lab->name }}</option>
                                     @endforeach
@@ -115,7 +123,8 @@
                         <div class="form-row">
                             <div class="form-group col-12 col-md-6">
                                 <label>Charges</label>
-                                <input type="password" class="form-control" min="0" id="cost">
+                                <input type="password" class="form-control" min="0" id="cost"
+                                    autocomplete="off">
                             </div> <!-- form-group -->
                             <div class="form-group col-12 col-md-6">
                                 <label>Date</label>
@@ -158,9 +167,12 @@
                                                         <label for="{{ $input->id }}"
                                                             class="col-sm-3 col-form-label">{{ $input->name }}</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" class="form-control attr-inputs"
+                                                            <input type="text"
+                                                                class="form-control attr-inputs {{ $treatment->treatmentType->need_labs ? 'lab-inputs' : '' }}"
                                                                 id="{{ $input->id }}"
                                                                 data-id="{{ $input->id }}"
+                                                                data-name="{{ $input->name }}"
+                                                                data-attr="{{ $attribute->id }}"
                                                                 value="{{ $input->value }}">
                                                         </div>
                                                     </div>
@@ -186,9 +198,12 @@
                                                         <label for="{{ $input->id }}"
                                                             class="col-sm-3 col-form-label">{{ $input->name }}</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" class="form-control attr-inputs"
+                                                            <input type="text"
+                                                                class="form-control attr-inputs {{ $treatment->treatmentType->need_labs ? 'lab-inputs' : '' }}"
                                                                 id="{{ $input->id }}"
                                                                 data-id="{{ $input->id }}"
+                                                                data-name="{{ $input->name }}"
+                                                                data-attr="{{ $attribute->id }}"
                                                                 value="{{ $input->value }}">
                                                         </div>
                                                     </div>
@@ -207,7 +222,7 @@
                                 <label for="select{{ $treatment->treatmentType->id }}"
                                     class="d-block">Services</label>
                                 <select multiple class="form-control select2-multi lab-work d-block w-100"
-                                    id="select{{ $treatment->treatmentType->id }}">
+                                    id="select{{ $treatment->treatmentType->id }}" autocomplete="off">
                                     @foreach ($labsServices as $service)
                                         <option value="{{ $service->name }}">{{ $service->name }}
                                         </option>
@@ -218,6 +233,7 @@
                                 <label for="simple-select{{ $treatment->treatmentType->id }}">Labs</label>
                                 <select class="form-control select2 lab"
                                     id="simple-select{{ $treatment->treatmentType->id }}">
+                                    <option value="">select lab</option>
                                     @foreach ($labs as $lab)
                                         <option value="{{ $lab->id }}">{{ $lab->name }}</option>
                                     @endforeach
@@ -227,7 +243,7 @@
                         <div class="form-row">
                             <div class="form-group col-12 col-md-6">
                                 <label>Charges</label>
-                                <input type="password" class="form-control" id="cost">
+                                <input type="password" class="form-control" id="cost" autocomplete="off">
                             </div> <!-- form-group -->
                             <div class="form-group col-12 col-md-6">
                                 <label>Date</label>
@@ -247,7 +263,7 @@
         @endforeach
         <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
             <h6>Write Notes</h6>
-            <textarea name="" dir="auto" class="form-control" id="" cols="30" rows="10"></textarea>
+            <textarea name="" dir="auto" class="form-control" id="notes-inp" cols="30" rows="10"></textarea>
         </div>
     </div>
 @endif

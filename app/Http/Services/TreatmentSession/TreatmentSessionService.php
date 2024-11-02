@@ -3,11 +3,11 @@
 namespace App\Http\Services\TreatmentSession;
 
 use App\Http\Services\BaseService;
-use App\Models\Appointment;
+use App\Models\TreatmentDetail;
 
 class TreatmentSessionService extends BaseService
 {
-    public function __construct(Appointment $model)
+    public function __construct(TreatmentDetail $model)
     {
         parent::__construct($model);
     }

@@ -147,7 +147,7 @@
                                     data-target=".prescription-modal">Prescription</button>
                             </div>
                             <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-danger">Save & Close</button>
+                                <button class="btn btn-danger" id="save">Save & Close</button>
                             </div>
                         </div>
                     </div>
@@ -441,6 +441,9 @@
         let diagnose = null;
         let labWork = [];
         let attrInputs = {};
+        let labData = {};
+        let lab_id = null;
+        let lab_done = false;
 
         setInterval(() => {
             totalSeconds++;
@@ -491,40 +494,53 @@
         $(document).on("change", "#simple-select2", function() {
             diagnose = $(this).val();
             getTreatmentsTabs();
-            console.log(diagnose);
+        })
 
+        $(document).on("change", ".select2", function() {
+            lab_id = $(this).val();
         })
 
         $(document).on("change", ".lab-work", function() {
             selectElement = $(this)[0];
             labWork = Array.from(selectElement.selectedOptions).map(option => option.value);
-
-            // Display the selected values
-            console.log(labWork);
         })
 
         $(document).on("keyup", ".attr-inputs", function() {
             // Set the value in attrInputs using the data-id as the key
             attrInputs[$(this).data("id")] = $(this).val();
-
-            // Display the updated attrInputs object
-            console.log(attrInputs);
         });
 
         $(document).on("focus", ".attr-inputs", function() {
             attrInputs[$(this).data("id")] = $(this).val();
-            console.log(attrInputs); // Display the updated attrInputs object
+        });
+
+        $(document).on("keyup", ".lab-inputs", function() {
+            // Set the value in attrInputs using the data-id as the key
+            labData[$(this).data("attr")] = {};
+            labData[$(this).data("attr")]['name'] = $(this).data('name');
+            labData[$(this).data("attr")]['value'] = $(this).val();
+        });
+
+        $(document).on("focus", ".lab-inputs", function() {
+            labData[$(this).data("attr")] = {};
+            labData[$(this).data("attr")]['name'] = $(this).data('name');
+            labData[$(this).data("attr")]['value'] = $(this).val();
         });
 
         function clearDataTeeth() {
             selectedTooth = 0;
             diagnose = null;
+            selectedAttr = [];
+            labWork = [];
+            attrInputs = {};
+            labData = {};
+            lab_id = null;
+            lab_done = false;
+
             $("polygon").removeClass("selected");
             $("path").removeClass("selected");
             $("#div-diagnosis").addClass("invisible");
             $("#div-upload-tooth").addClass("invisible");
-            console.log(diagnose);
-
         }
 
         function getTreatmentsTabs() {
@@ -578,10 +594,21 @@
             } else {
                 $('#' + id).addClass('d-none');
                 selectedAttr = selectedAttr.filter(attr => attr != attrId);
+                if (labData.hasOwnProperty(attrId)) {
+                    delete labData[attrId];
+                }
+                $("input[data-attr='" + attrId + "']").val("");
             }
+        })
 
-            console.log(selectedAttr);
+        $(document).on('click', ".lab-done", function() {
+            const checked = $(this).is(':checked');
 
+            if (checked) {
+                lab_done = true;
+            } else {
+                lab_done = false;
+            }
         })
 
         let lastChecked = null;
@@ -597,16 +624,21 @@
                     event.target.checked = false;
                     lastChecked = null;
                     selectedAttr = selectedAttr.filter(attr => attr != attrId);
+                    if (labData.hasOwnProperty(attrId)) {
+                        delete labData[attrId];
+                    }
+                    $("input[data-attr='" + attrId + "']").val("");
                 } else {
                     $('.' + section).addClass('d-none');
                     $('#' + id).removeClass('d-none');
+                    if (lastChecked) {
+                        let lastAttr = $(lastChecked).data('attr');
+                        selectedAttr = selectedAttr.filter(attr => attr !== lastAttr);
+                    }
                     lastChecked = event.target;
                     selectedAttr.push(attrId);
                 }
             }
-
-            console.log(selectedAttr);
-
         });
     </script>
 
@@ -705,6 +737,85 @@
                 printWindow.onafterprint = function() {
                     printWindow.close();
                 };
+            });
+        });
+    </script>
+
+    <script>
+        $("#save").click(function() {
+            const patient_id = "{{ $data->patient->id }}";
+            const fees = $("#fees").val();
+            const paid = $("#paid").val();
+            let lab = {};
+
+            if (!diagnose) {
+                alert("Please select diagnose");
+                return;
+            }
+
+            if (selectedAttr.length == 0) {
+                alert("Please select at least one treatment");
+                return;
+            }
+
+            if (!fees || !paid) {
+                alert("Please enter fees and paid amount");
+                return;
+            }
+
+            if (labWork.length > 0) {
+                let sent = $("#sent").val();
+                let cost = $("#cost").val();
+                if (!lab_id || lab_id == "") {
+                    alert("Please select lab");
+                    return;
+                }
+
+                if (!sent || sent == "") {
+                    alert("Please select date");
+                    return;
+                }
+
+                if (!cost || cost == "") {
+                    alert("Please enter cost");
+                    return;
+                }
+
+                lab = {
+                    work: labWork,
+                    custom_data: Object.keys(labData).length > 0 ? labData : null,
+                    cost: cost,
+                    sent: sent,
+                    lab_id: lab_id,
+                    done: lab_done ? 1 : 0
+                };
+            }
+
+            $.ajax({
+                url: "{{ route('treatment.session.store', ['patient' => $data->patient->id]) }}",
+                method: "POST",
+                data: {
+                    diagnose_id: diagnose,
+                    tooth: selectedTooth,
+                    fees: fees,
+                    paid: paid,
+                    data: {
+                        attr: selectedAttr,
+                        inputs: Object.keys(attrInputs).length > 0 ? attrInputs : null,
+                        notes: $("#notes-inp").val() || null,
+                    },
+                    lab: Object.keys(lab).length > 0 ? lab : null,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.close();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert(error.message);
+                }
             });
         });
     </script>

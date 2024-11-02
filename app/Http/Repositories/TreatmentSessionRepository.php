@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use App\Models\TreatmentDetail;
 use App\Http\Interfaces\ITreatmentSession;
 use App\Http\Services\TreatmentSession\ToothDeleteService;
 use App\Http\Services\TreatmentSession\PanoramaDeleteService;
@@ -11,6 +12,9 @@ use App\Http\Services\TreatmentSession\ToothUploadFilesService;
 use App\Http\Services\TreatmentSession\PanoramaUploadFilesService;
 use App\Http\Services\TreatmentSession\TreatmentSessionTabsService;
 use App\Http\Services\TreatmentSession\TreatmentSessionStartService;
+use App\Http\Services\TreatmentSession\TreatmentSessionStoreService;
+use App\Http\Services\TreatmentSession\TreatmentSessionUpdateService;
+use App\Http\Services\TreatmentSession\TreatmentSessionShowByIdService;
 use App\Http\Services\TreatmentSession\TreatmentSessionToothPanoramaService;
 
 class TreatmentSessionRepository implements ITreatmentSession
@@ -22,6 +26,9 @@ class TreatmentSessionRepository implements ITreatmentSession
     private $panoramaDeleteService;
     private $toothUploadFilesService;
     private $toothDeleteService;
+    private $treatmentSessionStoreService;
+    private $treatmentSessionUpdateService;
+    private $treatmentSessionShowByIdService;
 
     public function __construct(
         TreatmentSessionStartService $startService,
@@ -30,7 +37,10 @@ class TreatmentSessionRepository implements ITreatmentSession
         PanoramaUploadFilesService $panoramaUploadFilesService,
         PanoramaDeleteService $panoramaDeleteService,
         ToothUploadFilesService $toothUploadFilesService,
-        ToothDeleteService $toothDeleteService
+        ToothDeleteService $toothDeleteService,
+        TreatmentSessionStoreService $treatmentSessionStoreService,
+        TreatmentSessionShowByIdService $treatmentSessionShowByIdService,
+        TreatmentSessionUpdateService $treatmentSessionUpdateService
     ) {
         $this->startService = $startService;
         $this->tabsService = $tabsService;
@@ -39,6 +49,9 @@ class TreatmentSessionRepository implements ITreatmentSession
         $this->panoramaDeleteService = $panoramaDeleteService;
         $this->toothUploadFilesService = $toothUploadFilesService;
         $this->toothDeleteService = $toothDeleteService;
+        $this->treatmentSessionStoreService = $treatmentSessionStoreService;
+        $this->treatmentSessionShowByIdService = $treatmentSessionShowByIdService;
+        $this->treatmentSessionUpdateService = $treatmentSessionUpdateService;
     }
 
     public function start(Patient $patient)
@@ -74,5 +87,20 @@ class TreatmentSessionRepository implements ITreatmentSession
     public function toothDelete(Patient $patient, int $id, string $toothNumber)
     {
         return $this->toothDeleteService->boot($patient, $id, $toothNumber);
+    }
+
+    public function storeTreatmentSession(Patient $patient, array $data)
+    {
+        return $this->treatmentSessionStoreService->boot($patient, $data);
+    }
+
+    public function showById(TreatmentDetail $treatmentDetail, Patient $patient)
+    {
+        return $this->treatmentSessionShowByIdService->boot($treatmentDetail, $patient);
+    }
+
+    public function updateTreatmentSession(TreatmentDetail $treatmentDetail, Patient $patient, array $data)
+    {
+        return $this->treatmentSessionUpdateService->boot($treatmentDetail, $patient, $data);
     }
 }
