@@ -58,8 +58,8 @@
                                         <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
                                             class="btn mb-1 btn-sm btn-success">Completed</a>
 
-                                        <a href="#" class="btn mb-1 btn-sm btn-warning"
-                                            onclick="window.open('{{ route('appointments.treatment', ['patient' => $appointment->patient->id]) }}', 'fullscreenWindow', 'width=' + screen.width + ',height=' + screen.height + ',left=0,top=0'); return false;">Treatment
+                                        <a href="{{ route('patients.profile', ['patient' => $appointment->patient->id]) }}"
+                                            class="btn mb-1 btn-sm btn-warning">Treatment
                                             Session</a>
 
                                         <form class="d-inline mb-1" method="POST"

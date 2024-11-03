@@ -28,4 +28,9 @@ class Patient extends Model implements HasMedia
     {
         return Carbon::parse($this->attributes['date_of_birth'])->age;
     }
+
+    public function treatmentSessions()
+    {
+        return $this->hasMany(TreatmentDetail::class);
+    }
 }

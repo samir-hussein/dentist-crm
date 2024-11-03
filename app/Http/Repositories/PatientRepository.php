@@ -9,6 +9,7 @@ use App\Http\Services\Patient\PatientStoreService;
 use App\Http\Services\Patient\PatientDeleteService;
 use App\Http\Services\Patient\PatientGetAllService;
 use App\Http\Services\Patient\PatientUpdateService;
+use App\Http\Services\Patient\PatientProfileService;
 use App\Http\Services\Patient\PatientFindByIdService;
 use App\Http\Services\Patient\PatientNecessaryDataService;
 
@@ -20,6 +21,7 @@ class PatientRepository implements IPatient
     private $patientUpdateService;
     private $patientFindByIdService;
     private $necessaryDataService;
+    private $patientProfileService;
 
     public function __construct(
         PatientGetAllService $patientGetAllService,
@@ -27,7 +29,8 @@ class PatientRepository implements IPatient
         PatientDeleteService $patientDeleteService,
         PatientUpdateService $patientUpdateService,
         PatientFindByIdService $patientFindByIdService,
-        PatientNecessaryDataService $necessaryDataService
+        PatientNecessaryDataService $necessaryDataService,
+        PatientProfileService $patientProfileService
     ) {
         $this->patientGetAllService = $patientGetAllService;
         $this->patientStoreService = $patientStoreService;
@@ -35,6 +38,7 @@ class PatientRepository implements IPatient
         $this->patientUpdateService = $patientUpdateService;
         $this->patientFindByIdService = $patientFindByIdService;
         $this->necessaryDataService = $necessaryDataService;
+        $this->patientProfileService = $patientProfileService;
     }
 
     public function necessaryData()
@@ -65,5 +69,10 @@ class PatientRepository implements IPatient
     public function delete(Patient $patient)
     {
         return $this->patientDeleteService->boot($patient);
+    }
+
+    public function profile(Patient $patient)
+    {
+        return $this->patientProfileService->boot($patient);
     }
 }

@@ -13,4 +13,5 @@ interface IPatient
     public function delete(Patient $patient);
     public function findById(Patient $patient);
     public function necessaryData();
+    public function profile(Patient $patient);
 }

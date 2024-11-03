@@ -85,22 +85,23 @@
                 <div class="card-body">
                     <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active disabled" onclick="clearDataTeeth()" id="Permanent-tab"
-                                data-toggle="pill" href="#Permanent" role="tab" aria-controls="Permanent"
-                                aria-selected="true">Permanent</a>
+                            <a class="nav-link {{ is_numeric($data->session->tooth) ? 'active' : '' }} disabled"
+                                onclick="clearDataTeeth()" id="Permanent-tab" data-toggle="pill" href="#Permanent"
+                                role="tab" aria-controls="Permanent" aria-selected="true">Permanent</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" onclick="clearDataTeeth()" id="Deciduous-tab" data-toggle="pill"
-                                href="#Deciduous" role="tab" aria-controls="Deciduous"
-                                aria-selected="false">Deciduous</a>
+                            <a class="nav-link {{ is_numeric($data->session->tooth) ? '' : 'active' }} disabled"
+                                onclick="clearDataTeeth()" id="Deciduous-tab" data-toggle="pill" href="#Deciduous"
+                                role="tab" aria-controls="Deciduous" aria-selected="false">Deciduous</a>
                         </li>
                     </ul>
                     <div class="tab-content mb-1" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="Permanent" role="tabpanel"
-                            aria-labelledby="Permanent-tab">
+                        <div class="tab-pane fade {{ is_numeric($data->session->tooth) ? 'show active' : '' }}"
+                            id="Permanent" role="tabpanel" aria-labelledby="Permanent-tab">
                             <x-tooth-chart nameAttr="permanent" />
                         </div>
-                        <div class="tab-pane fade" id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
+                        <div class="tab-pane fade {{ is_numeric($data->session->tooth) ? '' : 'show active' }}"
+                            id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
                             <x-child-tooth-chart nameAttr="deciduous" />
                         </div>
                     </div>
@@ -109,7 +110,8 @@
                     <div class="form-group">
                         <label for="doctor_id">Diagnosis</label>
                         <select class="form-control select2" id="simple-select2" name="patient_id" disabled>
-                            <option value="{{ $data->session->diagnose->id }}" selected>{{ $data->session->diagnose->name }}
+                            <option value="{{ $data->session->diagnose->id }}" selected>
+                                {{ $data->session->diagnose->name }}
                             </option>
                         </select>
                     </div>
