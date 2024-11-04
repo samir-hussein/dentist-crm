@@ -106,8 +106,8 @@
                 </div>
                 <div class="card-body invisible pt-0 pb-0" id="div-diagnosis">
                     <div class="form-group">
-                        <label for="doctor_id">Diagnosis</label>
-                        <select class="form-control select2" id="simple-select2" name="patient_id">
+                        <label for="diagnose">Diagnosis</label>
+                        <select class="form-control select2" id="diagnose" name="patient_id">
                             <option value="0"></option>
                             @foreach ($data->diagnosis as $diagnose)
                                 <option value="{{ $diagnose->id }}">{{ $diagnose->name }}
@@ -491,7 +491,7 @@
             });
         });
 
-        $(document).on("change", "#simple-select2", function() {
+        $(document).on("change", "#diagnose", function() {
             diagnose = $(this).val();
             getTreatmentsTabs();
         })
@@ -544,7 +544,7 @@
         }
 
         function getTreatmentsTabs() {
-            const diagnose = $("#simple-select2").val();
+            const diagnose = $("#diagnose").val();
 
             if (diagnose != 0 && selectedTooth != 0) {
                 $.ajax({
@@ -707,7 +707,7 @@
         $(document).ready(function() {
             $("#generate-print").click(function() {
                 // Gather data for printing
-                const diagnosis = $("#simple-select2").find('option:selected').text()
+                const diagnosis = $("#diagnose").find('option:selected').text()
                     .trim(); // Diagnose select
 
                 $("#print-diagnosis").text(diagnosis);

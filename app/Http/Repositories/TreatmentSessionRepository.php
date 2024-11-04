@@ -13,6 +13,7 @@ use App\Http\Services\TreatmentSession\PanoramaUploadFilesService;
 use App\Http\Services\TreatmentSession\TreatmentSessionTabsService;
 use App\Http\Services\TreatmentSession\TreatmentSessionStartService;
 use App\Http\Services\TreatmentSession\TreatmentSessionStoreService;
+use App\Http\Services\TreatmentSession\TreatmentSessionGetAllService;
 use App\Http\Services\TreatmentSession\TreatmentSessionUpdateService;
 use App\Http\Services\TreatmentSession\TreatmentSessionShowByIdService;
 use App\Http\Services\TreatmentSession\TreatmentSessionToothPanoramaService;
@@ -29,6 +30,7 @@ class TreatmentSessionRepository implements ITreatmentSession
     private $treatmentSessionStoreService;
     private $treatmentSessionUpdateService;
     private $treatmentSessionShowByIdService;
+    private $treatmentSessionGetAllService;
 
     public function __construct(
         TreatmentSessionStartService $startService,
@@ -40,7 +42,8 @@ class TreatmentSessionRepository implements ITreatmentSession
         ToothDeleteService $toothDeleteService,
         TreatmentSessionStoreService $treatmentSessionStoreService,
         TreatmentSessionShowByIdService $treatmentSessionShowByIdService,
-        TreatmentSessionUpdateService $treatmentSessionUpdateService
+        TreatmentSessionUpdateService $treatmentSessionUpdateService,
+        TreatmentSessionGetAllService $treatmentSessionGetAllService
     ) {
         $this->startService = $startService;
         $this->tabsService = $tabsService;
@@ -52,6 +55,7 @@ class TreatmentSessionRepository implements ITreatmentSession
         $this->treatmentSessionStoreService = $treatmentSessionStoreService;
         $this->treatmentSessionShowByIdService = $treatmentSessionShowByIdService;
         $this->treatmentSessionUpdateService = $treatmentSessionUpdateService;
+        $this->treatmentSessionGetAllService = $treatmentSessionGetAllService;
     }
 
     public function start(Patient $patient)
@@ -102,5 +106,10 @@ class TreatmentSessionRepository implements ITreatmentSession
     public function updateTreatmentSession(TreatmentDetail $treatmentDetail, Patient $patient, array $data)
     {
         return $this->treatmentSessionUpdateService->boot($treatmentDetail, $patient, $data);
+    }
+
+    public function getAll(Request $request)
+    {
+        return $this->treatmentSessionGetAllService->boot($request);
     }
 }

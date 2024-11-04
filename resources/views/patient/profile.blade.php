@@ -100,23 +100,23 @@
                         <div class="col-12 col-md-2">
                             <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link {{ is_numeric($tooth[0]) ? 'active' : '' }}" id="Permanent-tab"
-                                        data-toggle="pill" href="#Permanent" role="tab" aria-controls="Permanent"
-                                        aria-selected="true">Permanent</a>
+                                    <a class="nav-link {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? 'active' : '') : 'active' }}"
+                                        id="Permanent-tab" data-toggle="pill" href="#Permanent" role="tab"
+                                        aria-controls="Permanent" aria-selected="true">Permanent</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ is_numeric($tooth[0]) ? '' : 'active' }}" id="Deciduous-tab"
-                                        data-toggle="pill" href="#Deciduous" role="tab" aria-controls="Deciduous"
-                                        aria-selected="false">Deciduous</a>
+                                    <a class="nav-link {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? '' : 'active') : '' }}"
+                                        id="Deciduous-tab" data-toggle="pill" href="#Deciduous" role="tab"
+                                        aria-controls="Deciduous" aria-selected="false">Deciduous</a>
                                 </li>
                             </ul>
                             <div class="tab-content mb-1" id="pills-tabContent">
-                                <div class="tab-pane fade {{ is_numeric($tooth[0]) ? 'show active' : '' }}" id="Permanent"
-                                    role="tabpanel" aria-labelledby="Permanent-tab">
+                                <div class="tab-pane fade {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? 'show active' : '') : 'show active' }}"
+                                    id="Permanent" role="tabpanel" aria-labelledby="Permanent-tab">
                                     <x-tooth-chart nameAttr="permanent" />
                                 </div>
-                                <div class="tab-pane fade {{ is_numeric($tooth[0]) ? '' : 'show active' }}" id="Deciduous"
-                                    role="tabpanel" aria-labelledby="Deciduous-tab">
+                                <div class="tab-pane fade {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? '' : 'show active') : '' }}"
+                                    id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
                                     <x-child-tooth-chart nameAttr="deciduous" />
                                 </div>
                             </div>
@@ -145,12 +145,13 @@
                                         <div class="col-md-12">
                                             <div class="card-body">
                                                 <!-- table -->
-                                                <table class="table datatables" id="dataTable-1">
+                                                <table class="table datatables" id="treatments">
                                                     <thead>
                                                         <tr>
                                                             <th>Tooth</th>
                                                             <th>Diagnose</th>
                                                             <th>Treatment</th>
+                                                            <th>Date</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -181,9 +182,88 @@
 @section('script')
     <script>
         let selectedTooth = {!! json_encode($tooth ?? []) !!};
+        let selectedToothNumber = "";
 
         selectedTooth.forEach(function(tooth) {
             $("polygon[data-key='" + tooth + "']").addClass("history");
         })
+
+        function getTreatments(tooth = "") {
+            if ($.fn.DataTable.isDataTable('#treatments')) {
+                $('#treatments').DataTable().destroy();
+            }
+
+            $('#treatments').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('treatment.session.getAll', ['patient' => $patient->id]) }}" + "&tooth=" +
+                        tooth, // Dynamically append tooth parameter
+                    type: 'GET',
+                    error: function(xhr, error, code) {
+                        console.log(xhr.responseText); // Log the error for debugging
+                    }
+                },
+                columns: [{
+                        data: 'tooth',
+                        name: 'Tooth'
+                    },
+                    {
+                        data: 'diagnose',
+                        name: 'Diagnose'
+                    },
+                    {
+                        data: 'treatment',
+                        name: 'Treatment'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'Date'
+                    },
+                    {
+                        data: null, // No field in the database for this, render buttons dynamically
+                        name: 'action',
+                        orderable: false, // Action buttons are not sortable
+                        searchable: false, // Action buttons are not searchable
+                        render: function(data, type, row) {
+                            // Use JavaScript to construct URLs
+                            var url = "/treatment-session/" + row.id + "/{{ $patient->id }}";
+                            return `
+            <a href="#" onclick="window.open('${url}', 'fullscreenWindow', 'width=' + screen.width + ',height=' + screen.height + ',left=0,top=0'); return false;" class="btn btn-sm btn-warning">Resume</a>
+        `;
+                        }
+                    }
+                ],
+                pageLength: 10, // You can change the default page size here
+                order: [] // Optional: Default sorting
+            });
+        }
+
+        getTreatments();
+
+        $(document).on("click", "polygon, path", function() {
+            let toothNumber = $(this).data("key"); // Get the data-key attribute (tooth number)
+
+            // Ensure the toothNumber is defined before processing
+            if (toothNumber !== undefined) {
+                $("polygon").removeClass("selected");
+                $("path").removeClass("selected");
+
+                if (selectedToothNumber == toothNumber) {
+                    selectedToothNumber = "";
+                    // Toggle the selected class to change the color
+                    $(this).removeClass("selected");
+                } else {
+                    selectedToothNumber = toothNumber;
+                    $(this).addClass("selected");
+                }
+
+                getTreatments(selectedToothNumber);
+            }
+        });
+
+        $("#treatment-tab").click(function() {
+            getTreatments(selectedToothNumber);
+        });
     </script>
 @endsection

@@ -26,6 +26,12 @@ class TreatmentSessionController extends Controller
         return view('treatment-session.create', ['data' => $data]);
     }
 
+    public function getAll(Request $request)
+    {
+        $data = $this->service->getAll($request);
+        return $data;
+    }
+
     public function edit(TreatmentDetail $treatmentDetail, Patient $patient)
     {
         $data = $this->service->showById($treatmentDetail, $patient);

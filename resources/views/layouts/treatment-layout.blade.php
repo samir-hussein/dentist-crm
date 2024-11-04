@@ -30,8 +30,8 @@
     <!-- Date Range Picker CSS -->
     <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
     <!-- App CSS -->
-    <link rel="stylesheet" href="{{ asset('css/app-light.css') }}" id="lightTheme">
-    <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme" disabled>
+    <link rel="stylesheet" href="{{ asset('css/app-light.css') }}" id="lightTheme" disabled>
+    <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme">
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('css/splide.min.css') }}">
 

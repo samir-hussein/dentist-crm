@@ -108,8 +108,8 @@
                 </div>
                 <div class="card-body pt-0 pb-0" id="div-diagnosis">
                     <div class="form-group">
-                        <label for="doctor_id">Diagnosis</label>
-                        <select class="form-control select2" id="simple-select2" name="patient_id" disabled>
+                        <label for="diagnose">Diagnosis</label>
+                        <select class="form-control select2" id="diagnose" name="patient_id" disabled>
                             <option value="{{ $data->session->diagnose->id }}" selected>
                                 {{ $data->session->diagnose->name }}
                             </option>

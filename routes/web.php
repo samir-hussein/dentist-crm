@@ -156,6 +156,7 @@ Route::middleware("auth")->group(function () {
     Route::post("treatment-session/{patient}", [TreatmentSessionController::class, 'storeTreatmentSession'])->name("treatment.session.store");
     Route::get("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'edit'])->name("treatment.session.edit");
     Route::put("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'update'])->name("treatment.session.update");
+    Route::get("treatment-session", [TreatmentSessionController::class, 'getAll'])->name("treatment.session.getAll");
 
     Route::delete("user/image", [UserController::class, "deleteProfileImage"])->name('user.image.delete');
     Route::put("user/profile", [UserController::class, "update"])->name('user.profile.update');
