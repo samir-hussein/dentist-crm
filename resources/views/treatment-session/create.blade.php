@@ -570,6 +570,14 @@
                             multiple: true,
                             theme: 'bootstrap4',
                         });
+
+                        let need_lab = $("li[data-first='1']").data("needlab");
+
+                        if (need_lab == 1) {
+                            $('#lab-div').removeClass('d-none');
+                        } else {
+                            $('#lab-div').addClass('d-none');
+                        }
                     }
                 });
             }
@@ -822,6 +830,16 @@
                     alert(error.message);
                 }
             });
+        });
+
+        $(document).on('click', '.tab-btn', function() {
+            let need_lab = $(this).data('needlab');
+
+            if (need_lab == 1) {
+                $('#lab-div').removeClass('d-none');
+            } else {
+                $('#lab-div').addClass('d-none');
+            }
         });
     </script>
 @endsection

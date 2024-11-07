@@ -130,6 +130,13 @@
                         </div>
                         <div class="col-12 col-md-10">
                             <div class="card-body">
+                                <div class="form-group">
+                                    <label for="reportrange">Filter By Date : </label>
+                                    <div id="reportrange" class="border px-2 py-2 bg-light">
+                                        <i class="fe fe-calendar fe-16 mx-2"></i>
+                                        <span id="date-range"></span>
+                                    </div>
+                                </div>
                                 <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" id="treatment-tab" data-toggle="pill" href="#treatment"
@@ -293,6 +300,48 @@
 
 @section('script')
     <script>
+        // Set initial start and end dates
+        var start = moment().startOf('month');
+        var end = moment().endOf('month');
+
+        // Callback function to display selected range
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        // Initialize date range picker
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf(
+                    'month')]
+            }
+        }, cb);
+
+        // Call cb to set the initial selected date range text
+        cb(start, end);
+
+        // Listen for date range selection
+        $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+            // Get the selected start and end dates
+            var selectedStart = picker.startDate.format('YYYY-MM-DD');
+            var selectedEnd = picker.endDate.format('YYYY-MM-DD');
+
+            // Convert formatted date to timestamp in milliseconds
+            start = new Date(selectedStart).getTime();
+            end = new Date(selectedEnd).getTime();
+
+            getTreatments(selectedToothNumber);
+            getInvoices(selectedToothNumber);
+            getLabOrders(selectedToothNumber);
+        });
+
         let selectedTooth = {!! json_encode($tooth ?? []) !!};
         let selectedToothNumber = "";
 
@@ -311,7 +360,7 @@
                 ordering: false, // Disable ordering for all columns
                 ajax: {
                     url: "{{ route('treatment.session.getAll', ['patient' => $patient->id]) }}" + "&tooth=" +
-                        tooth, // Dynamically append tooth parameter
+                        tooth + "&from=" + start + "&to=" + end, // Dynamically append tooth parameter
                     type: 'GET',
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
@@ -367,7 +416,7 @@
                 ordering: false, // Disable ordering for all columns
                 ajax: {
                     url: "{{ route('invoices.all', ['patient' => $patient->id]) }}" + "&tooth=" +
-                        tooth, // Dynamically append tooth parameter
+                        tooth + "&from=" + start + "&to=" + end, // Dynamically append tooth parameter
                     type: 'GET',
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
@@ -452,7 +501,7 @@
                 ordering: false, // Disable ordering for all columns
                 ajax: {
                     url: "{{ route('lab-orders.all', ['patient' => $patient->id]) }}" + "&tooth=" +
-                        tooth, // Dynamically append tooth parameter
+                        tooth + "&from=" + start + "&to=" + end, // Dynamically append tooth parameter
                     type: 'GET',
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
@@ -605,7 +654,7 @@
         $("#print-only").click(function() {
             $.ajax({
                 url: `/invoices/print?patient={{ $patient->id }}&tooth=` + selectedToothNumber +
-                    "&invoice=" + last_print_id,
+                    "&invoice=" + last_print_id + "&from=" + start + "&to=" + end,
                 type: "GET",
                 success: function(response) {
                     $("#print-list").html(response.html);
@@ -618,7 +667,7 @@
         $("#print-tax").click(function() {
             $.ajax({
                 url: `/invoices/print?patient={{ $patient->id }}&tooth=` + selectedToothNumber +
-                    "&invoice=" + last_print_id + "&tax=1",
+                    "&invoice=" + last_print_id + "&tax=1" + "&from=" + start + "&to=" + end,
                 type: "GET",
                 success: function(response) {
                     $("#print-list").html(response.html);

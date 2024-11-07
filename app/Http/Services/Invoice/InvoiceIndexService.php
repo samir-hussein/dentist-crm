@@ -3,6 +3,7 @@
 namespace App\Http\Services\Invoice;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -14,6 +15,20 @@ class InvoiceIndexService extends InvoiceService
         $data = $this->model->latest()->select('*');
 
         $request = request();
+
+        if ($request->from && $request->from != "") {
+            // Convert milliseconds to seconds and format as date
+            $timestamp = $request->from / 1000;
+            $from = Carbon::createFromTimestamp($timestamp)->startOfDay(); // Set to 00:00:00 of the given date
+            $data->where('created_at', '>=', $from);
+        }
+
+        if ($request->to && $request->to != "") {
+            // Convert milliseconds to seconds and format as date
+            $timestamp = $request->to / 1000;
+            $to = Carbon::createFromTimestamp($timestamp)->endOfDay(); // Set to 23:59:59 of the given date
+            $data->where('created_at', '<=', $to);
+        }
 
         if ($request->has("patient")) {
             $data->where("patient_id", $request->patient);

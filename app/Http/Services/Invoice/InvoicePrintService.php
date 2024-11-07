@@ -3,6 +3,7 @@
 namespace App\Http\Services\Invoice;
 
 use App\Models\Invoice;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class InvoicePrintService extends InvoiceService
@@ -21,6 +22,20 @@ class InvoicePrintService extends InvoiceService
         // Apply filters if any
         if ($tooth && $tooth != "") {
             $data->where('tooth', $tooth);
+        }
+
+        if ($request->from && $request->from != "") {
+            // Convert milliseconds to seconds and format as date
+            $timestamp = $request->from / 1000;
+            $from = Carbon::createFromTimestamp($timestamp)->startOfDay(); // Set to 00:00:00 of the given date
+            $data->where('created_at', '>=', $from);
+        }
+
+        if ($request->to && $request->to != "") {
+            // Convert milliseconds to seconds and format as date
+            $timestamp = $request->to / 1000;
+            $to = Carbon::createFromTimestamp($timestamp)->endOfDay(); // Set to 23:59:59 of the given date
+            $data->where('created_at', '<=', $to);
         }
 
         if ($invoice && $invoice != "") {
