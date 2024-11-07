@@ -55,12 +55,13 @@
                                         <a class="btn mb-1 btn-sm btn-info"
                                             href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
 
-                                        <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
-                                            class="btn mb-1 btn-sm btn-success">Completed</a>
+                                        @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                            <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
+                                                class="btn mb-1 btn-sm btn-success">Completed</a>
+                                        @endif
 
                                         <a href="{{ route('patients.profile', ['patient' => $appointment->patient->id]) }}"
-                                            class="btn mb-1 btn-sm btn-warning">Treatment
-                                            Session</a>
+                                            class="btn mb-1 btn-sm btn-warning">Patient Profile</a>
 
                                         <form class="d-inline mb-1" method="POST"
                                             action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">

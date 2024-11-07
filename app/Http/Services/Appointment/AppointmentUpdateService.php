@@ -31,6 +31,17 @@ class AppointmentUpdateService extends AppointmentService
 
         $appointment->update($data);
 
+        $services = array_map(function ($service_id) use ($appointment) {
+            return [
+                'service_id' => $service_id,
+                'appointment_id' => $appointment->id
+            ];
+        }, $data['service_ids']);
+
+        $appointment->appointment_services()->delete();
+
+        $appointment->appointment_services()->insert($services);
+
         return $this->success();
     }
 }

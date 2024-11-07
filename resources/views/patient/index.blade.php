@@ -57,6 +57,7 @@
         $('#dataTable-1').DataTable({
             processing: true,
             serverSide: true,
+            ordering: false,
             ajax: {
                 url: "{{ route('patients.all') }}", // URL to fetch data
                 type: 'GET',
@@ -114,6 +115,15 @@
                         var profileUrl = '/patients/' + row.id + '/profile';
                         var editUrl = '/patients/' + row.id + '/edit';
                         var deleteUrl = '/patients/' + row.id;
+                        var staff =
+                            "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
+
+                        if (staff) {
+                            return `
+                            <a href="${profileUrl}" class="btn btn-sm btn-info">Profile</a>
+                            <a href="${editUrl}" class="btn btn-sm btn-warning">Edit</a>
+                        `;
+                        }
 
                         return `
                             <a href="${profileUrl}" class="btn btn-sm btn-info">Profile</a>

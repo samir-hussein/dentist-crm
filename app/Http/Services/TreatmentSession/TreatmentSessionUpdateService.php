@@ -23,10 +23,18 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
             ->unique()
             ->implode(' - ');
 
-        $treatmentDetail->invoice->update([
-            "paid" => $data['paid'] + $treatmentDetail->invoice->paid,
-            "treatment" => $treatment,
-        ]);
+        if ($data['paid'] > 0) {
+            $treatmentDetail->invoice()->create([
+                "fees" => 0,
+                "paid" => $data['paid'],
+                "tooth" => $treatmentDetail->tooth,
+                "treatment" => "Follow Up For Date : " . $treatmentDetail->created_at->format("Y-m-d"),
+                "tax_invoice" => $patient->need_invoice,
+                'patient_id' => $patient->id,
+                "treatment_detail_id" => $treatmentDetail->id,
+                'doctor_id' => auth()->id()
+            ]);
+        }
 
         if ($data['lab']) {
             $lab = $data['lab'];

@@ -15,6 +15,7 @@ class TreatmentDetail extends Model
         'data',
         'patient_id',
         'diagnose_id',
+        'doctor_id'
     ];
 
     // Specify the data column as JSON cast
@@ -40,7 +41,7 @@ class TreatmentDetail extends Model
 
     public function invoice()
     {
-        return $this->hasOne(Invoice::class);
+        return $this->hasMany(Invoice::class);
     }
 
     public function labOrder()

@@ -53,6 +53,7 @@
         $('#dataTable-1').DataTable({
             processing: true,
             serverSide: true,
+            ordering: false,
             ajax: {
                 url: "{{ route('schdule-dates.all') }}", // URL to fetch data
                 type: 'GET',

@@ -9,7 +9,9 @@ use App\Http\Interfaces\IDiagnosis;
 use App\Http\Interfaces\IDoctor;
 use App\Http\Interfaces\IDose;
 use App\Http\Interfaces\IEloquent;
+use App\Http\Interfaces\IInvoice;
 use App\Http\Interfaces\ILab;
+use App\Http\Interfaces\ILabOrder;
 use App\Http\Interfaces\ILabService;
 use App\Http\Interfaces\IMedicalHistory;
 use App\Http\Interfaces\IMedicine;
@@ -31,6 +33,8 @@ use App\Http\Repositories\BaseRepository;
 use App\Http\Repositories\DiagnosisRepository;
 use App\Http\Repositories\DoctorRepository;
 use App\Http\Repositories\DoseRepository;
+use App\Http\Repositories\InvoiceRepository;
+use App\Http\Repositories\LabOrderRepository;
 use App\Http\Repositories\LabRepository;
 use App\Http\Repositories\LabServiceRepository;
 use App\Http\Repositories\MedicalHistoryRepository;
@@ -74,6 +78,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IMedicalHistory::class, MedicalHistoryRepository::class);
         $this->app->bind(ITreatmentSession::class, TreatmentSessionRepository::class);
         $this->app->bind(IPrescription::class, PrescriptionRepository::class);
+        $this->app->bind(IInvoice::class, InvoiceRepository::class);
+        $this->app->bind(ILabOrder::class, LabOrderRepository::class);
     }
 
     /**

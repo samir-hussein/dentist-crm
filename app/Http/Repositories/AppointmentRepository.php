@@ -41,9 +41,9 @@ class AppointmentRepository implements IAppointment
         $this->appointmentNecessaryDataService = $appointmentNecessaryDataService;
     }
 
-    public function all()
+    public function all($today = false)
     {
-        return $this->appointmentGetAllService->boot();
+        return $this->appointmentGetAllService->boot($today);
     }
 
     public function findById(Appointment $appointment)

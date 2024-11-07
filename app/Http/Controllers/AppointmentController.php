@@ -30,7 +30,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $data = $this->service->all();
+        $data = $this->service->all(false);
 
         return $this->view('appointment.index', ['data' => $data]);
     }

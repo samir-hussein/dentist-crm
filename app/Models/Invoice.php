@@ -18,6 +18,7 @@ class Invoice extends Model
         'patient_id',
         'tax_invoice',
         'treatment_detail_id',
+        'doctor_id'
     ];
 
     // Specify casts for fields

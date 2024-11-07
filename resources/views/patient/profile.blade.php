@@ -6,12 +6,13 @@
     <a href="{{ route('patients.index') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 
-    <a href="#"
-        onclick="window.open('{{ route('appointments.treatment', ['patient' => $patient->id]) }}', 'fullscreenWindow', 'width=' + screen.width + ',height=' + screen.height + ',left=0,top=0'); return false;">
-        <button type="button" class="btn btn-primary">
-            <span class="fe fe-plus fe-12 mr-2"></span>Start New Session
-        </button>
-    </a>
+    @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+        <a href="{{ route('appointments.treatment', ['patient' => $patient->id]) }}">
+            <button type="button" class="btn btn-primary">
+                <span class="fe fe-plus fe-12 mr-2"></span>Start New Session
+            </button>
+        </a>
+    @endif
 @endsection
 
 @section('style')
@@ -120,6 +121,12 @@
                                     <x-child-tooth-chart nameAttr="deciduous" />
                                 </div>
                             </div>
+                            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                <div>
+                                    <button type="button" class="btn btn-info w-100" data-toggle="modal"
+                                        data-target=".print-modal">Print Invoices</button>
+                                </div>
+                            @endif
                         </div>
                         <div class="col-12 col-md-10">
                             <div class="card-body">
@@ -129,13 +136,15 @@
                                             role="tab" aria-controls="treatment" aria-selected="true">Treatment
                                             Sessions</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="invoices-tab" data-toggle="pill" href="#invoices"
-                                            role="tab" aria-controls="invoices" aria-selected="false">Invoices</a>
-                                    </li>
+                                    @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="invoices-tab" data-toggle="pill" href="#invoices"
+                                                role="tab" aria-controls="invoices" aria-selected="false">Invoices</a>
+                                        </li>
+                                    @endif
                                     <li class="nav-item">
                                         <a class="nav-link" id="lab-tab" data-toggle="pill" href="#lab" role="tab"
-                                            aria-controls="lab" aria-selected="false">Lab</a>
+                                            aria-controls="lab" aria-selected="false">Lab Orders</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content mb-1" id="pills-tabContent">
@@ -164,10 +173,55 @@
                                     </div>
                                     <div class="tab-pane fade" id="invoices" role="tabpanel"
                                         aria-labelledby="invoices-tab">
-                                        invoices
+                                        <!-- Small table -->
+                                        <div class="col-md-12">
+                                            <div class="card-body">
+                                                <!-- table -->
+                                                <table class="table datatables" id="invoices-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Treatment</th>
+                                                            <th>Tooth</th>
+                                                            <th>Fees</th>
+                                                            <th>Paid</th>
+                                                            <th>Date</th>
+                                                            <th>Tax Invoice</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div> <!-- simple table -->
                                     </div>
                                     <div class="tab-pane fade" id="lab" role="tabpanel" aria-labelledby="lab-tab">
-                                        lab
+                                        <!-- Small table -->
+                                        <div class="col-md-12">
+                                            <div class="card-body">
+                                                <!-- table -->
+                                                <table class="table datatables" id="lab-orders-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Work</th>
+                                                            <th>Extra Data</th>
+                                                            <th>Tooth</th>
+                                                            <th>Lab</th>
+                                                            <th>Sent Date</th>
+                                                            <th>Received Date</th>
+                                                            <th>Cost</th>
+                                                            <th>Done</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div> <!-- simple table -->
                                     </div>
                                 </div>
                             </div>
@@ -176,6 +230,64 @@
                 </div> <!-- /. card-body -->
             </div> <!-- /. card -->
         </div> <!-- /. col -->
+    </div>
+
+    <div class="modal fade print-modal" tabindex="-1" role="dialog" aria-labelledby="verticalModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="verticalModalTitle">Invoice Print</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn mb-2 btn-warning" id="print-only"
+                        data-dismiss="modal">Print</button>
+                    <button type="button" class="btn mb-2 btn-primary" id="print-tax" data-dismiss="modal">Print & Send
+                        To Tax</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="print-area" style="display:none">
+        <table style="width: 80%; margin-top:110px">
+            <tbody>
+                <tr>
+                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                        Date</td>
+                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                    </td>
+                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                        {{ date('Y-m-d') }}</td>
+                </tr>
+                <tr>
+                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                        Name</td>
+                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                    </td>
+                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                        {{ $patient->name }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="width: 100%;margin-top:15px;border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left;border-top:1px solid black;padding: 1% 0 1% 0;border-bottom:1px solid black">
+                    <th>No.</th>
+                    <th>Date</th>
+                    <th>Treatment</th>
+                    <th>Fees</th>
+                    <th>Paid</th>
+                </tr>
+            </thead>
+            <tbody id="print-list">
+
+            </tbody>
+        </table>
     </div>
 @endsection
 
@@ -196,6 +308,7 @@
             $('#treatments').DataTable({
                 processing: true,
                 serverSide: true,
+                ordering: false, // Disable ordering for all columns
                 ajax: {
                     url: "{{ route('treatment.session.getAll', ['patient' => $patient->id]) }}" + "&tooth=" +
                         tooth, // Dynamically append tooth parameter
@@ -218,7 +331,7 @@
                     },
                     {
                         data: 'created_at',
-                        name: 'Date'
+                        name: 'Date',
                     },
                     {
                         data: null, // No field in the database for this, render buttons dynamically
@@ -228,9 +341,13 @@
                         render: function(data, type, row) {
                             // Use JavaScript to construct URLs
                             var url = "/treatment-session/" + row.id + "/{{ $patient->id }}";
-                            return `
-            <a href="#" onclick="window.open('${url}', 'fullscreenWindow', 'width=' + screen.width + ',height=' + screen.height + ',left=0,top=0'); return false;" class="btn btn-sm btn-warning">Resume</a>
-        `;
+                            var staff =
+                                "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
+
+                            if (staff) {
+                                return ``;
+                            }
+                            return `<a href="${url}" class="btn btn-sm btn-warning">Follow Up</a>`;
                         }
                     }
                 ],
@@ -238,6 +355,192 @@
                 order: [] // Optional: Default sorting
             });
         }
+
+        function getInvoices(tooth = "") {
+            if ($.fn.DataTable.isDataTable('#invoices-table')) {
+                $('#invoices-table').DataTable().destroy();
+            }
+
+            $('#invoices-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ordering: false, // Disable ordering for all columns
+                ajax: {
+                    url: "{{ route('invoices.all', ['patient' => $patient->id]) }}" + "&tooth=" +
+                        tooth, // Dynamically append tooth parameter
+                    type: 'GET',
+                    error: function(xhr, error, code) {
+                        console.log(xhr.responseText); // Log the error for debugging
+                    }
+                },
+                columns: [{
+                        data: 'id',
+                        name: '#'
+                    },
+                    {
+                        data: 'treatment',
+                        name: 'Treatment'
+                    },
+                    {
+                        data: 'tooth',
+                        name: 'Tooth'
+                    },
+                    {
+                        data: 'fees',
+                        name: 'Fees'
+                    },
+                    {
+                        data: 'paid',
+                        name: 'Paid'
+                    },
+                    {
+                        data: 'date',
+                        name: 'Date',
+                    },
+                    {
+                        data: null,
+                        name: 'Tax Invoice',
+                        orderable: false, // Action buttons are not sortable
+                        searchable: false, // Action buttons are not searchable
+                        render: function(data, type, row) {
+                            if (row.tax_invoice) {
+                                return `<span class="badge badge-warning">Yes</span>`;
+                            }
+                            return `<span class="badge badge-success">No</span>`;
+                        }
+                    },
+                    {
+                        data: null, // No field in the database for this, render buttons dynamically
+                        name: 'action',
+                        orderable: false, // Action buttons are not sortable
+                        searchable: false, // Action buttons are not searchable
+                        render: function(data, type, row) {
+                            // Use JavaScript to construct URLs
+                            var url = "/treatment-session/" + row.id + "/{{ $patient->id }}";
+                            var deleteUrl = '/invoices/' + row.id;
+                            let id = row.id;
+
+                            if (row.tax_invoice) {
+                                return `
+                                <button type="button" data-id="${id}" class="btn mb-2 btn-info btn-sm print-btn" data-toggle="modal"
+                                    data-target=".print-modal">Print</button>
+                                <form method="POST" action="${deleteUrl}" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger mb-2">Remove From Tax</button>
+                            </form>
+                                `;
+                            }
+                            return `<button type="button" data-id="${id}" class="btn btn-sm btn-info print-btn" data-toggle="modal"
+                                    data-target=".print-modal">Print</button>`;
+                        }
+                    }
+                ],
+                pageLength: 10, // You can change the default page size here
+                order: [] // Optional: Default sorting
+            });
+        }
+
+        function getLabOrders(tooth = "") {
+            if ($.fn.DataTable.isDataTable('#lab-orders-table')) {
+                $('#lab-orders-table').DataTable().destroy();
+            }
+
+            $('#lab-orders-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ordering: false, // Disable ordering for all columns
+                ajax: {
+                    url: "{{ route('lab-orders.all', ['patient' => $patient->id]) }}" + "&tooth=" +
+                        tooth, // Dynamically append tooth parameter
+                    type: 'GET',
+                    error: function(xhr, error, code) {
+                        console.log(xhr.responseText); // Log the error for debugging
+                    }
+                },
+                columns: [{
+                        data: 'id',
+                        name: '#'
+                    },
+                    {
+                        data: 'work',
+                        name: 'Work'
+                    },
+                    {
+                        data: 'custom_data',
+                        name: 'Extra Data'
+                    },
+                    {
+                        data: 'tooth',
+                        name: 'Tooth'
+                    },
+                    {
+                        data: 'lab',
+                        name: 'Lab'
+                    },
+                    {
+                        data: null,
+                        name: 'Sent Date',
+                        orderable: false, // Action buttons are not sortable
+                        searchable: false, // Action buttons are not searchable
+                        render: function(data, type, row) {
+                            let date = row.sent;
+                            let id = row.id;
+                            return `<input type="date" value="${date}" class="form-control date-change" data-name="sent" data-lab="${id}"/>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        name: 'Received Date',
+                        orderable: false, // Action buttons are not sortable
+                        searchable: false, // Action buttons are not searchable
+                        render: function(data, type, row) {
+                            let date = row.received;
+                            let id = row.id;
+                            return `<input type="date" value="${date}" class="form-control date-change" data-name="received" data-lab="${id}"/>`;
+                        }
+                    },
+                    {
+                        data: 'cost',
+                        name: 'Cost',
+                    },
+                    {
+                        data: null,
+                        name: 'Done',
+                        orderable: false, // Action buttons are not sortable
+                        searchable: false, // Action buttons are not searchable
+                        render: function(data, type, row) {
+                            if (row.done) {
+                                return `<span class="badge badge-warning">Yes</span>`;
+                            }
+                            return `<span class="badge badge-success">No</span>`;
+                        }
+                    }
+                ],
+                pageLength: 10, // You can change the default page size here
+                order: [] // Optional: Default sorting
+            });
+        }
+
+        $(document).on("change", ".date-change", function() {
+            let name = $(this).data("name");
+            let value = $(this).val();
+            let labOrder = $(this).data("lab");
+
+            $.ajax({
+                url: "/lab-orders/" + labOrder,
+                type: 'PUT',
+                data: {
+                    [name]: value
+                },
+                success: function(response) {
+                    alert("Updated Successfully");
+                },
+                error: function(xhr, error, code) {
+                    console.log(xhr.responseText); // Log the error for debugging
+                }
+            });
+        });
 
         getTreatments();
 
@@ -259,11 +562,71 @@
                 }
 
                 getTreatments(selectedToothNumber);
+                getInvoices(selectedToothNumber);
+                getLabOrders(selectedToothNumber);
             }
         });
 
         $("#treatment-tab").click(function() {
             getTreatments(selectedToothNumber);
+        });
+
+        $("#invoices-tab").click(function() {
+            getInvoices(selectedToothNumber);
+        });
+
+        $("#lab-tab").click(function() {
+            getLabOrders(selectedToothNumber);
+        });
+
+        let last_print_id = null;
+
+        $(document).on("click", ".print-btn", function() {
+            last_print_id = $(this).data("id");
+        });
+
+        function print() {
+            // Create an iFrame for printing
+            let printWindow = window.open('', '_blank', 'width=1200,height=600');
+            printWindow.document.write(`
+            <html>
+            <head></head>
+            <body>${document.getElementById("print-area").innerHTML}</body>
+            </html>
+        `);
+            printWindow.document.close(); // Finish writing to iFrame
+            printWindow.focus();
+            printWindow.print();
+            printWindow.onafterprint = function() {
+                printWindow.close();
+            };
+        }
+
+        $("#print-only").click(function() {
+            $.ajax({
+                url: `/invoices/print?patient={{ $patient->id }}&tooth=` + selectedToothNumber +
+                    "&invoice=" + last_print_id,
+                type: "GET",
+                success: function(response) {
+                    $("#print-list").html(response.html);
+                    last_print_id = null;
+                    print();
+                }
+            });
+        });
+
+        $("#print-tax").click(function() {
+            $.ajax({
+                url: `/invoices/print?patient={{ $patient->id }}&tooth=` + selectedToothNumber +
+                    "&invoice=" + last_print_id + "&tax=1",
+                type: "GET",
+                success: function(response) {
+                    $("#print-list").html(response.html);
+                    getInvoices(selectedToothNumber);
+                    last_print_id = null;
+                    print();
+                }
+            });
         });
     </script>
 @endsection

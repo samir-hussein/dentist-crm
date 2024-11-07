@@ -65,6 +65,7 @@
         $('#dataTable-1').DataTable({
             processing: true,
             serverSide: true,
+            ordering: false,
             ajax: {
                 url: "{{ route('medicines.all', ['searchKey' => request('searchKey')]) }}", // URL to fetch data
                 type: 'GET',

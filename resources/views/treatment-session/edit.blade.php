@@ -134,22 +134,30 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="form-row">
-                            <div class="form-group col-12 col-md-4">
+                            <div class="form-group col-12 col-md-2">
                                 <label for="fees">Fees</label>
                                 <input type="number" id="fees" class="form-control" min="0" disabled
-                                    value="{{ $data->session->invoice->fees }}">
+                                    value="{{ $data->session->invoice[0]->fees }}">
                             </div>
-                            <div class="form-group col-12 col-md-4">
-                                <label for="paid">Down Payment (Paid only :
-                                    {{ $data->session->invoice->paid }})</label>
+                            <div class="form-group col-12 col-md-3">
+                                <label for="paid">Down Payment (Paid :
+                                    {{ $data->session->invoice->sum('paid') }})</label>
                                 <input type="number" id="paid" class="form-control" min="0" value="0">
+                            </div>
+                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn btn-info" data-toggle="modal"
+                                    data-target=".invoices-modal">Invoices</button>
                             </div>
                             <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
                                 <button class="btn btn-warning" data-toggle="modal"
                                     data-target=".prescription-modal">Prescription</button>
                             </div>
                             <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-danger" id="save">Save & Close</button>
+                                <button class="btn btn-primary" id="save">Save & Close</button>
+                            </div>
+                            <div class="form-group col-12 col-md-1 d-flex align-items-end justify-content-center">
+                                <a href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
+                                        class="btn btn-danger">Exit</button></a>
                             </div>
                         </div>
                     </div>
@@ -527,6 +535,42 @@
 
     <div id="tooth-modals">
         {!! $data->tooth->modals !!}
+    </div>
+
+    <div class="modal fade invoices-modal" tabindex="-1" role="dialog" aria-labelledby="verticalModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @php
+                        $balance = $data->session->invoice->sum('paid') - $data->session->invoice[0]->fees;
+                    @endphp
+                    <h5 class="modal-title" id="verticalModalTitle">
+                        {{ $balance > 0 ? 'Advance  ' . $balance : 'Balance  ' . $balance }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Paid</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data->session->invoice as $invoice)
+                                <tr>
+                                    <td>{{ $invoice->paid }}</td>
+                                    <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade prescription-modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
@@ -1050,7 +1094,8 @@
                 },
                 success: function(response) {
                     if (response.status == "success") {
-                        window.close();
+                        window.location.href =
+                            "{{ route('patients.profile', ['patient' => $data->patient->id]) }}";
                     } else {
                         alert(response.message);
                     }

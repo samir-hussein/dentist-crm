@@ -27,7 +27,7 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
                 return $row->diagnose->name;
             })
             ->addColumn('treatment', function ($row) {
-                return $row->invoice->treatment;
+                return $row->invoice[0]->treatment;
             })
             ->addColumn('created_at', function ($row) {
                 return $row->created_at->format("Y-m-d");

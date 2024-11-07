@@ -34,14 +34,6 @@
             </li>
 
             <li class="nav-item w-100">
-                <a class="nav-link {{ strpos($currentRouteName, 'prescription') !== false ? 'active-link' : '' }}"
-                    href="{{ route('prescription.index') }}">
-                    <i class="fe fe-calendar fe-16"></i>
-                    <span class="ml-3 item-text">Prescription</span>
-                </a>
-            </li>
-
-            <li class="nav-item w-100">
                 <a class="nav-link {{ strpos($currentRouteName, 'patients') !== false ? 'active-link' : '' }}"
                     href="{{ route('patients.index') }}">
                     <i class="fe fe-users fe-16"></i>
@@ -49,12 +41,46 @@
                 </a>
             </li>
 
-            <li class="nav-item w-100">
-                <a class="nav-link @yield('settings-active', $currentRouteName == 'settings' ? 'active-link' : '')" href="{{ route('settings') }}">
-                    <i class="fe fe-settings fe-16"></i>
-                    <span class="ml-3 item-text">Settings</span>
+            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                <li class="nav-item w-100">
+                    <a class="nav-link {{ strpos($currentRouteName, 'prescription') !== false ? 'active-link' : '' }}"
+                        href="{{ route('prescription.index') }}">
+                        <i class="fe fe-pen-tool fe-16"></i>
+                        <span class="ml-3 item-text">Prescription</span>
+                    </a>
+                </li>
+
+                <li class="nav-item w-100">
+                    <a class="nav-link {{ strpos($currentRouteName, 'tax') !== false ? 'active-link' : '' }}"
+                        href="{{ route('invoices.tax.index') }}">
+                        <i class="fe fe-file-text fe-16"></i>
+                        <span class="ml-3 item-text">Tax Report</span>
+                    </a>
+                </li>
+
+                <li class="nav-item w-100">
+                    <a class="nav-link {{ strpos($currentRouteName, 'invoices.index') !== false ? 'active-link' : '' }}"
+                        href="{{ route('invoices.index') }}">
+                        <i class="fe fe-file fe-16"></i>
+                        <span class="ml-3 item-text">Invoices Report</span>
+                    </a>
+                </li>
+
+                {{-- <li class="nav-item w-100">
+                <a class="nav-link {{ strpos($currentRouteName, 'lab-orders') !== false ? 'active-link' : '' }}"
+                    href="{{ route('lab-orders.index') }}">
+                    <i class="fe fe-layers fe-16"></i>
+                    <span class="ml-3 item-text">Lab Orders</span>
                 </a>
-            </li>
+            </li> --}}
+
+                <li class="nav-item w-100">
+                    <a class="nav-link @yield('settings-active', $currentRouteName == 'settings' ? 'active-link' : '')" href="{{ route('settings') }}">
+                        <i class="fe fe-settings fe-16"></i>
+                        <span class="ml-3 item-text">Settings</span>
+                    </a>
+                </li>
+            @endif
         </ul>
     </nav>
 </aside>

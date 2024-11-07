@@ -14,6 +14,7 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             'diagnose_id' => $data['diagnose_id'],
             'tooth' => $data['tooth'],
             'data' => $data['data'],
+            'doctor_id' => auth()->id()
         ]);
 
         $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
@@ -32,7 +33,8 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             "treatment" => $treatment,
             "tax_invoice" => $patient->need_invoice,
             'patient_id' => $patient->id,
-            "treatment_detail_id" => $treatmentSession->id
+            "treatment_detail_id" => $treatmentSession->id,
+            'doctor_id' => auth()->id()
         ]);
 
         if ($data['lab']) {

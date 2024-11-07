@@ -17,7 +17,7 @@ class AppointmentGetAllService extends AppointmentService
         $this->schduleDateStoreService = $schduleDateStoreService;
     }
 
-    public function boot()
+    public function boot($today = false)
     {
         $this->schduleDateStoreService->boot();
 
@@ -39,16 +39,25 @@ class AppointmentGetAllService extends AppointmentService
             ->orderBy('schdule_date_times.time')
             ->select("appointments.*")
             ->where("completed", false)
-            ->where("schdule_date_times.is_deleted", false)
-            ->get()->map(function ($appointment) {
-                $appointment->selectedServices = $appointment->services->map(function ($service) {
-                    return $service->name;
-                })->implode(' - ');
+            ->where("schdule_date_times.is_deleted", false);
 
-                $appointment->formatedTime = $appointment->time?->time->format("l Y-m-d h:i a") ?? "";
+        if ($today) {
+            $data->whereDate('schdule_date_times.time', today());
+        }
 
-                return $appointment;
-            });
+        if (auth()->user()->is_doctor) {
+            $data->where("doctor_id", auth()->user()->id);
+        }
+
+        $data = $data->get()->map(function ($appointment) {
+            $appointment->selectedServices = $appointment->services->map(function ($service) {
+                return $service->name;
+            })->implode(' - ');
+
+            $appointment->formatedTime = $appointment->time?->time->format("l Y-m-d h:i a") ?? "";
+
+            return $appointment;
+        });
 
         return $data;
     }

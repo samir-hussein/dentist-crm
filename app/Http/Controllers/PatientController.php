@@ -101,6 +101,9 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
+        if (!auth()->user()->is_admin && !auth()->user()->is_doctor) {
+            abort(403, 'Unauthorized action.');
+        }
         $this->service->delete($patient);
         return $this->redirectWithSuccess("patients.index");
     }

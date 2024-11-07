@@ -134,11 +134,11 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="form-row">
-                            <div class="form-group col-12 col-md-4">
+                            <div class="form-group col-12 col-md-3">
                                 <label for="fees">Fees</label>
                                 <input type="number" id="fees" class="form-control" min="0">
                             </div>
-                            <div class="form-group col-12 col-md-4">
+                            <div class="form-group col-12 col-md-3">
                                 <label for="paid">Down Payment</label>
                                 <input type="number" id="paid" class="form-control" min="0">
                             </div>
@@ -147,7 +147,11 @@
                                     data-target=".prescription-modal">Prescription</button>
                             </div>
                             <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-danger" id="save">Save & Close</button>
+                                <button class="btn btn-primary" id="save">Save & Close</button>
+                            </div>
+                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
+                                <a href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
+                                        class="btn btn-danger">Exit</button></a>
                             </div>
                         </div>
                     </div>
@@ -173,8 +177,8 @@
                                     @if (count($data->panorama) > 0)
                                         @foreach ($data->panorama as $img)
                                             <li class="splide__slide" data-toggle="modal"
-                                                data-target="#panorama{{ $img['id'] }}"><img src="{{ $img['url'] }}"
-                                                    alt=""></li>
+                                                data-target="#panorama{{ $img['id'] }}"><img
+                                                    src="{{ $img['url'] }}" alt=""></li>
                                         @endforeach
                                     @endif
                                 </ul>
@@ -808,7 +812,8 @@
                 },
                 success: function(response) {
                     if (response.status == "success") {
-                        window.close();
+                        window.location.href =
+                            "{{ route('patients.profile', ['patient' => $data->patient->id]) }}";
                     } else {
                         alert(response.message);
                     }

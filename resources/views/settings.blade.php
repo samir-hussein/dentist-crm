@@ -27,38 +27,41 @@
 
 @section('content')
     <div class="row align-items-center">
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('admins.index') }}" class="squircle bg-danger justify-content-center text-decoration-none">
-                    <i class="fe fe-users fe-32 align-self-center text-white"></i>
+        @if (auth()->user()->is_admin)
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('admins.index') }}"
+                        class="squircle bg-danger justify-content-center text-decoration-none">
+                        <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('admins.index') }}" class="text-decoration-none">
+                    <p>Admins</p>
                 </a>
             </div>
-            <a href="{{ route('admins.index') }}" class="text-decoration-none">
-                <p>Admins</p>
-            </a>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('doctors.index') }}"
-                    class="squircle bg-success justify-content-center text-decoration-none">
-                    <i class="fe fe-users fe-32 align-self-center text-white"></i>
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('doctors.index') }}"
+                        class="squircle bg-success justify-content-center text-decoration-none">
+                        <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('doctors.index') }}" class="text-decoration-none">
+                    <p>Doctors</p>
                 </a>
             </div>
-            <a href="{{ route('doctors.index') }}" class="text-decoration-none">
-                <p>Doctors</p>
-            </a>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('staff.index') }}"
-                    class="squircle bg-primary justify-content-center text-decoration-none">
-                    <i class="fe fe-users fe-32 align-self-center text-white"></i>
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('staff.index') }}"
+                        class="squircle bg-primary justify-content-center text-decoration-none">
+                        <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('staff.index') }}" class="text-decoration-none">
+                    <p>Staff</p>
                 </a>
             </div>
-            <a href="{{ route('staff.index') }}" class="text-decoration-none">
-                <p>Staff</p>
-            </a>
-        </div>
+        @endif
         <div class="col-6 col-md-3 text-center">
             <div>
                 <a href="{{ route('services.index') }}"
