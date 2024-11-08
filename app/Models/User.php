@@ -48,4 +48,16 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Define the relationship to the fcm_tokens table
+    public function fcmTokens()
+    {
+        return $this->hasMany(SubscribeNotification::class);
+    }
+
+    // Define the method to retrieve all FCM tokens for this user
+    public function tokens()
+    {
+        return $this->fcmTokens->pluck('token')->toArray();
+    }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Services\Appointment;
 
+use App\Models\User;
+use App\Facades\Firebase;
 use App\Models\Appointment;
-use App\Models\SchduleDateTime;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Services\Patient\PatientStoreService;
 
 class AppointmentStoreService extends AppointmentService
@@ -59,10 +61,22 @@ class AppointmentStoreService extends AppointmentService
             $appointment->appointment_services()->insert($services);
 
             DB::commit();
+
+            $user = User::find($data['doctor_id']);
+
+            // Payload for the notification
+            $payload = [
+                'title' => 'New Appointment',
+                'message' => 'Schduled at ' . $appointment->time->time->format("Y-m-d H:i a"),
+                'url' => route("appointments.index")
+            ];
+
+            Firebase::sendNotification($user->tokens(), $payload);
             return $this->success();
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
+            Log::info($th->getMessage() . " : " . $th->getTraceAsString());
             return $this->error("Something went wrong!", 500);
         }
     }

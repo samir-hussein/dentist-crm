@@ -23,6 +23,7 @@ use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\MedicalHistoryController;
+use App\Http\Controllers\SubscribeNotificationController;
 use App\Http\Controllers\TreatmentSessionController;
 
 /*
@@ -43,6 +44,8 @@ Route::middleware("guest")->controller(AuthController::class)->group(function ()
 
 Route::middleware("auth")->group(function () {
     Route::get("/logout", [AuthController::class, "logout"])->name('logout');
+
+    Route::post("subscribe-notification", [SubscribeNotificationController::class, 'subscribe']);
 
     Route::get("/home", [HomePageController::class, "index"])->name('home');
 

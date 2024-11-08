@@ -10,7 +10,7 @@
             </a>
         </li>
         <li class="nav-item nav-notif">
-            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
+            <a class="nav-link text-muted my-2" href="./#" id="notif-permission">
                 <span class="fe fe-bell fe-16"></span>
                 <span class="dot dot-md bg-success"></span>
             </a>

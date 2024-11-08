@@ -16,7 +16,8 @@ class Appointment extends Model
         'time_id',
         'notes',
         'completed',
-        'visit_no'
+        'visit_no',
+        'notified'
     ];
 
     // Boot method to define model event

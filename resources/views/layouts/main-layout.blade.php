@@ -66,6 +66,22 @@
                                 @yield('buttons')
                             </div>
                         </div>
+                        <!-- Bootstrap Toast Notification -->
+                        <div id="notificationToast" class="toast d-none" role="alert" aria-live="assertive"
+                            aria-atomic="true" data-autohide="false"
+                            style="position: fixed; top: 20px; right: 20px; min-width: 250px;">
+                            <div class="toast-header">
+                                <img src="/path/to/icon.png" class="rounded mr-2" alt="Icon" style="width: 20px;">
+                                <strong class="mr-auto" id="toast-title">Notification</strong>
+                                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body" id="toast-body">
+                                <!-- Notification message will appear here -->
+                            </div>
+                        </div>
+
                         @yield('content')
                     </div> <!-- .col-12 -->
                 </div> <!-- .row -->
@@ -307,6 +323,76 @@
             }
         });
     </script>
+
+    <!-- Include Firebase v8 SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTBWP_5d-Jq-n4Vdg4tlqt-Pysg56yQXk",
+            authDomain: "dintest-1e036.firebaseapp.com",
+            projectId: "dintest-1e036",
+            storageBucket: "dintest-1e036.firebasestorage.app",
+            messagingSenderId: "41266953605",
+            appId: "1:41266953605:web:cd2cb3a0963b189b8618ec",
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        // Register the Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                    messaging.useServiceWorker(registration);
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+
+        async function requestPermission() {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === "granted") {
+                    const currentToken = await messaging.getToken({
+                        vapidKey: "BPRgD6UXrwDzpRPsNDtcdzK7sffnVRP3-ooB8MT7aY1FD1BfrdM85w-nWhxpWXmVwLkUdPl8IhcneFX6wsmS34Q"
+                    });
+                    if (currentToken) {
+                        $.ajax({
+                            url: '/subscribe-notification',
+                            method: 'POST',
+                            data: {
+                                token: currentToken
+                            }
+                        });
+
+                        alert("Subscribed Successfully");
+                    } else {
+                        console.log("No registration token available.");
+                        alert("No registration token available.");
+                    }
+                } else {
+                    console.log("Notification permission not granted.");
+                    alert("Notification permission not granted.");
+                }
+            } catch (error) {
+                console.error("Error getting permission or token:", error);
+                alert("Error getting permission or token");
+            }
+        }
+
+        document.getElementById("notif-permission").addEventListener("click", (e) => {
+            e.preventDefault();
+            requestPermission();
+        });
+    </script>
+
+
 
     @yield('script')
 </body>
