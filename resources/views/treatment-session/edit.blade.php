@@ -173,11 +173,11 @@
                                         data-needlab="{{ $treatment->treatmentType->need_labs }}"
                                         data-first="{{ $loop->first ? 1 : 0 }}">
                                         <a class="nav-link {{ $loop->first ? 'active' : '' }}"
-                                            id="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}-tab"
+                                            id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab"
                                             data-toggle="pill"
-                                            href="#{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
+                                            href="#{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
                                             role="tab"
-                                            aria-controls="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}"
+                                            aria-controls="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
                                             aria-selected="true">{{ $treatment->treatmentType->name }}</a>
                                     </li>
                                 @endforeach
@@ -189,8 +189,9 @@
                             <div class="tab-content mb-1" id="pills-tabContent">
                                 @foreach ($treatments as $treatment)
                                     <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
-                                        id="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}" role="tabpanel"
-                                        aria-labelledby="{{ str_replace(' ', '_', $treatment->treatmentType->name) }}-tab">
+                                        id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
+                                        role="tabpanel"
+                                        aria-labelledby="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab">
                                         <div class="row">
                                             @foreach ($treatment->treatmentType->sections as $section)
                                                 <div class="card-body col-12 col-md-6">
@@ -199,7 +200,7 @@
                                                         @foreach ($section->attributes as $attribute)
                                                             <div class="custom-control custom-checkbox">
                                                                 <input type="checkbox" data-attr="{{ $attribute->id }}"
-                                                                    data-id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}"
+                                                                    data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
                                                                     class="checkbox-inp custom-control-input"
                                                                     id="{{ $section->id }}-{{ $attribute->id }}"
                                                                     {{ in_array($attribute->id, $data->session->data['attr']) ? 'checked' : '' }}>
@@ -208,7 +209,7 @@
                                                             </div>
                                                             @if ($attribute->has_inputs && count($attribute->inputs) > 0)
                                                                 <div class="mt-2 d-none"
-                                                                    id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}">
+                                                                    id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}">
                                                                     @foreach ($attribute->inputs as $input)
                                                                         <div class="form-group row">
                                                                             <label for="{{ $input->id }}"
@@ -231,7 +232,7 @@
                                                         @foreach ($section->attributes as $attribute)
                                                             <div class="custom-control custom-radio">
                                                                 <input type="radio" data-attr="{{ $attribute->id }}"
-                                                                    data-id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}"
+                                                                    data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
                                                                     id="{{ $section->id }}-{{ $attribute->id }}"
                                                                     name="customRadio" class="custom-control-input"
                                                                     {{ in_array($attribute->id, $data->session->data['attr']) ? 'checked' : '' }}>
@@ -239,8 +240,8 @@
                                                                     for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                                             </div>
                                                             @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                                                <div class="mt-2 d-none {{ str_replace(' ', '_', $section->title) }}"
-                                                                    id="{{ str_replace(' ', '_', $section->title) }}-{{ $attribute->id }}">
+                                                                <div class="mt-2 d-none {{ str_replace([' ', '.'], '_', $section->title) }}"
+                                                                    id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}">
                                                                     @foreach ($attribute->inputs as $input)
                                                                         <div class="form-group row">
                                                                             <label for="{{ $input->id }}"

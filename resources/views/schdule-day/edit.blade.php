@@ -61,7 +61,7 @@
                                     <div class="form-group col-12">
                                         <label for="time">Appointment Time</label>
                                         <input type="time" class="form-control" value="{{ $pattern->time }}"
-                                            name="times[]">
+                                            name="times[]" disabled>
                                         <button type="button"
                                             class="mt-2 delete-time btn btn-danger btn-sm">Delete</button>
                                     </div>

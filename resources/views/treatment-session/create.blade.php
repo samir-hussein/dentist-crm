@@ -722,6 +722,11 @@
                 const diagnosis = $("#diagnose").find('option:selected').text()
                     .trim(); // Diagnose select
 
+                if (!diagnose || diagnose == "") {
+                    alert("Please select a diagnosis");
+                    return false;
+                }
+
                 $("#print-diagnosis").text(diagnosis);
 
                 // Medicines and doses

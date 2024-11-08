@@ -31,16 +31,27 @@ class AppointmentNotification extends Command
 
         $appointments = Appointment::where("notified", 0)
             ->whereHas("time", function ($query) {
-                $query->where("time", "<=", now()->addMinutes(5))
-                    ->where("time", ">", now());
-            })->with(['doctor', 'time'])
+                // If manually_updated_time is null, use the time column
+                $query->where(function ($subQuery) {
+                    $subQuery->whereNull('manually_updated_time')
+                        ->where('time', '<=', now()->addMinutes(5))
+                        ->where('time', '>', now());
+                })
+                    ->orWhere(function ($subQuery) {
+                        // If manually_updated_time is not null, use manually_updated_time column
+                        $subQuery->whereNotNull('manually_updated_time')
+                            ->where('manually_updated_time', '<=', now()->addMinutes(5))
+                            ->where('manually_updated_time', '>', now());
+                    });
+            })
+            ->with(['doctor', 'time'])
             ->get();
 
         foreach ($appointments as $appointment) {
             // Payload for the notification
             $payload = [
                 'title' => 'Appointment within the next 5 minutes',
-                'message' => 'Schduled at ' . $appointment->time->time->format("Y-m-d H:i a"),
+                'message' => 'Schduled at ' . $appointment->time?->manually_updated_time?->format("Y-m-d H:i a") ?? $appointment->time?->time->format("Y-m-d H:i a"),
                 'url' => route("patients.profile", ['patient' => $appointment->patient_id])
             ];
 

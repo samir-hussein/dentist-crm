@@ -687,7 +687,7 @@
                                                         @foreach ($data->times as $time)
                                                             <option {{ old('time_id') == $time->id ? 'selected' : '' }}
                                                                 value="{{ $time->id }}">
-                                                                {{ $time->time->format('l Y-m-d h:i a') }}
+                                                                {{ $time->manually_updated_time?->format('l Y-m-d h:i a') ?? $time->time->format('l Y-m-d h:i a') }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -766,7 +766,7 @@
                                                         @foreach ($data->times as $time)
                                                             <option {{ old('time_id') == $time->id ? 'selected' : '' }}
                                                                 value="{{ $time->id }}">
-                                                                {{ $time->time->format('l Y-m-d h:i a') }}
+                                                                {{ $time->manually_updated_time?->format('l Y-m-d h:i a') ?? $time->time->format('l Y-m-d h:i a') }}
                                                             </option>
                                                         @endforeach
                                                     </select>

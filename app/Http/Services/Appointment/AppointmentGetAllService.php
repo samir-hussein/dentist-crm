@@ -33,7 +33,7 @@ class AppointmentGetAllService extends AppointmentService
                 $q->select(['services.id', 'name']);
             },
             "time" => function ($q) {
-                $q->select(['schdule_date_times.id', 'time']);
+                $q->select(['schdule_date_times.id', 'time', 'manually_updated_time']);
             }
         ])->join('schdule_date_times', 'schdule_date_times.id', '=', 'appointments.time_id')
             ->orderBy('schdule_date_times.time')
@@ -54,7 +54,7 @@ class AppointmentGetAllService extends AppointmentService
                 return $service->name;
             })->implode(' - ');
 
-            $appointment->formatedTime = $appointment->time?->time->format("l Y-m-d h:i a") ?? "";
+            $appointment->formatedTime = $appointment->time?->manually_updated_time?->format("l Y-m-d h:i a") ?? $appointment->time?->time->format("l Y-m-d h:i a") ?? "";
 
             return $appointment;
         });
