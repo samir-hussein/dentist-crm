@@ -681,8 +681,8 @@
                                                     @enderror
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label for="simple-select4">Appointment</label>
-                                                    <select class="form-control select2" id="simple-select4"
+                                                    <label for="simple-select6">Appointment</label>
+                                                    <select class="form-control select2" id="simple-select6"
                                                         name="time_id">
                                                         @foreach ($data->times as $time)
                                                             <option {{ old('time_id') == $time->id ? 'selected' : '' }}

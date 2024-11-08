@@ -18,8 +18,6 @@ return new class extends Migration
             $table->boolean("is_manually_updated")->default(false);
             $table->boolean("is_deleted")->default(false);
             $table->unsignedBigInteger('schdule_date_id');
-            $table->unsignedBigInteger('patient_id')->nullable();
-            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade')->onUpdate("cascade");
             $table->foreign('schdule_date_id')->references('id')->on('schdule_dates')->onDelete('cascade')->onUpdate("cascade");
             $table->timestamps();
         });

@@ -34,9 +34,6 @@
                         <thead>
                             <tr>
                                 <th>Time</th>
-                                <th>Patient Name</th>
-                                <th>Patient Phone</th>
-                                <th>Patient Phone2</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -55,9 +52,6 @@
                                                 class="btn btn-primary btn-sm">Save</button>
                                         </form>
                                     </td>
-                                    <td>{{ $appointment->patient?->name }}</td>
-                                    <td>{{ $appointment->patient?->phone }}</td>
-                                    <td>{{ $appointment->patient?->phone2 }}</td>
                                     <td>
                                         <button data-id="time{{ $appointment->id }}"
                                             data-url="{{ route('times.update', ['time' => $appointment->id]) }}"

@@ -67,11 +67,9 @@
                             <div class="form-group col-md-6">
                                 <label for="simple-select4">Appointment</label>
                                 <select class="form-control select2" id="simple-select4" name="time_id">
-                                    <option value="{{ $data->appointment->time_id }}">
-                                        {{ $data->appointment->time?->time->format('l Y-m-d h:i a') }}
-                                    </option>
                                     @foreach ($data->times as $time)
-                                        <option {{ old('time_id') == $time->id ? 'selected' : '' }}
+                                        <option
+                                            {{ old('time_id') ?? $data->appointment->time_id == $time->id ? 'selected' : '' }}
                                             value="{{ $time->id }}">
                                             {{ $time->time->format('l Y-m-d h:i a') }}
                                         </option>

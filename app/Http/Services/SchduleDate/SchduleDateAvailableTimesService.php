@@ -8,6 +8,6 @@ class SchduleDateAvailableTimesService extends SchduleDateService
 {
     public function boot()
     {
-        return SchduleDateTime::where("is_deleted", false)->whereNull("patient_id")->orderBy("time")->get();
+        return SchduleDateTime::where("is_deleted", false)->orderBy("time")->get();
     }
 }

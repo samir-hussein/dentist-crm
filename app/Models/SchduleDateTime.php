@@ -19,7 +19,6 @@ class SchduleDateTime extends Model
         'is_manually_updated',
         'is_deleted',
         'schdule_date_id',
-        'patient_id',
         'manually_updated_time'
     ];
 
@@ -41,13 +40,5 @@ class SchduleDateTime extends Model
     public function scheduleDate()
     {
         return $this->belongsTo(SchduleDate::class);
-    }
-
-    /**
-     * Get the patient associated with the time.
-     */
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class);
     }
 }

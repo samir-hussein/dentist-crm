@@ -19,14 +19,10 @@ class AppointmentUpdateService extends AppointmentService
             return $this->error("This appointment already exists.", 400);
         }
 
-        if ($appointment->time_id != $data['time_id']) {
-            SchduleDateTime::where("id", $data['time_id'])->update([
-                'patient_id' => $appointment->patient_id,
-            ]);
+        $check_doctor_busy = $this->model->where("id", "!=", $appointment->id)->where("doctor_id", $data['doctor_id'])->where("time_id", $data['time_id'])->first();
 
-            SchduleDateTime::where("id", $appointment->time_id)->update([
-                'patient_id' => null,
-            ]);
+        if ($check_doctor_busy) {
+            return $this->error("The Doctor already have appointment in this time.", 400);
         }
 
         $appointment->update($data);
