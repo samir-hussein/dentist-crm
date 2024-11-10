@@ -5,7 +5,7 @@
 @section('buttons')
     <a href="{{ route('patients.create') }}">
         <button type="button" class="btn btn-primary">
-            <span class="fe fe-plus fe-12 mr-2"></span>Create
+            <span class="fe fe-plus fe-12 mr-2"></span>Add
         </button>
     </a>
 @endsection
