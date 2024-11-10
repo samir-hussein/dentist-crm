@@ -39,7 +39,7 @@ trait HelperFunctions
     {
         return DataTables::of($data)
             ->addColumn('formated_date', function ($row) {
-                return $row->date->format("Y-m-d");
+                return $row->date->format("d-m-Y");
             })
             ->addColumn('day', function ($row) {
                 return $row->schduleDay->day;

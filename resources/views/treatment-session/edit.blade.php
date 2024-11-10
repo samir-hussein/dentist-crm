@@ -22,7 +22,7 @@
         }
 
         .splide img {
-            width: 300px;
+            width: 100%;
             height: 270px;
             object-fit: contain;
             background-color: white;
@@ -47,6 +47,10 @@
             cursor: not-allowed;
             /* Change cursor to indicate it's not clickable */
         }
+
+        .tooth-chart {
+            margin: auto;
+        }
     </style>
 @endsection
 
@@ -60,14 +64,10 @@
 
     <div class="alert alert-info" role="alert">
         <div class="row">
-            <p class="col-2 mb-0 d-flex align-items-baseline">
-                <span class="fe fe-16 fe-clock"></span>
-                <span id="counter" class="ml-2">00:00:00</span>
-            </p>
-            <p class="col-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
+            <p class="col-12 col-md-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
                 {{ $data->patient->age }} years old | {{ $data->patient->nationality }} |
                 {{ $data->patient->phone }} | {{ $data->patient->phone2 }}</p>
-            <div class="col-2">
+            <div class="col-6 col-md-2">
                 <span class="d-flex align-items-center justify-content-center">
                     Take Invoice :
                     @if ($data->patient->need_invoice)
@@ -77,6 +77,10 @@
                     @endif
                 </span>
             </div>
+            <p class="col-6 col-md-2 mb-0 d-flex align-items-baseline">
+                <span class="fe fe-16 fe-clock"></span>
+                <span id="counter" class="ml-2">00:00:00</span>
+            </p>
         </div>
     </div>
     <div class="row">
@@ -117,12 +121,12 @@
                     </div>
                 </div>
                 <div class="card-body form-row pt-0 pb-0">
-                    <div class="form-group col-12" id="div-upload-tooth">
-                        <button class="btn btn-secondary" id="tooth-btn">Upload Tooth Panorama</button>
+                    <div class="form-group col-6 col-md-12" id="div-upload-tooth">
+                        <button class="btn btn-secondary w-100" id="tooth-btn">Upload Tooth X-Ray</button>
                         <input type="file" hidden id="tooth-inp" multiple>
                     </div>
-                    <div class="form-group col-12">
-                        <button class="btn btn-info" id="panorama-btn">Upload Panorama</button>
+                    <div class="form-group col-6 col-md-12">
+                        <button class="btn btn-info w-100" id="panorama-btn">Upload Panorama</button>
                         <input type="file" hidden id="panorama-inp" multiple>
                     </div>
                 </div>
@@ -132,45 +136,11 @@
         <div class="col-12 col-md-7">
             <div class="mb-2">
                 <div class="card shadow">
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-12 col-md-2">
-                                <label for="fees">Fees</label>
-                                <input type="number" id="fees" class="form-control" min="0" disabled
-                                    value="{{ $data->session->invoice[0]->fees }}">
-                            </div>
-                            <div class="form-group col-12 col-md-3">
-                                <label for="paid">Down Payment (Paid :
-                                    {{ $data->session->invoice->sum('paid') }})</label>
-                                <input type="number" id="paid" class="form-control" min="0" value="0">
-                            </div>
-                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-info" data-toggle="modal"
-                                    data-target=".invoices-modal">Invoices</button>
-                            </div>
-                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-warning" data-toggle="modal"
-                                    data-target=".prescription-modal">Prescription</button>
-                            </div>
-                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-primary" id="save">Save & Close</button>
-                            </div>
-                            <div class="form-group col-12 col-md-1 d-flex align-items-end justify-content-center">
-                                <a href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
-                                        class="btn btn-danger">Exit</button></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="card shadow">
                     <div class="card-body" id="treatment-tabs">
                         @if (count($treatments) > 0)
                             <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                                 @foreach ($treatments as $treatment)
-                                    <li class="nav-item tab-btn"
-                                        data-needlab="{{ $treatment->treatmentType->need_labs }}"
+                                    <li class="nav-item tab-btn" data-needlab="{{ $treatment->treatmentType->need_labs }}"
                                         data-first="{{ $loop->first ? 1 : 0 }}">
                                         <a class="nav-link {{ $loop->first ? 'active' : '' }}"
                                             id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab"
@@ -194,7 +164,7 @@
                                         aria-labelledby="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab">
                                         <div class="row">
                                             @foreach ($treatment->treatmentType->sections as $section)
-                                                <div class="card-body col-12 col-md-6">
+                                                <div class="card-body col-6">
                                                     <h6>{{ $section->title }}</h6>
                                                     @if ($section->multi_selection)
                                                         @foreach ($section->attributes as $attribute)
@@ -272,7 +242,15 @@
                                 </div>
                             </div>
 
-                            <div id="lab-div" class="d-none">
+                            <div id="lab-div" class="d-none p-2">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input lab-done"
+                                            id="cementation-delivery"
+                                            {{ $data->session->labOrder?->done ? 'checked' : '' }}>
+                                        <label class="custom-control-label" for="cementation-delivery">Done</label>
+                                    </div> <!-- form-group -->
+                                </div>
                                 <h6>Lab Service</h6>
                                 <div class="form-row">
                                     <div class="form-group col-12 col-md-6">
@@ -309,18 +287,47 @@
                                     <div class="form-group col-12 col-md-6">
                                         <label>Date</label>
                                         <input type="date" class="form-control" id="sent"
-                                            value="{{ optional($data->session->labOrder)->sent ? \Carbon\Carbon::parse($data->session->labOrder->sent)->format('Y-m-d') : '' }}">
+                                            value="{{ optional($data->session->labOrder)->sent ? \Carbon\Carbon::parse($data->session->labOrder->sent)->format('d-m-Y') : '' }}">
                                     </div> <!-- form-group -->
                                 </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input lab-done"
-                                        id="cementation-delivery" {{ $data->session->labOrder?->done ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="cementation-delivery">Cementation
-                                        Delivery</label>
-                                </div> <!-- form-group -->
                             </div>
                         @endif
 
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-6 col-md-2">
+                                <label for="fees">Fees</label>
+                                <input type="number" id="fees" class="form-control" min="0" disabled
+                                    value="{{ $data->session->invoice[0]->fees }}">
+                            </div>
+                            <div class="form-group col-6 col-md-3">
+                                <label for="paid">Down Payment (Paid :
+                                    {{ $data->session->invoice->sum('paid') }})</label>
+                                <input type="number" id="paid" class="form-control" min="0"
+                                    value="0">
+                            </div>
+                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-info" data-toggle="modal"
+                                    data-target=".invoices-modal">Invoices</button>
+                            </div>
+                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-warning" data-toggle="modal"
+                                    data-target=".prescription-modal">Prescription</button>
+                            </div>
+                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-primary" id="save">Save & Close</button>
+                            </div>
+                            <div class="form-group col-6 col-md-1 d-flex align-items-end justify-content-center">
+                                <a class="w-100"
+                                    href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
+                                        class="btn w-100 btn-danger">Exit</button></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -405,7 +412,7 @@
                             @foreach ($data->session->invoice as $invoice)
                                 <tr>
                                     <td>{{ $invoice->paid }}</td>
-                                    <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+                                    <td>{{ $invoice->created_at->format('d-m-Y') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -473,7 +480,7 @@
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
                                                     </td>
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
-                                                        {{ date('Y-m-d') }}</td>
+                                                        {{ date('d-m-Y') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">

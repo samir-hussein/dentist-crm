@@ -81,7 +81,7 @@
                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Date</td>
                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
-                                        {{ date('Y-m-d') }}</td>
+                                        {{ date('d-m-Y') }}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Name</td>

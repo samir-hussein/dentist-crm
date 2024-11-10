@@ -91,7 +91,7 @@ class AppointmentController extends Controller
             return $this->backWithError($response['errors']);
         }
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("appointments.index");
     }
 
     /**

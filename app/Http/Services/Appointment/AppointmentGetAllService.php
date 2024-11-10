@@ -54,7 +54,7 @@ class AppointmentGetAllService extends AppointmentService
                 return $service->name;
             })->implode(' - ');
 
-            $appointment->formatedTime = $appointment->time?->manually_updated_time?->format("l Y-m-d h:i a") ?? $appointment->time?->time->format("l Y-m-d h:i a") ?? "";
+            $appointment->formatedTime = $appointment->time?->manually_updated_time?->format("l d-m-Y h:i a") ?? $appointment->time?->time->format("l d-m-Y h:i a") ?? "";
 
             return $appointment;
         });

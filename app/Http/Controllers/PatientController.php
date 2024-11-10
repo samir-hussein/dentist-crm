@@ -93,7 +93,7 @@ class PatientController extends Controller
 
         $this->service->update($patient, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("patients.index");
     }
 
     /**

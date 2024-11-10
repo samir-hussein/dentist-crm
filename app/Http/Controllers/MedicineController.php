@@ -83,7 +83,7 @@ class MedicineController extends Controller
 
         $this->service->update($medicine, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("medicines.index");
     }
 
     /**

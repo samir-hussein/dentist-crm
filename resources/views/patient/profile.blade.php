@@ -1,6 +1,6 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Patient Profile')
+@section('title', 'Patient File')
 
 @section('buttons')
     <a href="{{ route('patients.index') }}"><button type="button" class="btn btn-dark"><span
@@ -33,7 +33,6 @@
             polygon:active,
             path:hover,
             path:active {
-                fill: #c0bfbf;
                 cursor: pointer;
             }
 
@@ -63,6 +62,10 @@
         .select2 {
             width: 100% !important;
         }
+
+        .tooth-chart {
+            margin: auto;
+        }
     </style>
 @endsection
 
@@ -82,10 +85,10 @@
 
                             <div class="alert alert-info" role="alert">
                                 <div class="row">
-                                    <p class="col-8 mb-0">#{{ $patient->id }} | {{ $patient->name }} |
+                                    <p class="col-12 col-md-10 mb-0">#{{ $patient->id }} | {{ $patient->name }} |
                                         {{ $patient->age }} years old | {{ $patient->nationality }} |
                                         {{ $patient->phone }} | {{ $patient->phone2 }}</p>
-                                    <div class="col-2">
+                                    <div class="col-md-2 col-12">
                                         <span class="d-flex align-items-center justify-content-center">
                                             Take Invoice :
                                             @if ($patient->need_invoice)
@@ -123,7 +126,7 @@
                             </div>
                             @if (auth()->user()->is_admin || auth()->user()->is_doctor)
                                 <div>
-                                    <button type="button" class="btn btn-info w-100" data-toggle="modal"
+                                    <button type="button" class="btn w-100 btn-info w-100" data-toggle="modal"
                                         data-target=".print-modal">Print Invoices</button>
                                 </div>
                             @endif
@@ -268,7 +271,7 @@
                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
                     </td>
                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
-                        {{ date('Y-m-d') }}</td>
+                        {{ date('d-m-Y') }}</td>
                 </tr>
                 <tr>
                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">

@@ -51,7 +51,7 @@ class AppointmentNotification extends Command
             // Payload for the notification
             $payload = [
                 'title' => 'Appointment within the next 5 minutes',
-                'message' => 'Schduled at ' . $appointment->time?->manually_updated_time?->format("Y-m-d H:i a") ?? $appointment->time?->time->format("Y-m-d H:i a"),
+                'message' => 'Schduled at ' . $appointment->time?->manually_updated_time?->format("d-m-Y H:i a") ?? $appointment->time?->time->format("d-m-Y H:i a"),
                 'url' => route("patients.profile", ['patient' => $appointment->patient_id])
             ];
 

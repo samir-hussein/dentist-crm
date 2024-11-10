@@ -126,7 +126,7 @@
                         }
 
                         return `
-                            <a href="${profileUrl}" class="btn btn-sm btn-info">Profile</a>
+                            <a href="${profileUrl}" class="btn btn-sm btn-info">Patient File</a>
                             <a href="${editUrl}" class="btn btn-sm btn-warning">Edit</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">
                                 @csrf

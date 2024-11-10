@@ -40,7 +40,7 @@ class InvoiceTaxService extends InvoiceService
 
         if ($request->excel) {
             $invoices = $data->get();
-            return Excel::download(new InvoiceTaxExport($invoices, $from?->format("Y-m-d"), $to?->format("Y-m-d")), 'tax_invoices.xlsx');
+            return Excel::download(new InvoiceTaxExport($invoices, $from?->format("d-m-Y"), $to?->format("d-m-Y")), 'tax_invoices.xlsx');
         }
 
         $tableName = $this->model->getTable();
@@ -50,7 +50,7 @@ class InvoiceTaxService extends InvoiceService
                 return $row->patient->name;
             })
             ->addColumn('date', function ($row) {
-                return $row->created_at->format("Y-m-d");
+                return $row->created_at->format("d-m-Y");
             })
             ->filter(function ($query) use ($request, $tableName) {
                 if ($request->has('search') && !empty($request->search['value'])) {

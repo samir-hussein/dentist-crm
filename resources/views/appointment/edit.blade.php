@@ -71,7 +71,7 @@
                                         <option
                                             {{ old('time_id') ?? $data->appointment->time_id == $time->id ? 'selected' : '' }}
                                             value="{{ $time->id }}">
-                                            {{ $time->manually_updated_time?->format('l Y-m-d h:i a') ?? $time->time->format('l Y-m-d h:i a') }}
+                                            {{ $time->manually_updated_time?->format('l d-m-Y h:i a') ?? $time->time->format('l d-m-Y h:i a') }}
                                         </option>
                                     @endforeach
                                 </select>

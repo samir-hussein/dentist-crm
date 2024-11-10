@@ -74,7 +74,7 @@ class ServiceController extends Controller
 
         $this->service->update($service, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("services.index");
     }
 
     /**

@@ -74,7 +74,7 @@ class MedicalHistoryController extends Controller
 
         $this->service->update($medicalHistory, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("medical-histories.index");
     }
 
     /**

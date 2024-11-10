@@ -28,7 +28,7 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
                 "fees" => 0,
                 "paid" => $data['paid'],
                 "tooth" => $treatmentDetail->tooth,
-                "treatment" => "Follow Up For Date : " . $treatmentDetail->created_at->format("Y-m-d"),
+                "treatment" => "Follow Up For Date : " . $treatmentDetail->created_at->format("d-m-Y"),
                 "tax_invoice" => $patient->need_invoice,
                 'patient_id' => $patient->id,
                 "treatment_detail_id" => $treatmentDetail->id,

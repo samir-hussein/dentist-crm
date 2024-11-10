@@ -45,7 +45,7 @@ class InvoiceIndexService extends InvoiceService
                 return $row->patient->name;
             })
             ->addColumn('date', function ($row) {
-                return $row->created_at->format("Y-m-d");
+                return $row->created_at->format("d-m-Y");
             })
             ->filter(function ($query) use ($request, $tableName) {
                 if ($request->has('search') && !empty($request->search['value'])) {

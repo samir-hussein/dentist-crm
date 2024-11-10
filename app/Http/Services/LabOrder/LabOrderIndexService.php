@@ -48,10 +48,10 @@ class LabOrderIndexService extends LabOrderService
                 return $row->lab->name;
             })
             ->addColumn('sent', function ($row) {
-                return $row->sent->format("Y-m-d");
+                return $row->sent->format("d-m-Y");
             })
             ->addColumn('received', function ($row) {
-                return $row->received?->format("Y-m-d");
+                return $row->received?->format("d-m-Y");
             })
             ->addColumn('custom_data', function ($row) {
                 return collect($row->custom_data)

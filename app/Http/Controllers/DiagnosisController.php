@@ -90,7 +90,7 @@ class DiagnosisController extends Controller
 
         $this->service->update($diagnosis, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("diagnosis.index");
     }
 
     /**

@@ -90,7 +90,7 @@ class TreatmentTypeController extends Controller
 
         $this->service->update($treatmentType, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("treatment-types.index");
     }
 
     /**

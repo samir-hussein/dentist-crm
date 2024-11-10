@@ -26,7 +26,7 @@
     <div class="row my-4">
         <!-- Small table -->
         <div class="col-md-12">
-            <h4>{{ $data->schduleDay->day }} - {{ $data->date->format('Y-m-d') }}</h4>
+            <h4>{{ $data->schduleDay->day }} - {{ $data->date->format('d-m-Y') }}</h4>
             <div class="card shadow">
                 <div class="card-body">
                     <!-- table -->

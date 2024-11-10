@@ -74,7 +74,7 @@ class LabServiceController extends Controller
 
         $this->service->update($labService, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("lab-services.index");
     }
 
     /**

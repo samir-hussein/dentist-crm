@@ -41,6 +41,16 @@
             background-color: rgb(130, 130, 130) !important;
             color: white !important;
         }
+
+        .card-body {
+            overflow-x: scroll;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .card-body::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 
     @yield('style')

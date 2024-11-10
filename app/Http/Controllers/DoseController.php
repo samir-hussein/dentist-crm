@@ -74,7 +74,7 @@ class DoseController extends Controller
 
         $this->service->update($dose, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("doses.index");
     }
 
     /**

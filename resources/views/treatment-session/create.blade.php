@@ -20,7 +20,6 @@
             polygon:active,
             path:hover,
             path:active {
-                fill: #c0bfbf !important;
                 cursor: pointer;
             }
 
@@ -30,7 +29,7 @@
         }
 
         .splide img {
-            width: 300px;
+            width: 100%;
             height: 270px;
             object-fit: contain;
             background-color: white;
@@ -46,6 +45,10 @@
         .select2 {
             width: 100% !important;
         }
+
+        .tooth-chart {
+            margin: auto;
+        }
     </style>
 @endsection
 
@@ -59,14 +62,10 @@
 
     <div class="alert alert-info" role="alert">
         <div class="row">
-            <p class="col-2 mb-0 d-flex align-items-baseline">
-                <span class="fe fe-16 fe-clock"></span>
-                <span id="counter" class="ml-2">00:00:00</span>
-            </p>
-            <p class="col-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
+            <p class="col-12 col-md-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
                 {{ $data->patient->age }} years old | {{ $data->patient->nationality }} |
                 {{ $data->patient->phone }} | {{ $data->patient->phone2 }}</p>
-            <div class="col-2">
+            <div class="col-6 col-md-2">
                 <span class="d-flex align-items-center justify-content-center">
                     Take Invoice :
                     @if ($data->patient->need_invoice)
@@ -76,6 +75,10 @@
                     @endif
                 </span>
             </div>
+            <p class="col-6 col-md-2 mb-0 d-flex align-items-baseline">
+                <span class="fe fe-16 fe-clock"></span>
+                <span id="counter" class="ml-2">00:00:00</span>
+            </p>
         </div>
     </div>
     <div class="row">
@@ -117,12 +120,12 @@
                     </div>
                 </div>
                 <div class="card-body form-row pt-0 pb-0">
-                    <div class="form-group col-12 invisible" id="div-upload-tooth">
-                        <button class="btn btn-secondary" id="tooth-btn">Upload Tooth Panorama</button>
+                    <div class="form-group col-6 col-md-12 invisible" id="div-upload-tooth">
+                        <button class="btn btn-secondary w-100" id="tooth-btn">Upload Tooth X-Ray</button>
                         <input type="file" hidden id="tooth-inp" multiple>
                     </div>
-                    <div class="form-group col-12">
-                        <button class="btn btn-info" id="panorama-btn">Upload Panorama</button>
+                    <div class="form-group col-6 col-md-12">
+                        <button class="btn btn-info w-100" id="panorama-btn">Upload Panorama</button>
                         <input type="file" hidden id="panorama-inp" multiple>
                     </div>
                 </div>
@@ -132,35 +135,36 @@
         <div class="col-12 col-md-7">
             <div class="mb-2">
                 <div class="card shadow">
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-12 col-md-3">
-                                <label for="fees">Fees</label>
-                                <input type="number" id="fees" class="form-control" min="0">
-                            </div>
-                            <div class="form-group col-12 col-md-3">
-                                <label for="paid">Down Payment</label>
-                                <input type="number" id="paid" class="form-control" min="0">
-                            </div>
-                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-warning" data-toggle="modal"
-                                    data-target=".prescription-modal">Prescription</button>
-                            </div>
-                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn btn-primary" id="save">Save & Close</button>
-                            </div>
-                            <div class="form-group col-12 col-md-2 d-flex align-items-end justify-content-center">
-                                <a href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
-                                        class="btn btn-danger">Exit</button></a>
-                            </div>
-                        </div>
+                    <div class="card-body" id="treatment-tabs">
+
                     </div>
                 </div>
             </div>
             <div>
                 <div class="card shadow">
-                    <div class="card-body" id="treatment-tabs">
-
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-6 col-md-3">
+                                <label for="fees">Fees</label>
+                                <input type="number" id="fees" class="form-control" min="0">
+                            </div>
+                            <div class="form-group col-6 col-md-3">
+                                <label for="paid">Down Payment</label>
+                                <input type="number" id="paid" class="form-control" min="0">
+                            </div>
+                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-warning" data-toggle="modal"
+                                    data-target=".prescription-modal">Prescription</button>
+                            </div>
+                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-primary" id="save">Save & Close</button>
+                            </div>
+                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
+                                <a class="w-100"
+                                    href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
+                                        class="btn w-100 btn-danger">Exit</button></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -284,7 +288,7 @@
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
                                                     </td>
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
-                                                        {{ date('Y-m-d') }}</td>
+                                                        {{ date('d-m-Y') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">

@@ -22,7 +22,7 @@
                 aria-labelledby="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab">
                 <div class="row">
                     @foreach ($treatment->treatmentType->sections as $section)
-                        <div class="card-body col-12 col-md-6">
+                        <div class="card-body col-6">
                             <h6>{{ $section->title }}</h6>
                             @if ($section->multi_selection)
                                 @foreach ($section->attributes as $attribute)
@@ -95,7 +95,13 @@
         </div>
     </div>
 
-    <div id="lab-div" class="d-none">
+    <div id="lab-div" class="d-none p-2">
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input lab-done" id="cementation-delivery">
+                <label class="custom-control-label" for="cementation-delivery">Done</label>
+            </div> <!-- form-group -->
+        </div>
         <h6>Lab Service</h6>
         <div class="form-row">
             <div class="form-group col-12 col-md-6">
@@ -128,11 +134,6 @@
                 <input type="date" class="form-control" id="sent">
             </div> <!-- form-group -->
         </div>
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input lab-done" id="cementation-delivery">
-            <label class="custom-control-label" for="cementation-delivery">Cementation
-                Delivery</label>
-        </div> <!-- form-group -->
     </div>
 
 @endif

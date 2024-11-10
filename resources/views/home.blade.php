@@ -51,7 +51,7 @@
                                         @endif
 
                                         <a href="{{ route('patients.profile', ['patient' => $appointment->patient->id]) }}"
-                                            class="btn mb-1 btn-sm btn-warning">Patient Profile</a>
+                                            class="btn mb-1 btn-sm btn-warning">Patient File</a>
 
                                         <form class="d-inline mb-1" method="POST"
                                             action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">

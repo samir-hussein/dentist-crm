@@ -1,7 +1,7 @@
 @foreach ($data as $row)
     <tr>
         <td style="padding-bottom: 15px;font-size: 12px;font-family: cursive">{{ $loop->iteration }}</td>
-        <td style="padding-bottom: 15px;font-size: 12px;font-family: cursive">{{ $row->created_at->format('Y-m-d') }}
+        <td style="padding-bottom: 15px;font-size: 12px;font-family: cursive">{{ $row->created_at->format('d-m-Y') }}
         </td>
         <td style="padding-bottom: 15px;font-size: 12px;font-family: cursive">{{ $row->treatment }}</td>
         <td style="padding-bottom: 15px;font-size: 12px;font-family: cursive">{{ $row->fees }}</td>

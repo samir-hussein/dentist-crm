@@ -67,7 +67,7 @@ class AppointmentStoreService extends AppointmentService
             // Payload for the notification
             $payload = [
                 'title' => 'New Appointment',
-                'message' => 'Schduled at ' . $appointment->time->time->format("Y-m-d H:i a"),
+                'message' => 'Schduled at ' . $appointment->time->time->format("d-m-Y H:i a"),
                 'url' => route("appointments.index")
             ];
 

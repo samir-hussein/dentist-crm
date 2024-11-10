@@ -74,7 +74,7 @@ class MedicineTypeController extends Controller
 
         $this->service->update($medicineType, $data);
 
-        return $this->backWithSuccess();
+        return $this->redirectWithSuccess("medicine-types.index");
     }
 
     /**
