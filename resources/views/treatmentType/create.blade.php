@@ -267,7 +267,7 @@
             const input = $(this).data('input');
             $("#inputs-container-" + section + "-" + attribute).append(`
             <div class="form-row">
-                <div class="form-group col-md-11">
+                <div class="form-group col-11">
                     <label for="sections[${section}][attributes][${attribute}][inputs][${input}][name]">Input Name</label>
                     <input type="text" class="form-control"
                         name="sections[${section}][attributes][${attribute}][inputs][${input}][name]"
@@ -276,7 +276,7 @@
                         <p style="color: red">* {{ $message }}</p>
                     @enderror
                 </div>
-                <div class="col-md-1 d-flex align-items-center">
+                <div class="col-1 d-flex align-items-center">
                     <button type="button"
                         class="btn btn-danger btn-sm delete-input-btn">X</button>
                 </div>

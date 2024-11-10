@@ -157,7 +157,7 @@
                                                         @if ($data->sections[0]->attributes[0]->inputs)
                                                             @for ($i = 0; $i < count($data->sections[0]->attributes[0]->inputs); $i++)
                                                                 <div class="form-row">
-                                                                    <div class="form-group col-md-11">
+                                                                    <div class="form-group col-11">
                                                                         <label
                                                                             for="sections[0][attributes][0][inputs][{{ $i }}][name]">Input
                                                                             Name</label>
@@ -168,7 +168,7 @@
                                                                             <p style="color: red">* {{ $message }}</p>
                                                                         @enderror
                                                                     </div>
-                                                                    <div class="col-md-1 d-flex align-items-center">
+                                                                    <div class="col-1 d-flex align-items-center">
                                                                         <button type="button"
                                                                             class="btn btn-danger btn-sm delete-input-btn">X</button>
                                                                     </div>
@@ -225,7 +225,7 @@
                                                                 @if ($data->sections[0]->attributes[$a]->inputs)
                                                                     @for ($i = 0; $i < count($data->sections[0]->attributes[$a]->inputs); $i++)
                                                                         <div class="form-row">
-                                                                            <div class="form-group col-md-11">
+                                                                            <div class="form-group col-11">
                                                                                 <label
                                                                                     for="sections[0][attributes][{{ $a }}][inputs][{{ $i }}][name]">Input
                                                                                     Name</label>
@@ -238,8 +238,7 @@
                                                                                 @enderror
                                                                             </div>
 
-                                                                            <div
-                                                                                class="col-md-1 d-flex align-items-center">
+                                                                            <div class="col-1 d-flex align-items-center">
                                                                                 <button type="button"
                                                                                     class="btn btn-danger btn-sm delete-input-btn">X</button>
                                                                             </div>
@@ -345,7 +344,7 @@
                                                                 @if ($data->sections[$i]->attributes[0]->inputs)
                                                                     @for ($j = 0; $j < count($data->sections[$i]->attributes[0]->inputs); $j++)
                                                                         <div class="form-row">
-                                                                            <div class="form-group col-md-11">
+                                                                            <div class="form-group col-11">
                                                                                 <label
                                                                                     for="sections[{{ $i }}][attributes][0][inputs][{{ $j }}][name]">Input
                                                                                     Name</label>
@@ -358,8 +357,7 @@
                                                                                 @enderror
                                                                             </div>
 
-                                                                            <div
-                                                                                class="col-md-1 d-flex align-items-center">
+                                                                            <div class="col-1 d-flex align-items-center">
                                                                                 <button type="button"
                                                                                     class="btn btn-danger btn-sm delete-input-btn">X</button>
                                                                             </div>
@@ -422,7 +420,7 @@
                                                                         @if ($data->sections[$i]->attributes[$a]->inputs)
                                                                             @for ($j = 0; $j < count($data->sections[$i]->attributes[$a]->inputs); $j++)
                                                                                 <div class="form-row">
-                                                                                    <div class="form-group col-md-11">
+                                                                                    <div class="form-group col-11">
                                                                                         <label
                                                                                             for="sections[{{ $i }}][attributes][{{ $a }}][inputs][{{ $j }}][name]">Input
                                                                                             Name</label>
@@ -437,7 +435,7 @@
                                                                                     </div>
 
                                                                                     <div
-                                                                                        class="col-md-1 d-flex align-items-center">
+                                                                                        class="col-1 d-flex align-items-center">
                                                                                         <button type="button"
                                                                                             class="btn btn-danger btn-sm delete-input-btn">X</button>
                                                                                     </div>
@@ -616,7 +614,7 @@
             const input = $(this).data('input');
             $("#inputs-container-" + section + "-" + attribute).append(`
                 <div class="form-row">
-                    <div class="form-group col-md-11">
+                    <div class="form-group col-11">
                         <label for="sections[${section}][attributes][${attribute}][inputs][${input}][name]">Input Name</label>
                         <input type="text" class="form-control"
                             name="sections[${section}][attributes][${attribute}][inputs][${input}][name]"
@@ -626,7 +624,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-1 d-flex align-items-center">
+                    <div class="col-1 d-flex align-items-center">
                         <button type="button"
                             class="btn btn-danger btn-sm delete-input-btn">X</button>
                     </div>
