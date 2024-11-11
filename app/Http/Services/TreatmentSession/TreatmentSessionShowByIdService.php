@@ -25,6 +25,30 @@ class TreatmentSessionShowByIdService extends TreatmentSessionService
                 ->orWhereJsonContains('childTooths', $data->session->tooth);
         }])->get();
 
+        $data->treatments = DiagnosisTreatment::where("diagnosis_id", $data->session->diagnose_id)
+            ->whereHas('treatmentType', function ($q) use ($data) {
+                $q->where("tooth_type", $data['tooth_type']);
+            })
+            ->where(function ($query) use ($data) {
+                $query->whereHas('treatmentType.sections.attributes.inputs', function ($q) use ($data) {
+                    if ($data['tooth_type'] == "permanent") {
+                        $q->whereJsonContains('adultTooths', $data->session->tooth)
+                            ->orWhere("adultTooths", null); // Match null or the tooth
+                    } else {
+                        $q->whereJsonContains('childTooths', $data->session->tooth)
+                            ->orWhere("childTooths", null); // Match null or the tooth
+                    }
+                })
+                    ->orWhereDoesntHave('treatmentType.sections.attributes.inputs'); // Allow treatments with no inputs
+            })
+            ->with([
+                'treatmentType',
+                'treatmentType.sections',
+                'treatmentType.sections.attributes',
+                'treatmentType.sections.attributes.inputs'
+            ])
+            ->get();
+
         $data->labs = Lab::all();
         $data->labsServices = LabService::all();
 

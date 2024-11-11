@@ -87,12 +87,12 @@
                 <div class="card-body">
                     <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" onclick="clearDataTeeth()" id="Permanent-tab" data-toggle="pill"
-                                href="#Permanent" role="tab" aria-controls="Permanent"
+                            <a class="nav-link active" onclick="clearDataTeeth('permanent')" id="Permanent-tab"
+                                data-toggle="pill" href="#Permanent" role="tab" aria-controls="Permanent"
                                 aria-selected="true">Permanent</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" onclick="clearDataTeeth()" id="Deciduous-tab" data-toggle="pill"
+                            <a class="nav-link" onclick="clearDataTeeth('deciduous')" id="Deciduous-tab" data-toggle="pill"
                                 href="#Deciduous" role="tab" aria-controls="Deciduous"
                                 aria-selected="false">Deciduous</a>
                         </li>
@@ -452,6 +452,7 @@
         let labData = {};
         let lab_id = null;
         let lab_done = false;
+        let tooth_type = "permanent";
 
         setInterval(() => {
             totalSeconds++;
@@ -535,7 +536,7 @@
             labData[$(this).data("attr")]['value'] = $(this).val();
         });
 
-        function clearDataTeeth() {
+        function clearDataTeeth(type) {
             selectedTooth = 0;
             diagnose = null;
             selectedAttr = [];
@@ -544,15 +545,20 @@
             labData = {};
             lab_id = null;
             lab_done = false;
+            tooth_type = type;
 
             $("polygon").removeClass("selected");
             $("path").removeClass("selected");
             $("#div-diagnosis").addClass("invisible");
             $("#div-upload-tooth").addClass("invisible");
+            $("#treatment-tabs").html("");
         }
 
         function getTreatmentsTabs() {
             const diagnose = $("#diagnose").val();
+
+            console.log(tooth_type);
+
 
             if (diagnose != 0 && selectedTooth != 0) {
                 $.ajax({
@@ -560,7 +566,8 @@
                     type: "GET",
                     data: {
                         diagnose: diagnose,
-                        teeth: selectedTooth
+                        teeth: selectedTooth,
+                        tooth_type: tooth_type,
                     },
                     success: function(response) {
                         $("#treatment-tabs").html(response.html);

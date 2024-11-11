@@ -18,6 +18,7 @@ class TreatmentType extends Model
         'name',
         'need_labs',
         'description',
+        'tooth_type'
     ];
 
     /**

@@ -23,6 +23,7 @@ class TreatmentTypeStoreRequest extends FormRequest
     {
         return [
             "name" => "required|string",
+            "tooth_type" => "required|string|in:permanent,deciduous",
             "need_labs" => "required|boolean",
             "description" => "sometimes|nullable|string",
             "diagnosis_ids" => "required|array",

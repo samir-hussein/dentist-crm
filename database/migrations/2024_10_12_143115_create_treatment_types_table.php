@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name");
             $table->boolean("need_labs")->default(false);
             $table->text("description")->nullable();
+            $table->string("tooth_type");
             $table->timestamps();
         });
     }

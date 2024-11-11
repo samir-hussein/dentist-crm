@@ -73,6 +73,18 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="tooth_type">Tooth Type</label>
+                            <select id="tooth_type" name="tooth_type" class="form-control">
+                                <option value="permanent" {{ old('tooth_type') == 'permanent' ? 'selected' : '' }}>Permanent
+                                </option>
+                                <option value="deciduous" {{ old('tooth_type') == 'deciduous' ? 'selected' : '' }}>Deciduous
+                                </option>
+                            </select>
+                            @error('tooth_type')
+                                <p style="color: red">* {{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="need_labs">Need Labs?</label>
                             <select id="need_labs" name="need_labs" class="form-control">
                                 <option value="1" {{ old('need_labs') ? 'selected' : '' }}>Yes</option>
@@ -265,8 +277,8 @@
             const attribute = $(this).data('attribute');
             const section = $(this).data('section');
             const input = $(this).data('input');
-            $("#inputs-container-" + section + "-" + attribute).append(`
-            <div class="form-row">
+            let tooth_type = $("#tooth_type").val();
+            let append = `<div class="form-row">
                 <div class="form-group col-11">
                     <label for="sections[${section}][attributes][${attribute}][inputs][${input}][name]">Input Name</label>
                     <input type="text" class="form-control"
@@ -279,17 +291,21 @@
                 <div class="col-1 d-flex align-items-center">
                     <button type="button"
                         class="btn btn-danger btn-sm delete-input-btn">X</button>
-                </div>
-                <div class="form-group col-12 col-md-6">
+                </div>`;
+
+            if (tooth_type == "permanent") {
+                append += `<div class="form-group col-12 col-md-6">
                     <label for="tooths">Adult Tooths</label>
                     <x-tooth-chart nameAttr="sections[${section}][attributes][${attribute}][inputs][${input}][adultTooths]" />
-                </div>
-
-                <div class="form-group col-12 col-md-6">
+                </div></div>`;
+            } else {
+                append += `<div class="form-group col-12 col-md-6">
                     <label for="tooths">Child Tooths</label>
                     <x-child-tooth-chart nameAttr="sections[${section}][attributes][${attribute}][inputs][${input}][childTooths]" />
-                </div>
-            </div>`);
+                </div></div>`;
+            }
+
+            $("#inputs-container-" + section + "-" + attribute).append(append);
 
             $(this).data("input", input + 1);
         })
