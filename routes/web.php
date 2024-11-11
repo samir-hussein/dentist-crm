@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Patient;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LabController;
 use App\Http\Controllers\AuthController;
@@ -8,23 +9,24 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\SchduleDayController;
+use App\Models\TreatmentSectionAttributeInput;
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\SchduleDateController;
 use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\MedicalHistoryController;
-use App\Http\Controllers\SubscribeNotificationController;
 use App\Http\Controllers\TreatmentSessionController;
+use App\Http\Controllers\SubscribeNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +52,7 @@ Route::middleware("auth")->group(function () {
     Route::get("/home", [HomePageController::class, "index"])->name('home');
 
     Route::get("patients/all", [PatientController::class, 'all'])->name('patients.all');
-    Route::get("patients/{patient}/profile", [PatientController::class, 'profile'])->name('patients.profile');
+    Route::get("patients/{patient}/profile", [PatientController::class, 'profile'])->name('patients.file');
     Route::resource('patients', PatientController::class)->missing(function () {
         return abort(404);
     });

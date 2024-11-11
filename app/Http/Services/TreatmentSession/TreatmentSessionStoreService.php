@@ -14,15 +14,12 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             'diagnose_id' => $data['diagnose_id'],
             'tooth' => $data['tooth'],
             'data' => $data['data'],
-            'doctor_id' => auth()->id()
+            'doctor_id' => auth()->id(),
+            'tooth_type' => $data['tooth_type'],
         ]);
 
         $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
-            ->with(['treatmentSection.treatmentType' => function ($q) {
-                $q->select(['treatment_types.id', 'name']);
-            }])
-            ->get()
-            ->pluck('treatmentSection.treatmentType.name')
+            ->pluck('name')
             ->unique()
             ->implode(' - ');
 
@@ -41,7 +38,7 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             $lab = $data['lab'];
             $treatmentSession->labOrder()->create([
                 'work' => implode(" - ", $lab['work']),
-                'cost' => $lab['cost'],
+                'cost' => isset($lab['cost']) ? $lab['cost'] : "",
                 'done' => $lab['done'],
                 'custom_data' => $lab['custom_data'],
                 'tooth' => $data['tooth'],

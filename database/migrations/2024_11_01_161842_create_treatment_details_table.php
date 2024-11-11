@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('treatment_details', function (Blueprint $table) {
             $table->id();
-            $table->string("tooth");
+            $table->json("tooth");
             $table->json("data");
             $table->unsignedBigInteger("patient_id");
+            $table->string("tooth_type");
             $table->foreign("patient_id")->on("patients")->references("id")->onDelete("cascade")->onUpdate("cascade");
             $table->unsignedBigInteger("diagnose_id");
             $table->foreign("diagnose_id")->on("diagnoses")->references("id")->onDelete("cascade")->onUpdate("cascade");

@@ -85,16 +85,19 @@
 
                             <div class="alert alert-info" role="alert">
                                 <div class="row">
-                                    <p class="col-12 col-md-10 mb-0">#{{ $patient->id }} | {{ $patient->name }} |
+                                    <p class="col-12 col-md-10 mb-0">#{{ $patient->code }} | {{ $patient->name }} |
                                         {{ $patient->age }} years old | {{ $patient->nationality }} |
                                         {{ $patient->phone }} | {{ $patient->phone2 }}</p>
                                     <div class="col-md-2 col-12">
-                                        <span class="d-flex align-items-center justify-content-center">
+                                        <span class="d-flex align-items-center justify-content-center"
+                                            style="color: #d82525;font-weight: bolder;font-size:18px">
                                             Take Invoice :
                                             @if ($patient->need_invoice)
-                                                <span class="ml-2 fe fe-16 fe-check-circle"></span>
+                                                <span class="ml-2 fe fe-16 fe-check-circle"
+                                                    style="color: #d82525;font-weight: bolder;font-size:18px"></span>
                                             @else
-                                                <span class="ml-2 fe fe-16 fe-x-circle"></span>
+                                                <span class="ml-2 fe fe-16 fe-x-circle"
+                                                    style="color: #d82525;font-weight: bolder;font-size:18px"></span>
                                             @endif
                                         </span>
                                     </div>
@@ -104,22 +107,22 @@
                         <div class="col-12 col-md-2">
                             <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? 'active' : '') : 'active' }}"
+                                    <a class="nav-link {{ isset($tooth[0]) ? ($tooth[0] < 50 ? 'active' : '') : 'active' }}"
                                         id="Permanent-tab" data-toggle="pill" href="#Permanent" role="tab"
                                         aria-controls="Permanent" aria-selected="true">Permanent</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? '' : 'active') : '' }}"
+                                    <a class="nav-link {{ isset($tooth[0]) ? ($tooth[0] < 50 ? '' : 'active') : '' }}"
                                         id="Deciduous-tab" data-toggle="pill" href="#Deciduous" role="tab"
                                         aria-controls="Deciduous" aria-selected="false">Deciduous</a>
                                 </li>
                             </ul>
                             <div class="tab-content mb-1" id="pills-tabContent">
-                                <div class="tab-pane fade {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? 'show active' : '') : 'show active' }}"
+                                <div class="tab-pane fade {{ isset($tooth[0]) ? ($tooth[0] < 50 ? 'show active' : '') : 'show active' }}"
                                     id="Permanent" role="tabpanel" aria-labelledby="Permanent-tab">
                                     <x-tooth-chart nameAttr="permanent" />
                                 </div>
-                                <div class="tab-pane fade {{ isset($tooth[0]) ? (is_numeric($tooth[0]) ? '' : 'show active') : '' }}"
+                                <div class="tab-pane fade {{ isset($tooth[0]) ? ($tooth[0] < 50 ? '' : 'show active') : '' }}"
                                     id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
                                     <x-child-tooth-chart nameAttr="deciduous" />
                                 </div>
@@ -167,10 +170,12 @@
                                                 <table class="table datatables" id="treatments">
                                                     <thead>
                                                         <tr>
-                                                            <th>Tooth</th>
-                                                            <th>Diagnose</th>
-                                                            <th>Treatment</th>
                                                             <th>Date</th>
+                                                            <th>Tooth</th>
+                                                            <th>Diagnosis</th>
+                                                            <th>Treatment</th>
+                                                            <th>Fees</th>
+                                                            <th>Paid</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -191,11 +196,11 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
+                                                            <th>Date</th>
                                                             <th>Treatment</th>
                                                             <th>Tooth</th>
                                                             <th>Fees</th>
                                                             <th>Paid</th>
-                                                            <th>Date</th>
                                                             <th>Tax Invoice</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -350,6 +355,7 @@
 
         selectedTooth.forEach(function(tooth) {
             $("polygon[data-key='" + tooth + "']").addClass("history");
+            $("path[data-key='" + tooth + "']").addClass("history");
         })
 
         function getTreatments(tooth = "") {
@@ -370,6 +376,9 @@
                     }
                 },
                 columns: [{
+                        data: 'created_at',
+                        name: 'Date',
+                    }, {
                         data: 'tooth',
                         name: 'Tooth'
                     },
@@ -382,8 +391,12 @@
                         name: 'Treatment'
                     },
                     {
-                        data: 'created_at',
-                        name: 'Date',
+                        data: 'fees',
+                        name: 'Fees'
+                    },
+                    {
+                        data: 'paid',
+                        name: 'Paid'
                     },
                     {
                         data: null, // No field in the database for this, render buttons dynamically
@@ -430,6 +443,10 @@
                         name: '#'
                     },
                     {
+                        data: 'date',
+                        name: 'Date',
+                    },
+                    {
                         data: 'treatment',
                         name: 'Treatment'
                     },
@@ -444,10 +461,6 @@
                     {
                         data: 'paid',
                         name: 'Paid'
-                    },
-                    {
-                        data: 'date',
-                        name: 'Date',
                     },
                     {
                         data: null,

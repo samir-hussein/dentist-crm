@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("fees");
             $table->string("paid");
-            $table->string("tooth");
+            $table->json("tooth");
             $table->text("treatment");
             $table->unsignedBigInteger("patient_id");
             $table->boolean("tax_invoice")->default(false);

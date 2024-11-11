@@ -21,7 +21,7 @@ class InvoicePrintService extends InvoiceService
 
         // Apply filters if any
         if ($tooth && $tooth != "") {
-            $data->where('tooth', $tooth);
+            $data->whereJsonContains('tooth', $tooth);
         }
 
         if ($request->from && $request->from != "") {

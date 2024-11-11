@@ -21,7 +21,7 @@ class LabOrderIndexService extends LabOrderService
         }
 
         if ($request->has("tooth") && $request->tooth != "") {
-            $data->where("tooth", $request->tooth);
+            $data->whereJsonContains("tooth", $request->tooth);
         }
 
         if ($request->from && $request->from != "") {
@@ -48,10 +48,10 @@ class LabOrderIndexService extends LabOrderService
                 return $row->lab->name;
             })
             ->addColumn('sent', function ($row) {
-                return $row->sent->format("d-m-Y");
+                return $row->sent->format("Y-m-d");
             })
             ->addColumn('received', function ($row) {
-                return $row->received?->format("d-m-Y");
+                return $row->received?->format("Y-m-d");
             })
             ->addColumn('custom_data', function ($row) {
                 return collect($row->custom_data)

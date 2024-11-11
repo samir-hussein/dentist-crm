@@ -2,19 +2,24 @@
 
 namespace App\Http\Services\Appointment;
 
+use Carbon\Carbon;
 use App\Models\Appointment;
+use App\Http\Services\Doctor\DoctorListService;
 use App\Http\Services\SchduleDate\SchduleDateStoreService;
 
 class AppointmentGetAllService extends AppointmentService
 {
     private $schduleDateStoreService;
+    private $doctorListService;
 
     public function __construct(
         SchduleDateStoreService $schduleDateStoreService,
         Appointment $model,
+        DoctorListService $doctorListService,
     ) {
         parent::__construct($model);
         $this->schduleDateStoreService = $schduleDateStoreService;
+        $this->doctorListService = $doctorListService;
     }
 
     public function boot($today = false)
@@ -24,7 +29,7 @@ class AppointmentGetAllService extends AppointmentService
         // Fetch all columns from your model's table
         $data = $this->model->with([
             "patient" => function ($q) {
-                $q->select(['patients.id', 'name', 'phone', 'phone2']);
+                $q->select(['patients.id', 'name', 'phone', 'phone2', 'code']);
             },
             "doctor" => function ($q) {
                 $q->select(['users.id', 'name']);
@@ -41,8 +46,28 @@ class AppointmentGetAllService extends AppointmentService
             ->where("completed", false)
             ->where("schdule_date_times.is_deleted", false);
 
-        if ($today) {
+        $request = request();
+
+        if ($request->from && $request->from != "") {
+            // Convert milliseconds to seconds and format as date
+            $timestamp = $request->from / 1000;
+            $from = Carbon::createFromTimestamp($timestamp)->startOfDay(); // Set to 00:00:00 of the given date
+            $data->whereDate('schdule_date_times.time', '>=', $from);
+        }
+
+        if ($request->to && $request->to != "") {
+            // Convert milliseconds to seconds and format as date
+            $timestamp = $request->to / 1000;
+            $to = Carbon::createFromTimestamp($timestamp)->endOfDay(); // Set to 23:59:59 of the given date
+            $data->whereDate('schdule_date_times.time', '<=', $to);
+        }
+
+        if ((!$request->to && !$request->from) || ($request->from == "" && $request->to == "")) {
             $data->whereDate('schdule_date_times.time', today());
+        }
+
+        if ($request->doctor && $request->doctor != "") {
+            $data->where("doctor_id", $request->doctor);
         }
 
         if (auth()->user()->is_doctor) {
@@ -59,6 +84,9 @@ class AppointmentGetAllService extends AppointmentService
             return $appointment;
         });
 
-        return $data;
+        return [
+            "data" => $data,
+            "doctors" => $this->doctorListService->boot(),
+        ];
     }
 }

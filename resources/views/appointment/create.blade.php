@@ -736,7 +736,7 @@
                                                         @foreach ($data->patients as $patient)
                                                             <option
                                                                 {{ old('patient_id') == $patient->id ? 'selected' : '' }}
-                                                                value="{{ $patient->id }}">#{{ $patient->id }} |
+                                                                value="{{ $patient->id }}">#{{ $patient->code }} |
                                                                 {{ $patient->name }} |
                                                                 {{ $patient->phone }} | {{ $patient->phone2 }}
                                                             </option>

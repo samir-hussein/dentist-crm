@@ -41,7 +41,7 @@
                                 <select class="form-control select2" id="simple-select2" name="patient_id" disabled>
                                     @foreach ($data->patients as $patient)
                                         <option {{ $data->appointment->patient->id == $patient->id ? 'selected' : '' }}
-                                            value="{{ $patient->id }}">#{{ $patient->id }} |
+                                            value="{{ $patient->id }}">#{{ $patient->code }} |
                                             {{ $patient->name }} |
                                             {{ $patient->phone }} | {{ $patient->phone2 }}
                                         </option>

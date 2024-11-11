@@ -14,15 +14,6 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
             'data' => $data['data'],
         ]);
 
-        $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
-            ->with(['treatmentSection.treatmentType' => function ($q) {
-                $q->select(['treatment_types.id', 'name']);
-            }])
-            ->get()
-            ->pluck('treatmentSection.treatmentType.name')
-            ->unique()
-            ->implode(' - ');
-
         if ($data['paid'] > 0) {
             $treatmentDetail->invoice()->create([
                 "fees" => 0,
@@ -42,7 +33,7 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
                 "treatment_detail_id" => $treatmentDetail->id
             ], [
                 'work' => implode(" - ", $lab['work']),
-                'cost' => $lab['cost'],
+                'cost' => isset($lab['cost']) ? $lab['cost'] : "",
                 'done' => $lab['done'],
                 'custom_data' => $lab['custom_data'],
                 'tooth' => $treatmentDetail->tooth,

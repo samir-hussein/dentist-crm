@@ -20,32 +20,30 @@ class TreatmentSessionShowByIdService extends TreatmentSessionService
 
         $data->session = $model->load(['diagnose', 'invoice', 'labOrder']);
 
-        $data->treatments = DiagnosisTreatment::where("diagnosis_id", $data->session->diagnose_id)->with(['treatmentType', 'treatmentType.sections', 'treatmentType.sections.attributes', 'treatmentType.sections.attributes.inputs' => function ($q) use ($data) {
-            $q->whereJsonContains('adultTooths', $data->session->tooth)
-                ->orWhereJsonContains('childTooths', $data->session->tooth);
-        }])->get();
-
         $data->treatments = DiagnosisTreatment::where("diagnosis_id", $data->session->diagnose_id)
             ->whereHas('treatmentType', function ($q) use ($data) {
-                $q->where("tooth_type", $data['tooth_type']);
-            })
-            ->where(function ($query) use ($data) {
-                $query->whereHas('treatmentType.sections.attributes.inputs', function ($q) use ($data) {
-                    if ($data['tooth_type'] == "permanent") {
-                        $q->whereJsonContains('adultTooths', $data->session->tooth)
-                            ->orWhere("adultTooths", null); // Match null or the tooth
-                    } else {
-                        $q->whereJsonContains('childTooths', $data->session->tooth)
-                            ->orWhere("childTooths", null); // Match null or the tooth
-                    }
-                })
-                    ->orWhereDoesntHave('treatmentType.sections.attributes.inputs'); // Allow treatments with no inputs
+                $q->where("tooth_type", $data->session->tooth_type);
             })
             ->with([
                 'treatmentType',
                 'treatmentType.sections',
                 'treatmentType.sections.attributes',
-                'treatmentType.sections.attributes.inputs'
+                // Filter inputs to only include those with the specified tooth
+                'treatmentType.sections.attributes.inputs' => function ($inputQuery) use ($data) {
+                    if ($data->session->tooth_type == "permanent") {
+                        $inputQuery->where(function ($query) use ($data) {
+                            foreach ($data->session->tooth as $tooth) {
+                                $query->orWhereJsonContains('adultTooths', $tooth);
+                            }
+                        });
+                    } else {
+                        $inputQuery->where(function ($query) use ($data) {
+                            foreach ($data->session->tooth as $tooth) {
+                                $query->orWhereJsonContains('childTooths', $tooth);
+                            }
+                        });
+                    }
+                }
             ])
             ->get();
 
@@ -70,7 +68,7 @@ class TreatmentSessionShowByIdService extends TreatmentSessionService
 
         unset($data->patient->media);
 
-        $panorama = $patient->getMedia($data->session->tooth)->sortByDesc('created_at')->map(function ($media) {
+        $panorama = $patient->getMedia(implode("-", $data->session->tooth))->sortByDesc('created_at')->map(function ($media) {
             return [
                 "id" => $media->id,
                 "url" => $media->getUrl()

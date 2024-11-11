@@ -64,16 +64,19 @@
 
     <div class="alert alert-info" role="alert">
         <div class="row">
-            <p class="col-12 col-md-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
+            <p class="col-12 col-md-8 mb-0">#{{ $data->patient->code }} | {{ $data->patient->name }} |
                 {{ $data->patient->age }} years old | {{ $data->patient->nationality }} |
                 {{ $data->patient->phone }} | {{ $data->patient->phone2 }}</p>
             <div class="col-6 col-md-2">
-                <span class="d-flex align-items-center justify-content-center">
+                <span class="d-flex align-items-center justify-content-center"
+                    style="color: #d82525;font-weight: bolder;font-size:18px">
                     Take Invoice :
                     @if ($data->patient->need_invoice)
-                        <span class="ml-2 fe fe-16 fe-check-circle"></span>
+                        <span class="ml-2 fe fe-16 fe-check-circle"
+                            style="color: #d82525;font-weight: bolder;font-size:18px"></span>
                     @else
-                        <span class="ml-2 fe fe-16 fe-x-circle"></span>
+                        <span class="ml-2 fe fe-16 fe-x-circle"
+                            style="color: #d82525;font-weight: bolder;font-size:18px"></span>
                     @endif
                 </span>
             </div>
@@ -89,23 +92,23 @@
                 <div class="card-body">
                     <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link {{ is_numeric($data->session->tooth) ? 'active' : '' }} disabled"
+                            <a class="nav-link {{ $data->session->tooth[0] < 50 ? 'active' : '' }} disabled"
                                 onclick="clearDataTeeth()" id="Permanent-tab" data-toggle="pill" href="#Permanent"
                                 role="tab" aria-controls="Permanent" aria-selected="true">Permanent</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ is_numeric($data->session->tooth) ? '' : 'active' }} disabled"
+                            <a class="nav-link {{ $data->session->tooth[0] < 50 ? '' : 'active' }} disabled"
                                 onclick="clearDataTeeth()" id="Deciduous-tab" data-toggle="pill" href="#Deciduous"
                                 role="tab" aria-controls="Deciduous" aria-selected="false">Deciduous</a>
                         </li>
                     </ul>
                     <div class="tab-content mb-1" id="pills-tabContent">
-                        <div class="tab-pane fade {{ is_numeric($data->session->tooth) ? 'show active' : '' }}"
-                            id="Permanent" role="tabpanel" aria-labelledby="Permanent-tab">
+                        <div class="tab-pane fade {{ $data->session->tooth[0] < 50 ? 'show active' : '' }}" id="Permanent"
+                            role="tabpanel" aria-labelledby="Permanent-tab">
                             <x-tooth-chart nameAttr="permanent" />
                         </div>
-                        <div class="tab-pane fade {{ is_numeric($data->session->tooth) ? '' : 'show active' }}"
-                            id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
+                        <div class="tab-pane fade {{ $data->session->tooth[0] < 50 ? '' : 'show active' }}" id="Deciduous"
+                            role="tabpanel" aria-labelledby="Deciduous-tab">
                             <x-child-tooth-chart nameAttr="deciduous" />
                         </div>
                     </div>
@@ -282,12 +285,12 @@
                                     <div class="form-group col-12 col-md-6">
                                         <label>Charges</label>
                                         <input type="password" class="form-control" min="0" id="cost"
-                                            autocomplete="off" value="{{ $data->session->labOrder?->cost }}">
+                                            autocomplete="new-password" value="{{ $data->session->labOrder?->cost }}">
                                     </div> <!-- form-group -->
                                     <div class="form-group col-12 col-md-6">
                                         <label>Date</label>
                                         <input type="date" class="form-control" id="sent"
-                                            value="{{ optional($data->session->labOrder)->sent ? \Carbon\Carbon::parse($data->session->labOrder->sent)->format('d-m-Y') : '' }}">
+                                            value="{{ optional($data->session->labOrder)->sent ? \Carbon\Carbon::parse($data->session->labOrder->sent)->format('Y-m-d') : '' }}">
                                     </div> <!-- form-group -->
                                 </div>
                             </div>
@@ -324,7 +327,7 @@
                             </div>
                             <div class="form-group col-6 col-md-1 d-flex align-items-end justify-content-center">
                                 <a class="w-100"
-                                    href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
+                                    href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
                                         class="btn w-100 btn-danger">Exit</button></a>
                             </div>
                         </div>
@@ -524,6 +527,16 @@
 
 @section('script')
     <script>
+        let totalSeconds = 0;
+        let selectedTooth = {!! json_encode($data->session->tooth ?? []) !!};
+        let selectedAttr = [];
+        let diagnose = "{{ $data->session->diagnose->id }}";
+        let labWork = {!! json_encode($data->session->labOrder?->work ? explode(' - ', $data->session->labOrder->work) : []) !!};
+        let attrInputs = {!! json_encode($data->session->data['inputs'] ?? []) !!};
+        let labData = {!! json_encode($data->session->labOrder?->custom_data ?? []) !!};
+        let lab_id = {!! json_encode($data->session->labOrder?->lab_id ?? null) !!};
+        let lab_done = {!! json_encode($data->session->labOrder?->done ?? false) !!};
+
         $("#panorama-btn").click(function() {
             $("#panorama-inp").trigger("click");
         })
@@ -575,7 +588,7 @@
             // Send the data via AJAX
             $.ajax({
                 url: "/tooth/{{ $data->patient->id }}/upload-files/" +
-                    selectedTooth, // Replace with your route URL
+                    selectedTooth.join("-"), // Replace with your route URL
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -616,7 +629,7 @@
         $(document).on('click', '.del-tooth', function() {
             let id = $(this).data("id");
             $.ajax({
-                url: "/tooth/{{ $data->patient->id }}/" + id + "/" + selectedTooth,
+                url: "/tooth/{{ $data->patient->id }}/" + id + "/" + selectedTooth.join("-"),
                 type: "DELETE",
                 success: function(response) {
                     $("#tooth-img").html(response.html.slider);
@@ -635,17 +648,10 @@
             });
         })
 
-        let totalSeconds = 0;
-        let selectedTooth = "{{ $data->session->tooth }}";
-        let selectedAttr = [];
-        let diagnose = "{{ $data->session->diagnose->id }}";
-        let labWork = {!! json_encode($data->session->labOrder?->work ? explode(' - ', $data->session->labOrder->work) : []) !!};
-        let attrInputs = {!! json_encode($data->session->data['inputs'] ?? []) !!};
-        let labData = {!! json_encode($data->session->labOrder?->custom_data ?? []) !!};
-        let lab_id = "{{ $data->session->labOrder?->lab_id ?? null }}";
-        let lab_done = {!! json_encode($data->session->labOrder?->done ?? false) !!};
-
-        $("polygon[data-key='" + selectedTooth + "']").addClass("selected");
+        selectedTooth.forEach(toothNumber => {
+            $("polygon[data-key='" + toothNumber + "']").addClass("selected");
+            $("path[data-key='" + toothNumber + "']").addClass("selected");
+        });
 
         setInterval(() => {
             totalSeconds++;
@@ -784,9 +790,7 @@
                 }
             }
         });
-    </script>
 
-    <script>
         $(document).on("change", ".types", function() {
             // Get the selected option
             let selectedOption = $(this).find('option:selected');
@@ -882,14 +886,13 @@
                 };
             });
         });
-    </script>
 
-    <script>
         $("#save").click(function() {
             const patient_id = "{{ $data->patient->id }}";
             const fees = $("#fees").val();
             const paid = $("#paid").val();
             let lab = {};
+            lab_id = $("#simple-select").val();
 
             if (selectedAttr.length == 0) {
                 alert("Please select at least one treatment");
@@ -904,6 +907,7 @@
             if (labWork.length > 0) {
                 let sent = $("#sent").val();
                 let cost = $("#cost").val();
+
                 if (!lab_id || lab_id == "") {
                     alert("Please select lab");
                     return;
@@ -911,11 +915,6 @@
 
                 if (!sent || sent == "") {
                     alert("Please select date");
-                    return;
-                }
-
-                if (!cost || cost == "") {
-                    alert("Please enter cost");
                     return;
                 }
 
@@ -944,7 +943,7 @@
                 success: function(response) {
                     if (response.status == "success") {
                         window.location.href =
-                            "{{ route('patients.profile', ['patient' => $data->patient->id]) }}";
+                            "{{ route('patients.file', ['patient' => $data->patient->id]) }}";
                     } else {
                         alert(response.message);
                     }

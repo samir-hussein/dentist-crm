@@ -29,7 +29,7 @@ class TreatmentSessionUpdateRequest extends FormRequest
             "data.inputs" => "sometimes|nullable|array",
             "data.notes" => "sometimes|nullable|string",
             "lab" => "sometimes|nullable|array",
-            "lab.cost" => "sometimes|numeric|min:0",
+            "lab.cost" => "sometimes|nullable|numeric|min:0",
             "lab.done" => "sometimes|boolean",
             "lab.lab_id" => "sometimes|exists:labs,id",
             "lab.sent" => "sometimes|date",

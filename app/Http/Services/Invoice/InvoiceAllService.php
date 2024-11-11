@@ -49,6 +49,9 @@ class InvoiceAllService extends InvoiceService
             ->addColumn('patient_name', function ($row) {
                 return $row->patient->name;
             })
+            ->addColumn('patient_code', function ($row) {
+                return $row->patient->code;
+            })
             ->addColumn('date', function ($row) {
                 return $row->created_at->format("d-m-Y");
             })
@@ -66,7 +69,7 @@ class InvoiceAllService extends InvoiceService
 
                         // Additional search for related 'day' field (assuming relationship is 'schduleDay')
                         $query->orWhereHas('patient', function ($query) use ($search) {
-                            $query->where('name', 'like', "%{$search}%");
+                            $query->where('name', 'like', "%{$search}%")->orWhere("code", 'like', "%{$search}%");
                         });
                     });
                 }

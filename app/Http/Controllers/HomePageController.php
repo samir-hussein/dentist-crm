@@ -18,6 +18,6 @@ class HomePageController extends Controller
     {
         $data = $this->service->all(true);
 
-        return $this->view("home", ['data' => $data]);
+        return $this->view("home", ['data' => $data['data']]);
     }
 }

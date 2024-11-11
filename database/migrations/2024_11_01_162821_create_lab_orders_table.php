@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("cost");
             $table->boolean("done")->default(false);
             $table->json("custom_data")->nullable();
-            $table->string("tooth");
+            $table->json("tooth");
             $table->date("sent");
             $table->date("received")->nullable();
             $table->unsignedBigInteger("patient_id");

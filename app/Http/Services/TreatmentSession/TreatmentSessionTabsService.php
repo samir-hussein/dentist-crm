@@ -14,23 +14,26 @@ class TreatmentSessionTabsService extends TreatmentSessionService
             ->whereHas('treatmentType', function ($q) use ($data) {
                 $q->where("tooth_type", $data['tooth_type']);
             })
-            ->where(function ($query) use ($data) {
-                $query->whereHas('treatmentType.sections.attributes.inputs', function ($q) use ($data) {
-                    if ($data['tooth_type'] == "permanent") {
-                        $q->whereJsonContains('adultTooths', $data['teeth'])
-                            ->orWhere("adultTooths", null); // Match null or the tooth
-                    } else {
-                        $q->whereJsonContains('childTooths', $data['teeth'])
-                            ->orWhere("childTooths", null); // Match null or the tooth
-                    }
-                })
-                    ->orWhereDoesntHave('treatmentType.sections.attributes.inputs'); // Allow treatments with no inputs
-            })
             ->with([
                 'treatmentType',
                 'treatmentType.sections',
                 'treatmentType.sections.attributes',
-                'treatmentType.sections.attributes.inputs'
+                // Filter inputs to only include those with the specified teeth in the array
+                'treatmentType.sections.attributes.inputs' => function ($inputQuery) use ($data) {
+                    if ($data['tooth_type'] == "permanent") {
+                        $inputQuery->where(function ($query) use ($data) {
+                            foreach ($data['teeth'] as $tooth) {
+                                $query->orWhereJsonContains('adultTooths', $tooth);
+                            }
+                        });
+                    } else {
+                        $inputQuery->where(function ($query) use ($data) {
+                            foreach ($data['teeth'] as $tooth) {
+                                $query->orWhereJsonContains('childTooths', $tooth);
+                            }
+                        });
+                    }
+                }
             ])
             ->get();
 

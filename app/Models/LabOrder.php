@@ -26,6 +26,7 @@ class LabOrder extends Model
     // Specify casts for fields
     protected $casts = [
         'done' => 'boolean',
+        'tooth' => 'array',
         'custom_data' => 'array',
         'sent' => 'date',
         'received' => 'date',

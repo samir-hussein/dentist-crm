@@ -62,16 +62,19 @@
 
     <div class="alert alert-info" role="alert">
         <div class="row">
-            <p class="col-12 col-md-8 mb-0">#{{ $data->patient->id }} | {{ $data->patient->name }} |
+            <p class="col-12 col-md-8 mb-0">#{{ $data->patient->code }} | {{ $data->patient->name }} |
                 {{ $data->patient->age }} years old | {{ $data->patient->nationality }} |
                 {{ $data->patient->phone }} | {{ $data->patient->phone2 }}</p>
             <div class="col-6 col-md-2">
-                <span class="d-flex align-items-center justify-content-center">
+                <span class="d-flex align-items-center justify-content-center"
+                    style="color: #d82525;font-weight: bolder;font-size:18px">
                     Take Invoice :
                     @if ($data->patient->need_invoice)
-                        <span class="ml-2 fe fe-16 fe-check-circle"></span>
+                        <span class="ml-2 fe fe-16 fe-check-circle"
+                            style="color: #d82525;font-weight: bolder;font-size:18px"></span>
                     @else
-                        <span class="ml-2 fe fe-16 fe-x-circle"></span>
+                        <span class="ml-2 fe fe-16 fe-x-circle"
+                            style="color: #d82525;font-weight: bolder;font-size:18px"></span>
                     @endif
                 </span>
             </div>
@@ -161,7 +164,7 @@
                             </div>
                             <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
                                 <a class="w-100"
-                                    href="{{ route('patients.profile', ['patient' => $data->patient->id]) }}"><button
+                                    href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
                                         class="btn w-100 btn-danger">Exit</button></a>
                             </div>
                         </div>
@@ -332,6 +335,17 @@
 
 @section('script')
     <script>
+        let totalSeconds = 0;
+        let selectedTooth = [];
+        let selectedAttr = [];
+        let diagnose = null;
+        let labWork = [];
+        let attrInputs = {};
+        let labData = {};
+        let lab_id = null;
+        let lab_done = false;
+        let tooth_type = "permanent";
+
         $("#panorama-btn").click(function() {
             $("#panorama-inp").trigger("click");
         })
@@ -383,7 +397,7 @@
             // Send the data via AJAX
             $.ajax({
                 url: "/tooth/{{ $data->patient->id }}/upload-files/" +
-                    selectedTooth, // Replace with your route URL
+                    selectedTooth.join("-"), // Replace with your route URL
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -424,7 +438,7 @@
         $(document).on('click', '.del-tooth', function() {
             let id = $(this).data("id");
             $.ajax({
-                url: "/tooth/{{ $data->patient->id }}/" + id + "/" + selectedTooth,
+                url: "/tooth/{{ $data->patient->id }}/" + id + "/" + selectedTooth.join("-"),
                 type: "DELETE",
                 success: function(response) {
                     $("#tooth-img").html(response.html.slider);
@@ -442,17 +456,6 @@
                 }
             });
         })
-
-        let totalSeconds = 0;
-        let selectedTooth = 0;
-        let selectedAttr = [];
-        let diagnose = null;
-        let labWork = [];
-        let attrInputs = {};
-        let labData = {};
-        let lab_id = null;
-        let lab_done = false;
-        let tooth_type = "permanent";
 
         setInterval(() => {
             totalSeconds++;
@@ -478,15 +481,20 @@
 
                 // Ensure the toothNumber is defined before processing
                 if (toothNumber !== undefined) {
-                    $("polygon").removeClass("selected");
-                    $("path").removeClass("selected");
-
                     // Toggle the selected class to change the color
                     $(this).toggleClass("selected");
 
-                    selectedTooth = toothNumber;
+                    if ($(this).hasClass("selected")) {
+                        // Add tooth number to the array if selected
+                        if (!selectedTooth.includes(toothNumber)) {
+                            selectedTooth.push(toothNumber);
+                        }
+                    } else {
+                        // Remove tooth number from the array if deselected
+                        selectedTooth = selectedTooth.filter(num => num !== toothNumber);
+                    }
 
-                    if (selectedTooth != 0) {
+                    if (selectedTooth.length > 0) {
                         $("#div-diagnosis").removeClass("invisible");
                         $("#div-upload-tooth").removeClass("invisible");
                     } else {
@@ -495,7 +503,7 @@
                     }
 
                     getTreatmentsTabs();
-                    getToothPanorama(toothNumber);
+                    getToothPanorama(selectedTooth.join("-"));
                 }
             });
         });
@@ -537,8 +545,7 @@
         });
 
         function clearDataTeeth(type) {
-            selectedTooth = 0;
-            diagnose = null;
+            selectedTooth = [];
             selectedAttr = [];
             labWork = [];
             attrInputs = {};
@@ -557,10 +564,7 @@
         function getTreatmentsTabs() {
             const diagnose = $("#diagnose").val();
 
-            console.log(tooth_type);
-
-
-            if (diagnose != 0 && selectedTooth != 0) {
+            if (diagnose != 0 && selectedTooth.length != 0) {
                 $.ajax({
                     url: "{{ route('treatment.tabs') }}",
                     type: "GET",
@@ -804,11 +808,6 @@
                     return;
                 }
 
-                if (!cost || cost == "") {
-                    alert("Please enter cost");
-                    return;
-                }
-
                 lab = {
                     work: labWork,
                     custom_data: Object.keys(labData).length > 0 ? labData : null,
@@ -825,6 +824,7 @@
                 data: {
                     diagnose_id: diagnose,
                     tooth: selectedTooth,
+                    tooth_type: tooth_type,
                     fees: fees,
                     paid: paid,
                     data: {
@@ -837,7 +837,7 @@
                 success: function(response) {
                     if (response.status == "success") {
                         window.location.href =
-                            "{{ route('patients.profile', ['patient' => $data->patient->id]) }}";
+                            "{{ route('patients.file', ['patient' => $data->patient->id]) }}";
                     } else {
                         alert(response.message);
                     }

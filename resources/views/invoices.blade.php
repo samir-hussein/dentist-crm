@@ -145,7 +145,7 @@
                         name: 'Patient'
                     },
                     {
-                        data: 'patient_id',
+                        data: 'patient_code',
                         name: 'Patient Id'
                     },
                     {

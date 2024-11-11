@@ -19,7 +19,7 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
         }
 
         if ($request->has("tooth") && $request->tooth != "") {
-            $data->where("tooth", $request->tooth);
+            $data->whereJsonContains("tooth", $request->tooth);
         }
 
         if ($request->from && $request->from != "") {
@@ -44,6 +44,12 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
             })
             ->addColumn('treatment', function ($row) {
                 return $row->invoice[0]->treatment;
+            })
+            ->addColumn('fees', function ($row) {
+                return $row->invoice[0]->fees;
+            })
+            ->addColumn('paid', function ($row) {
+                return $row->invoice()->sum("paid");
             })
             ->addColumn('created_at', function ($row) {
                 return $row->created_at->format("d-m-Y");

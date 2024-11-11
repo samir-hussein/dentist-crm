@@ -23,7 +23,7 @@ class TreatmentTabsRequest extends FormRequest
     {
         return [
             "diagnose" => "required|exists:diagnoses,id",
-            "teeth" => "required",
+            "teeth" => "required|array",
             "tooth_type" => "required|string|in:permanent,deciduous"
         ];
     }

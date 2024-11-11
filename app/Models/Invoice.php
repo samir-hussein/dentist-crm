@@ -24,6 +24,7 @@ class Invoice extends Model
     // Specify casts for fields
     protected $casts = [
         'tax_invoice' => 'boolean',
+        'tooth' => 'array',
     ];
 
     /**

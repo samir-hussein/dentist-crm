@@ -21,26 +21,28 @@
                     <table class="table datatables" id="dataTable-1">
                         <thead>
                             <tr>
-                                <th>Visit No.</th>
+                                <th>Patient Id</th>
                                 <th>Patient Name</th>
                                 <th>Patient Phone</th>
                                 <th>Patient Phone 2</th>
                                 <th>Doctor Name</th>
                                 <th>Services</th>
                                 <th>Appointment</th>
+                                <th>Notes</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $appointment)
                                 <tr>
-                                    <td># {{ $appointment->visit_no }}</td>
+                                    <td>{{ $appointment->patient->code }}</td>
                                     <td>{{ $appointment->patient->name }}</td>
                                     <td>{{ $appointment->patient->phone }}</td>
                                     <td>{{ $appointment->patient->phone2 }}</td>
                                     <td>{{ $appointment->doctor->name }}</td>
                                     <td>{{ $appointment->selectedServices }}</td>
                                     <td>{{ $appointment->formatedTime }}</td>
+                                    <td>{{ $appointment->notes }}</td>
                                     <td>
                                         <a class="btn mb-1 btn-sm btn-info"
                                             href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
@@ -50,7 +52,7 @@
                                                 class="btn mb-1 btn-sm btn-success">Completed</a>
                                         @endif
 
-                                        <a href="{{ route('patients.profile', ['patient' => $appointment->patient->id]) }}"
+                                        <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
                                             class="btn mb-1 btn-sm btn-warning">Patient File</a>
 
                                         <form class="d-inline mb-1" method="POST"

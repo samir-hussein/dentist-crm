@@ -66,7 +66,7 @@
                 }
             },
             columns: [{
-                    data: 'id',
+                    data: 'code',
                     name: '#'
                 },
                 {

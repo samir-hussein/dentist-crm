@@ -13,7 +13,7 @@
                             <label>Patient</label>
                             <select class="form-control select2" name="patient">
                                 @foreach ($data->patients as $patient)
-                                    <option value="{{ $patient->name }}">#{{ $patient->id }} |
+                                    <option value="{{ $patient->name }}">#{{ $patient->code }} |
                                         {{ $patient->name }} |
                                         {{ $patient->phone }} | {{ $patient->phone2 }}
                                     </option>

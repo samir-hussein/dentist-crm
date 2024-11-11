@@ -15,12 +15,14 @@ class TreatmentDetail extends Model
         'data',
         'patient_id',
         'diagnose_id',
-        'doctor_id'
+        'doctor_id',
+        'tooth_type'
     ];
 
     // Specify the data column as JSON cast
     protected $casts = [
         'data' => 'array',
+        'tooth' => 'array',
     ];
 
     /**
