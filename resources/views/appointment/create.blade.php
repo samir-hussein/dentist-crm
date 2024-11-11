@@ -39,7 +39,8 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
-                                    role="tab" aria-controls="pills-profile" aria-selected="false">Old Patient</a>
+                                    role="tab" aria-controls="pills-profile" aria-selected="false">Registered
+                                    Patient</a>
                             </li>
                         </ul>
                         <div class="tab-content mb-1" id="pills-tabContent">
