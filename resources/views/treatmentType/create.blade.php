@@ -4,6 +4,8 @@
 
 @section('page-path-prefix', 'SETTINGS > ')
 
+@section('page-path', 'TREATMENT PLANS')
+
 @section('settings-active', 'active-link')
 
 @section('buttons')

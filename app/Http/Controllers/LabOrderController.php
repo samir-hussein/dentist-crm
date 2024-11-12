@@ -34,6 +34,18 @@ class LabOrderController extends Controller
         return view("lab-orders");
     }
 
+    public function reportView()
+    {
+        return view("lab-orders-report");
+    }
+
+    public function report()
+    {
+        $data = $this->service->report();
+
+        return $data;
+    }
+
     /**
      * Show the form for creating a new resource.
      */

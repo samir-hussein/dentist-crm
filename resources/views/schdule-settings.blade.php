@@ -2,6 +2,8 @@
 
 @section('settings-active', 'active-link')
 
+@section('page-path', 'SETTINGS > SCHEDULE')
+
 @section('buttons')
     <a href="{{ route('settings') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
@@ -26,7 +28,7 @@
                 </a>
             </div>
             <a href="{{ route('schdule-days.index') }}" class="text-decoration-none">
-                <p>Schdule Days</p>
+                <p>Schedule Days</p>
             </a>
         </div>
         <div class="col-6 text-center">
@@ -37,7 +39,7 @@
                 </a>
             </div>
             <a href="{{ route('schdule-dates.index') }}" class="text-decoration-none">
-                <p>Schdule Dates</p>
+                <p>Schedule Dates</p>
             </a>
         </div>
     </div>

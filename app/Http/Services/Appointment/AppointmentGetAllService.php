@@ -4,6 +4,7 @@ namespace App\Http\Services\Appointment;
 
 use Carbon\Carbon;
 use App\Models\Appointment;
+use App\Http\Services\Branch\BranchListService;
 use App\Http\Services\Doctor\DoctorListService;
 use App\Http\Services\SchduleDate\SchduleDateStoreService;
 
@@ -11,15 +12,18 @@ class AppointmentGetAllService extends AppointmentService
 {
     private $schduleDateStoreService;
     private $doctorListService;
+    private $branchesListService;
 
     public function __construct(
         SchduleDateStoreService $schduleDateStoreService,
         Appointment $model,
         DoctorListService $doctorListService,
+        BranchListService $branchesListService,
     ) {
         parent::__construct($model);
         $this->schduleDateStoreService = $schduleDateStoreService;
         $this->doctorListService = $doctorListService;
+        $this->branchesListService = $branchesListService;
     }
 
     public function boot($today = false)
@@ -33,6 +37,9 @@ class AppointmentGetAllService extends AppointmentService
             },
             "doctor" => function ($q) {
                 $q->select(['users.id', 'name']);
+            },
+            "branch" => function ($q) {
+                $q->select(['branches.id', 'name']);
             },
             "services" => function ($q) {
                 $q->select(['services.id', 'name']);
@@ -70,6 +77,10 @@ class AppointmentGetAllService extends AppointmentService
             $data->where("doctor_id", $request->doctor);
         }
 
+        if ($request->branch && $request->branch != "") {
+            $data->where("branch_id", $request->branch);
+        }
+
         if (auth()->user()->is_doctor) {
             $data->where("doctor_id", auth()->user()->id);
         }
@@ -87,6 +98,7 @@ class AppointmentGetAllService extends AppointmentService
         return [
             "data" => $data,
             "doctors" => $this->doctorListService->boot(),
+            "branches" => $this->branchesListService->boot(),
         ];
     }
 }

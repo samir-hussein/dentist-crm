@@ -35,18 +35,27 @@
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>
+                            @php
+                                // Combine predefined medicalHistory with the patient's existing medical_history
+$existingHistory = $data->patient->medical_history; // Patient's saved medical history
+                                $allMedicalHistory = collect($data->medicalHistory)
+                                    ->pluck('name')
+                                    ->merge($existingHistory)
+                                    ->unique();
+                            @endphp
                             <div class="form-group col-12 col-md-6">
                                 <label for="multi-select2" class="d-block">Medical History</label>
                                 <select multiple name="medical_history[]" class="form-control select2-multi d-block w-100"
                                     id="multi-select2">
-                                    @foreach ($data->medicalHistory as $medicalHistory)
-                                        <option value="{{ $medicalHistory->name }}"
-                                            {{ in_array($medicalHistory->name, $data->patient->medical_history) ? 'selected' : '' }}>
-                                            {{ $medicalHistory->name }}
+                                    @foreach ($allMedicalHistory as $medicalHistory)
+                                        <option value="{{ $medicalHistory }}"
+                                            {{ in_array($medicalHistory, $data->patient->medical_history) ? 'selected' : '' }}>
+                                            {{ $medicalHistory }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
+
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
@@ -691,4 +700,18 @@
             </div> <!-- /. card -->
         </div> <!-- /. col -->
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#multi-select2').select2({
+                tags: true, // Enable custom tagging
+                tokenSeparators: [',', ' '], // Allow comma or space for creating new tags
+                placeholder: "Select or add medical history",
+                theme: "bootstrap4",
+                width: '100%' // Ensure full-width styling
+            });
+        });
+    </script>
 @endsection

@@ -20,6 +20,7 @@ use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\SchduleDayController;
 use App\Models\TreatmentSectionAttributeInput;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\SchduleDateController;
 use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PrescriptionController;
@@ -118,6 +119,11 @@ Route::middleware("auth")->group(function () {
             return abort(404);
         });
 
+        Route::get("branches/all", [BranchController::class, 'all'])->name('branches.all');
+        Route::resource('branches', BranchController::class)->missing(function () {
+            return abort(404);
+        });
+
         Route::get("schdule-days/all", [SchduleDayController::class, 'all'])->name('schdule-days.all');
         Route::resource('schdule-days', SchduleDayController::class)->missing(function () {
             return abort(404);
@@ -184,6 +190,9 @@ Route::middleware("auth")->group(function () {
         Route::get("invoices/report/tax", [InvoiceController::class, 'taxReport'])->name("invoices.tax.index");
         Route::delete("invoices/{invoice}", [InvoiceController::class, 'removeFromTax'])->name("invoices.destroy");
         Route::get("invoices/print", [InvoiceController::class, 'print'])->name("invoices.print");
+
+        Route::get("lab-order/report", [LabOrderController::class, 'reportView'])->name('lab-order.report.view');
+        Route::get("lab-order/report/data", [LabOrderController::class, 'report'])->name('lab-order.report');
 
         Route::get("lab-orders", [LabOrderController::class, 'index'])->name("lab-orders.index");
     });

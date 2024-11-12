@@ -27,6 +27,7 @@ class User extends Authenticatable implements HasMedia
         'is_doctor',
         'phone',
         'gender',
+        'branch_id'
     ];
 
     /**
@@ -48,6 +49,11 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     // Define the relationship to the fcm_tokens table
     public function fcmTokens()

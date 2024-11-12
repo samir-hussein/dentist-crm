@@ -11,8 +11,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>@yield('title', 'Home')</title>
-    <link rel="icon" href="favicon.ico">
-    <title>Tiny Dashboard - A Bootstrap Dashboard Template</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}" />
+    <meta name="apple-mobile-web-app-title" content="NORY CLINIC" />
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}" />
+
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="{{ asset('css/simplebar.css') }}">
     <!-- Fonts CSS -->
@@ -69,7 +74,7 @@
                             <div class="col">
                                 <h2 class="h5 mb-0 page-title">
                                     @yield('page-path-prefix')
-                                    {{ strtoupper(rtrim(str_replace(['.', '-', 'index'], [' > ', ' ', ''], $currentRouteName), ' > ')) }}
+                                    @yield('page-path', strtoupper(rtrim(str_replace(['.', '-', 'index'], [' > ', ' ', ''], $currentRouteName), ' > ')))
                                 </h2>
                             </div>
                             <div class="col-auto">

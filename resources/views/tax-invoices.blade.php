@@ -2,6 +2,8 @@
 
 @section('title', 'Tax Invoices')
 
+@section('page-path', 'TAX INVOICES')
+
 @section('buttons')
     <button type="button" class="btn btn-success" id="export-excel">
         <span class="fe fe-share fe-12 mr-2"></span>Export

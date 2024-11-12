@@ -28,8 +28,7 @@
                                 <select multiple name="medical_history[]" class="form-control select2-multi d-block w-100"
                                     id="multi-select2">
                                     @foreach ($data->medicalHistory as $medicalHistory)
-                                        <option value="{{ $medicalHistory->name }}">{{ $medicalHistory->name }}
-                                        </option>
+                                        <option value="{{ $medicalHistory->name }}">{{ $medicalHistory->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -488,4 +487,18 @@
             </div> <!-- /. card -->
         </div> <!-- /. col -->
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#multi-select2').select2({
+                tags: true, // Enable custom tagging
+                tokenSeparators: [',', ' '], // Allow comma or space for creating new tags
+                placeholder: "Select or add medical history",
+                theme: "bootstrap4",
+                width: '100%' // Ensure full-width styling
+            });
+        });
+    </script>
 @endsection

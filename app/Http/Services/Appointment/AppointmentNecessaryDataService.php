@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Appointment;
 
+use App\Http\Services\Branch\BranchListService;
 use stdClass;
 use App\Http\Services\Doctor\DoctorListService;
 use App\Http\Services\Patient\PatientListService;
@@ -16,6 +17,7 @@ class AppointmentNecessaryDataService extends AppointmentService
     private $serviceListService;
     private $schduleDateStoreService;
     private $schduleDateAvailableTimesService;
+    private $branchesService;
 
     public function __construct(
         DoctorListService $doctorListService,
@@ -23,12 +25,14 @@ class AppointmentNecessaryDataService extends AppointmentService
         ServiceListService $serviceListService,
         SchduleDateStoreService $schduleDateStoreService,
         SchduleDateAvailableTimesService $schduleDateAvailableTimesService,
+        BranchListService $branchesService,
     ) {
         $this->doctorListService = $doctorListService;
         $this->patientListService = $patientListService;
         $this->serviceListService = $serviceListService;
         $this->schduleDateStoreService = $schduleDateStoreService;
         $this->schduleDateAvailableTimesService = $schduleDateAvailableTimesService;
+        $this->branchesService = $branchesService;
     }
 
     public function boot()
@@ -41,6 +45,7 @@ class AppointmentNecessaryDataService extends AppointmentService
         $data->patients = $this->patientListService->boot();
         $data->services = $this->serviceListService->boot();
         $data->times = $this->schduleDateAvailableTimesService->boot();
+        $data->branches = $this->branchesService->boot();
 
         return $data;
     }

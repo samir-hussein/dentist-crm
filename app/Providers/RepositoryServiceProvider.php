@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Interfaces\IAdmin;
 use App\Http\Interfaces\IAppointment;
 use App\Http\Interfaces\IAuth;
+use App\Http\Interfaces\IBranch;
 use App\Http\Interfaces\IDiagnosis;
 use App\Http\Interfaces\IDoctor;
 use App\Http\Interfaces\IDose;
@@ -30,6 +31,7 @@ use App\Http\Repositories\AppointmentRepository;
 use App\Http\Repositories\AuthRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Repositories\BaseRepository;
+use App\Http\Repositories\BranchRepository;
 use App\Http\Repositories\DiagnosisRepository;
 use App\Http\Repositories\DoctorRepository;
 use App\Http\Repositories\DoseRepository;
@@ -80,6 +82,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IPrescription::class, PrescriptionRepository::class);
         $this->app->bind(IInvoice::class, InvoiceRepository::class);
         $this->app->bind(ILabOrder::class, LabOrderRepository::class);
+        $this->app->bind(IBranch::class, BranchRepository::class);
     }
 
     /**

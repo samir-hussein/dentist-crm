@@ -149,11 +149,11 @@
                         <div class="form-row">
                             <div class="form-group col-6 col-md-3">
                                 <label for="fees">Fees</label>
-                                <input type="number" id="fees" class="form-control" min="0">
+                                <input type="number" step="100" id="fees" class="form-control" min="0">
                             </div>
                             <div class="form-group col-6 col-md-3">
                                 <label for="paid">Down Payment</label>
-                                <input type="number" id="paid" class="form-control" min="0">
+                                <input type="number" step="100" id="paid" class="form-control" min="0">
                             </div>
                             <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
                                 <button class="btn w-100 btn-warning" data-toggle="modal"

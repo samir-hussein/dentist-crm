@@ -28,6 +28,9 @@ class AppointmentFindByIdService extends AppointmentService
                 "doctor" => function ($q) {
                     $q->select(["id", "name"]);
                 },
+                "branch" => function ($q) {
+                    $q->select(["id", "name"]);
+                },
                 "time"
             ]
         );

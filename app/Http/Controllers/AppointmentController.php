@@ -32,7 +32,7 @@ class AppointmentController extends Controller
     {
         $data = $this->service->all(false);
 
-        return $this->view('appointment.index', ['data' => $data['data'], 'doctors' => $data['doctors']]);
+        return $this->view('appointment.index', ['data' => $data['data'], 'doctors' => $data['doctors'], 'branches' => $data['branches']]);
     }
 
     /**

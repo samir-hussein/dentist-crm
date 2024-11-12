@@ -21,6 +21,7 @@ class LabOrder extends Model
         'patient_id',
         'lab_id',
         'treatment_detail_id',
+        'branch_id'
     ];
 
     // Specify casts for fields
@@ -31,6 +32,11 @@ class LabOrder extends Model
         'sent' => 'date',
         'received' => 'date',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     /**
      * Relationship with the Patient model.

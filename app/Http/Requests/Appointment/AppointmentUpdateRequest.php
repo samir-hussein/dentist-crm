@@ -23,6 +23,7 @@ class AppointmentUpdateRequest extends FormRequest
     {
         return [
             "doctor_id" => "required|exists:users,id",
+            "branch_id" => "sometimes|nullable|exists:branches,id",
             "notes" => "sometimes|nullable|string",
             "time_id" => "required|exists:schdule_date_times,id",
             "service_ids" => "required|array",

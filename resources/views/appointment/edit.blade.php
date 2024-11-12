@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-12">
+                            <div class="form-group col-md-6">
                                 <label for="multi-select2" class="d-block">Services</label>
                                 <select multiple name="service_ids[]" class="form-control select2-multi d-block w-100"
                                     id="multi-select2">
@@ -89,6 +89,20 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="branch_id">Branch</label>
+                                <select id="branch_id" name="branch_id" class="form-control">
+                                    @foreach ($data->branches as $branch)
+                                        <option
+                                            {{ old('branch_id') ?? $data->appointment->branch?->id == $branch?->id ? 'selected' : '' }}
+                                            value="{{ $branch?->id }}">{{ $branch?->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('branch_id')
+                                    <p style="color: red">* {{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-row">

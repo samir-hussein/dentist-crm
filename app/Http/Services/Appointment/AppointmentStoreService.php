@@ -49,6 +49,10 @@ class AppointmentStoreService extends AppointmentService
                 return $this->error("The Doctor already have appointment in this time.", 400);
             }
 
+            if (!isset($data['branch_id'])) {
+                $data['branch_id'] = auth()->user()->branch_id;
+            }
+
             $appointment = $this->model->create($data);
 
             $services = array_map(function ($service_id) use ($appointment) {

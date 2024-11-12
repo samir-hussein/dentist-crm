@@ -2,8 +2,9 @@
 
 @section('title', 'Schdule Dates')
 
-@section('page-path-prefix', 'SETTINGS > SCHDULE SETTINGS > ')
+@section('page-path-prefix', 'SETTINGS > SCHEDULE > ')
 
+@section('page-path', 'DATES')
 @section('settings-active', 'active-link')
 
 @section('buttons')

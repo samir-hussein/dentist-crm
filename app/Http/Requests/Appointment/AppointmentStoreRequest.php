@@ -30,6 +30,7 @@ class AppointmentStoreRequest extends FormRequest
             "gender" => "required_with:phone|in:Male,Female",
             "patient_id" => "exists:patients,id|required_without:phone",
             "doctor_id" => "required|exists:users,id",
+            "branch_id" => "sometimes|nullable|exists:branches,id",
             "notes" => "sometimes|nullable|string",
             "time_id" => "required|exists:schdule_date_times,id",
             "service_ids" => "required|array",

@@ -18,7 +18,8 @@ class Invoice extends Model
         'patient_id',
         'tax_invoice',
         'treatment_detail_id',
-        'doctor_id'
+        'doctor_id',
+        'branch_id'
     ];
 
     // Specify casts for fields
@@ -26,6 +27,11 @@ class Invoice extends Model
         'tax_invoice' => 'boolean',
         'tooth' => 'array',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     /**
      * Relationship with the Patient model.

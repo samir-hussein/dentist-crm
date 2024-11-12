@@ -25,6 +25,7 @@
                                 <th>Patient Name</th>
                                 <th>Patient Phone</th>
                                 <th>Patient Phone 2</th>
+                                <th>Branch</th>
                                 <th>Doctor Name</th>
                                 <th>Services</th>
                                 <th>Appointment</th>
@@ -39,6 +40,7 @@
                                     <td>{{ $appointment->patient->name }}</td>
                                     <td>{{ $appointment->patient->phone }}</td>
                                     <td>{{ $appointment->patient->phone2 }}</td>
+                                    <td>{{ $appointment->branch?->name }}</td>
                                     <td>{{ $appointment->doctor->name }}</td>
                                     <td>{{ $appointment->selectedServices }}</td>
                                     <td>{{ $appointment->formatedTime }}</td>

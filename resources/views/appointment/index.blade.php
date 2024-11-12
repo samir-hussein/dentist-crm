@@ -26,7 +26,7 @@
         <!-- Small table -->
         <div class="col-md-12">
             <div class="form-row">
-                <div class="form-group col-4">
+                <div class="form-group col-12 col-md-4">
                     <label for="reportrange">Filter By Date : </label>
                     <div id="reportrange" class="border px-2 py-2 bg-light">
                         <i class="fe fe-calendar fe-16 mx-2"></i>
@@ -34,13 +34,25 @@
                     </div>
                 </div>
 
-                <div class="form-group col-4">
+                <div class="form-group col-6 col-md-4">
                     <label for="doctor_id">Filter By Doctor : </label>
                     <select id="doctor_id" name="doctor_id" class="form-control">
                         <option value="0">All Doctors</option>
                         @foreach ($doctors as $doctor)
                             <option {{ request('doctor') == $doctor->id ? 'selected' : '' }} value="{{ $doctor->id }}">
                                 {{ $doctor->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group col-6 col-md-4">
+                    <label for="branch_id">Filter By Branch : </label>
+                    <select id="branch_id" name="branch_id" class="form-control">
+                        <option value="0">All Branches</option>
+                        @foreach ($branches as $branch)
+                            <option {{ request('branch') == $branch->id ? 'selected' : '' }} value="{{ $branch->id }}">
+                                {{ $branch->name }}
                             </option>
                         @endforeach
                     </select>
@@ -56,6 +68,7 @@
                                 <th>Patient Name</th>
                                 <th>Patient Phone</th>
                                 <th>Patient Phone 2</th>
+                                <th>Branch</th>
                                 <th>Doctor Name</th>
                                 <th>Services</th>
                                 <th>Appointment</th>
@@ -70,6 +83,7 @@
                                     <td>{{ $appointment->patient->name }}</td>
                                     <td>{{ $appointment->patient->phone }}</td>
                                     <td>{{ $appointment->patient->phone2 }}</td>
+                                    <td>{{ $appointment->branch?->name }}</td>
                                     <td>{{ $appointment->doctor->name }}</td>
                                     <td>{{ $appointment->selectedServices }}</td>
                                     <td>{{ $appointment->formatedTime }}</td>
@@ -153,12 +167,17 @@
             end = new Date(selectedEnd).getTime();
 
             window.location.href = "{{ route('appointments.index') }}?from=" + start + "&to=" + end + "&doctor=" +
-                $("#doctor_id").val();
+                $("#doctor_id").val() + "&branch=" + $("#branch_id").val();
         });
 
         $("#doctor_id").change(function() {
             window.location.href = "{{ route('appointments.index') }}?from=" + start + "&to=" + end + "&doctor=" +
-                $(this).val();
+                $(this).val() + "&branch=" + $("#branch_id").val();
+        });
+
+        $("#branch_id").change(function() {
+            window.location.href = "{{ route('appointments.index') }}?from=" + start + "&to=" + end + "&doctor=" +
+                $("#doctor_id").val() + "&branch=" + $(this).val();
         });
     </script>
 @endsection

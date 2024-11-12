@@ -17,8 +17,14 @@ class Appointment extends Model
         'notes',
         'completed',
         'visit_no',
-        'notified'
+        'notified',
+        'branch_id'
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     // Boot method to define model event
     protected static function boot()

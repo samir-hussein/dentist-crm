@@ -22,6 +22,10 @@
         .bg-medical-history {
             background-color: #df58df;
         }
+
+        .bg-branch {
+            background-color: #4062be;
+        }
     </style>
 @endsection
 
@@ -47,7 +51,7 @@
                     </a>
                 </div>
                 <a href="{{ route('doctors.index') }}" class="text-decoration-none">
-                    <p>Doctors</p>
+                    <p>Dentists</p>
                 </a>
             </div>
             <div class="col-6 col-md-3 text-center">
@@ -92,7 +96,7 @@
                 </a>
             </div>
             <a href="{{ route('settings.lab-settings') }}" class="text-decoration-none">
-                <p>Labs Settings</p>
+                <p>Lab Settings</p>
             </a>
         </div>
 
@@ -116,7 +120,7 @@
                 </a>
             </div>
             <a href="{{ route('settings.schdule-settings') }}" class="text-decoration-none">
-                <p>Schdule Settings</p>
+                <p>Schedule</p>
             </a>
         </div>
 
@@ -128,7 +132,7 @@
                 </a>
             </div>
             <a href="{{ route('treatment-types.index') }}" class="text-decoration-none">
-                <p>Treatment Types</p>
+                <p>Treatment Plans</p>
             </a>
         </div>
 
@@ -141,6 +145,18 @@
             </div>
             <a href="{{ route('medical-histories.index') }}" class="text-decoration-none">
                 <p>Medical History</p>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-3 text-center">
+            <div>
+                <a href="{{ route('branches.index') }}"
+                    class="squircle bg-branch justify-content-center text-decoration-none">
+                    <i class="fe fe-map fe-32 align-self-center text-white"></i>
+                </a>
+            </div>
+            <a href="{{ route('branches.index') }}" class="text-decoration-none">
+                <p>Branches</p>
             </a>
         </div>
     </div>
