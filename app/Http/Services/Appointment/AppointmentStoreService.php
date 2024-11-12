@@ -72,10 +72,15 @@ class AppointmentStoreService extends AppointmentService
             $payload = [
                 'title' => 'New Appointment',
                 'message' => 'Schduled at ' . $appointment->time->time->format("d-m-Y H:i a"),
-                'url' => route("appointments.index")
+                'url' => route("patients.file", ['patient' => $appointment->patient_id])
             ];
 
-            Firebase::sendNotification($user->tokens(), $payload);
+            try {
+                Firebase::sendNotification($user->tokens(), $payload);
+            } catch (\Throwable $th) {
+                Log::info($th->getMessage() . " : " . $th->getTraceAsString());
+            }
+
             return $this->success();
         } catch (\Throwable $th) {
             //throw $th;

@@ -18,6 +18,8 @@ class FirebaseService
         $this->projectId = config('services.fcm.project_id');
         $credentialsFilePath = Storage::path(config('services.fcm.credentials'));
 
+        Log::info($credentialsFilePath);
+
         $this->client = new Google_Client();
         $this->client->setAuthConfig($credentialsFilePath);
         $this->client->addScope('https://www.googleapis.com/auth/firebase.messaging');
