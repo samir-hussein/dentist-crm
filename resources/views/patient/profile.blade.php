@@ -144,75 +144,81 @@
                                     </div>
                                 </div>
                                 <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="treatment-tab" data-toggle="pill" href="#treatment"
-                                            role="tab" aria-controls="treatment" aria-selected="true">Treatment
-                                            Sessions</a>
-                                    </li>
                                     @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="treatment-tab" data-toggle="pill"
+                                                href="#treatment" role="tab" aria-controls="treatment"
+                                                aria-selected="true">Treatment
+                                                Sessions</a>
+                                        </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="invoices-tab" data-toggle="pill" href="#invoices"
                                                 role="tab" aria-controls="invoices" aria-selected="false">Invoices</a>
                                         </li>
                                     @endif
                                     <li class="nav-item">
-                                        <a class="nav-link" id="lab-tab" data-toggle="pill" href="#lab" role="tab"
+                                        <a class="nav-link {{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? 'active' : '' }}"
+                                            id="lab-tab" data-toggle="pill" href="#lab" role="tab"
                                             aria-controls="lab" aria-selected="false">Lab Orders</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content mb-1" id="pills-tabContent">
-                                    <div class="tab-pane fade show active" id="treatment" role="tabpanel"
-                                        aria-labelledby="treatment-tab">
-                                        <!-- Small table -->
-                                        <div class="col-md-12">
-                                            <div class="card-body">
-                                                <!-- table -->
-                                                <table class="table datatables" id="treatments">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Date</th>
-                                                            <th>Tooth</th>
-                                                            <th>Diagnosis</th>
-                                                            <th>Treatment</th>
-                                                            <th>Fees</th>
-                                                            <th>Paid</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                    @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                        <div class="tab-pane fade show active" id="treatment" role="tabpanel"
+                                            aria-labelledby="treatment-tab">
+                                            <!-- Small table -->
+                                            <div class="col-md-12">
+                                                <div class="card-body">
+                                                    <!-- table -->
+                                                    <table class="table datatables" id="treatments">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Date</th>
+                                                                <th>Dentist</th>
+                                                                <th>Tooth</th>
+                                                                <th>Diagnosis</th>
+                                                                <th>Treatment</th>
+                                                                <th>Fees</th>
+                                                                <th>Paid</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
 
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div> <!-- simple table -->
-                                    </div>
-                                    <div class="tab-pane fade" id="invoices" role="tabpanel"
-                                        aria-labelledby="invoices-tab">
-                                        <!-- Small table -->
-                                        <div class="col-md-12">
-                                            <div class="card-body">
-                                                <!-- table -->
-                                                <table class="table datatables" id="invoices-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Date</th>
-                                                            <th>Treatment</th>
-                                                            <th>Tooth</th>
-                                                            <th>Fees</th>
-                                                            <th>Paid</th>
-                                                            <th>Tax Invoice</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div> <!-- simple table -->
+                                        </div>
+                                        <div class="tab-pane fade" id="invoices" role="tabpanel"
+                                            aria-labelledby="invoices-tab">
+                                            <!-- Small table -->
+                                            <div class="col-md-12">
+                                                <div class="card-body">
+                                                    <!-- table -->
+                                                    <table class="table datatables" id="invoices-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Date</th>
+                                                                <th>Treatment</th>
+                                                                <th>Tooth</th>
+                                                                <th>Fees</th>
+                                                                <th>Paid</th>
+                                                                <th>Tax Invoice</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
 
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div> <!-- simple table -->
-                                    </div>
-                                    <div class="tab-pane fade" id="lab" role="tabpanel" aria-labelledby="lab-tab">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div> <!-- simple table -->
+                                        </div>
+                                    @endif
+                                    <div class="tab-pane fade {{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? 'show active' : '' }}"
+                                        id="lab" role="tabpanel" aria-labelledby="lab-tab">
                                         <!-- Small table -->
                                         <div class="col-md-12">
                                             <div class="card-body">
@@ -227,8 +233,10 @@
                                                             <th>Lab</th>
                                                             <th>Sent Date</th>
                                                             <th>Received Date</th>
-                                                            <th>Cost</th>
-                                                            <th>Done</th>
+                                                            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                                                <th>Cost</th>
+                                                                <th>Done</th>
+                                                            @endif
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -252,7 +260,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="verticalModalTitle">Invoice Print</h5>
+                    <h5 class="modal-title" id="verticalModalTitle">Print Invoice</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -271,19 +279,19 @@
         <table style="width: 80%; margin-top:110px">
             <tbody>
                 <tr>
-                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                    <td style="padding-bottom: 15px;font-size: 19px;">
                         Date</td>
-                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                    <td style="padding-bottom: 15px;font-size: 19px;">:
                     </td>
-                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                    <td style="padding-bottom: 15px;font-size: 19px;">
                         {{ date('d-m-Y') }}</td>
                 </tr>
                 <tr>
-                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                    <td style="padding-bottom: 15px;font-size: 19px;">
                         Name</td>
-                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                    <td style="padding-bottom: 15px;font-size: 19px;">:
                     </td>
-                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                    <td style="padding-bottom: 15px;font-size: 19px;">
                         {{ $patient->name }}
                     </td>
                 </tr>
@@ -294,6 +302,7 @@
                 <tr style="text-align: left;border-top:1px solid black;padding: 1% 0 1% 0;border-bottom:1px solid black">
                     <th>No.</th>
                     <th>Date</th>
+                    <th>Teeth</th>
                     <th>Treatment</th>
                     <th>Fees</th>
                     <th>Paid</th>
@@ -378,6 +387,9 @@
                 columns: [{
                         data: 'created_at',
                         name: 'Date',
+                    }, {
+                        data: 'doctor',
+                        name: 'Dentist',
                     }, {
                         data: 'tooth',
                         name: 'Tooth'
@@ -506,6 +518,100 @@
             });
         }
 
+        const userStaff = @json(!auth()->user()->is_admin && !auth()->user()->is_doctor);
+
+        let columns = [];
+
+        if (userStaff) {
+            columns.push({
+                data: 'id',
+                name: '#'
+            }, {
+                data: 'work',
+                name: 'Work'
+            }, {
+                data: 'custom_data',
+                name: 'Extra Data'
+            }, {
+                data: 'tooth',
+                name: 'Tooth'
+            }, {
+                data: 'lab',
+                name: 'Lab'
+            }, {
+                data: null,
+                name: 'Sent Date',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    let date = row.sent;
+                    let id = row.id;
+                    return `<input type="date" value="${date}" class="form-control date-change" data-name="sent" data-lab="${id}"/>`;
+                }
+            }, {
+                data: null,
+                name: 'Received Date',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    let date = row.received;
+                    let id = row.id;
+                    return `<input type="date" value="${date}" class="form-control date-change" data-name="received" data-lab="${id}"/>`;
+                }
+            });
+        } else {
+            columns.push({
+                data: 'id',
+                name: '#'
+            }, {
+                data: 'work',
+                name: 'Work'
+            }, {
+                data: 'custom_data',
+                name: 'Extra Data'
+            }, {
+                data: 'tooth',
+                name: 'Tooth'
+            }, {
+                data: 'lab',
+                name: 'Lab'
+            }, {
+                data: null,
+                name: 'Sent Date',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    let date = row.sent;
+                    let id = row.id;
+                    return `<input type="date" value="${date}" class="form-control date-change" data-name="sent" data-lab="${id}"/>`;
+                }
+            }, {
+                data: null,
+                name: 'Received Date',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    let date = row.received;
+                    let id = row.id;
+                    return `<input type="date" value="${date}" class="form-control date-change" data-name="received" data-lab="${id}"/>`;
+                }
+            }, {
+                data: 'cost',
+                name: 'Cost',
+            }, {
+                data: null,
+                name: 'Done',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    if (row.done) {
+                        return `<span class="badge badge-warning">Yes</span>`;
+                    }
+                    return `<span class="badge badge-success">No</span>`;
+                }
+            });
+        }
+
         function getLabOrders(tooth = "") {
             if ($.fn.DataTable.isDataTable('#lab-orders-table')) {
                 $('#lab-orders-table').DataTable().destroy();
@@ -523,65 +629,7 @@
                         console.log(xhr.responseText); // Log the error for debugging
                     }
                 },
-                columns: [{
-                        data: 'id',
-                        name: '#'
-                    },
-                    {
-                        data: 'work',
-                        name: 'Work'
-                    },
-                    {
-                        data: 'custom_data',
-                        name: 'Extra Data'
-                    },
-                    {
-                        data: 'tooth',
-                        name: 'Tooth'
-                    },
-                    {
-                        data: 'lab',
-                        name: 'Lab'
-                    },
-                    {
-                        data: null,
-                        name: 'Sent Date',
-                        orderable: false, // Action buttons are not sortable
-                        searchable: false, // Action buttons are not searchable
-                        render: function(data, type, row) {
-                            let date = row.sent;
-                            let id = row.id;
-                            return `<input type="date" value="${date}" class="form-control date-change" data-name="sent" data-lab="${id}"/>`;
-                        }
-                    },
-                    {
-                        data: null,
-                        name: 'Received Date',
-                        orderable: false, // Action buttons are not sortable
-                        searchable: false, // Action buttons are not searchable
-                        render: function(data, type, row) {
-                            let date = row.received;
-                            let id = row.id;
-                            return `<input type="date" value="${date}" class="form-control date-change" data-name="received" data-lab="${id}"/>`;
-                        }
-                    },
-                    {
-                        data: 'cost',
-                        name: 'Cost',
-                    },
-                    {
-                        data: null,
-                        name: 'Done',
-                        orderable: false, // Action buttons are not sortable
-                        searchable: false, // Action buttons are not searchable
-                        render: function(data, type, row) {
-                            if (row.done) {
-                                return `<span class="badge badge-warning">Yes</span>`;
-                            }
-                            return `<span class="badge badge-success">No</span>`;
-                        }
-                    }
-                ],
+                columns: columns,
                 pageLength: 10, // You can change the default page size here
                 order: [] // Optional: Default sorting
             });
@@ -607,7 +655,11 @@
             });
         });
 
-        getTreatments();
+        if (userStaff) {
+            getLabOrders();
+        } else {
+            getTreatments();
+        }
 
         $(document).on("click", "polygon, path", function() {
             let toothNumber = $(this).data("key"); // Get the data-key attribute (tooth number)

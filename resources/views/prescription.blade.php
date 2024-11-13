@@ -78,22 +78,20 @@
                         <table style="width: 80%; margin-top:110px">
                             <tbody>
                                 <tr>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Date</td>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                    <td style="padding-bottom: 15px;font-size: 19px;">Date</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;">:</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                         {{ date('d-m-Y') }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Name</td>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive"
-                                        id="print-patient-name"></td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;">Name</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;">:</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;" id="print-patient-name"></td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">Diagnosis</td>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:</td>
-                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive"
-                                        id="print-diagnosis"></td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;">Diagnosis</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;">:</td>
+                                    <td style="padding-bottom: 15px;font-size: 19px;" id="print-diagnosis"></td>
                                 </tr>
                                 <tr>
                                     <td style="font-size: 60px;font-family:cursive;font-weight:bolder">R/</td>
@@ -194,7 +192,7 @@
                         .trim();
                     const dose = $(this).find(".dose option:selected").text().trim();
                     medicineList +=
-                        `<tr><td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">${medicine}</td><td style="font-size: 19px;font-family: cursive"> ${dose}</td></tr>`;
+                        `<tr><td style="padding-bottom: 15px;font-size: 19px;">${medicine}</td><td style="font-size: 19px;"> ${dose}</td></tr>`;
                 });
                 $("#print-medicines-list").html(medicineList);
 

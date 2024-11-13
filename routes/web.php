@@ -86,86 +86,86 @@ Route::middleware("auth")->group(function () {
             Route::resource('doctors', DoctorController::class)->missing(function () {
                 return abort(404);
             });
-        });
 
-        Route::get("/settings", function () {
-            return view('settings', ["currentRouteName" => Route::currentRouteName()]);
-        })->name('settings');
+            Route::get("/settings", function () {
+                return view('settings', ["currentRouteName" => Route::currentRouteName()]);
+            })->name('settings');
 
-        Route::get("/settings/lab", function () {
-            return view('lab-settings', ["currentRouteName" => Route::currentRouteName()]);
-        })->name('settings.lab-settings');
+            Route::get("/settings/lab", function () {
+                return view('lab-settings', ["currentRouteName" => Route::currentRouteName()]);
+            })->name('settings.lab-settings');
 
-        Route::get("/settings/medicine", function () {
-            return view('medicine-settings', ["currentRouteName" => Route::currentRouteName()]);
-        })->name('settings.medicine-settings');
+            Route::get("/settings/medicine", function () {
+                return view('medicine-settings', ["currentRouteName" => Route::currentRouteName()]);
+            })->name('settings.medicine-settings');
 
-        Route::get("/settings/schdule", function () {
-            return view('schdule-settings', ["currentRouteName" => Route::currentRouteName()]);
-        })->name('settings.schdule-settings');
+            Route::get("/settings/schdule", function () {
+                return view('schdule-settings', ["currentRouteName" => Route::currentRouteName()]);
+            })->name('settings.schdule-settings');
 
-        Route::get("diagnosis/all", [DiagnosisController::class, 'all'])->name('diagnosis.all');
-        Route::resource('diagnosis', DiagnosisController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("diagnosis/all", [DiagnosisController::class, 'all'])->name('diagnosis.all');
+            Route::resource('diagnosis', DiagnosisController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("services/all", [ServiceController::class, 'all'])->name('services.all');
-        Route::resource('services', ServiceController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("services/all", [ServiceController::class, 'all'])->name('services.all');
+            Route::resource('services', ServiceController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
-        Route::resource('labs', LabController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("labs/all", [LabController::class, 'all'])->name('labs.all');
+            Route::resource('labs', LabController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("branches/all", [BranchController::class, 'all'])->name('branches.all');
-        Route::resource('branches', BranchController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("branches/all", [BranchController::class, 'all'])->name('branches.all');
+            Route::resource('branches', BranchController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("schdule-days/all", [SchduleDayController::class, 'all'])->name('schdule-days.all');
-        Route::resource('schdule-days', SchduleDayController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("schdule-days/all", [SchduleDayController::class, 'all'])->name('schdule-days.all');
+            Route::resource('schdule-days', SchduleDayController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("schdule-dates/all", [SchduleDateController::class, 'all'])->name('schdule-dates.all');
-        Route::get("schdule-dates/{schdule_date}/make-holiday", [SchduleDateController::class, 'makeHoliday'])->name('schdule-dates.make-holiday');
-        Route::resource('schdule-dates', SchduleDateController::class)->missing(function () {
-            return abort(404);
-        })->except(['destroy']);
-        Route::resource('times', SchduleDateController::class)->missing(function () {
-            return abort(404);
-        })->only(['destroy', 'update']);
+            Route::get("schdule-dates/all", [SchduleDateController::class, 'all'])->name('schdule-dates.all');
+            Route::get("schdule-dates/{schdule_date}/make-holiday", [SchduleDateController::class, 'makeHoliday'])->name('schdule-dates.make-holiday');
+            Route::resource('schdule-dates', SchduleDateController::class)->missing(function () {
+                return abort(404);
+            })->except(['destroy']);
+            Route::resource('times', SchduleDateController::class)->missing(function () {
+                return abort(404);
+            })->only(['destroy', 'update']);
 
-        Route::get("doses/all", [DoseController::class, 'all'])->name('doses.all');
-        Route::resource('doses', DoseController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("doses/all", [DoseController::class, 'all'])->name('doses.all');
+            Route::resource('doses', DoseController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("medical-histories/all", [MedicalHistoryController::class, 'all'])->name('medical-histories.all');
-        Route::resource('medical-histories', MedicalHistoryController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("medical-histories/all", [MedicalHistoryController::class, 'all'])->name('medical-histories.all');
+            Route::resource('medical-histories', MedicalHistoryController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("medicine-types/all", [MedicineTypeController::class, 'all'])->name('medicine-types.all');
-        Route::resource('medicine-types', MedicineTypeController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("medicine-types/all", [MedicineTypeController::class, 'all'])->name('medicine-types.all');
+            Route::resource('medicine-types', MedicineTypeController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("medicines/all", [MedicineController::class, 'all'])->name('medicines.all');
-        Route::resource('medicines', MedicineController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("medicines/all", [MedicineController::class, 'all'])->name('medicines.all');
+            Route::resource('medicines', MedicineController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("lab-services/all", [LabServiceController::class, 'all'])->name('lab-services.all');
-        Route::resource('lab-services', LabServiceController::class)->missing(function () {
-            return abort(404);
-        });
+            Route::get("lab-services/all", [LabServiceController::class, 'all'])->name('lab-services.all');
+            Route::resource('lab-services', LabServiceController::class)->missing(function () {
+                return abort(404);
+            });
 
-        Route::get("treatment-types/all", [TreatmentTypeController::class, 'all'])->name('treatment-types.all');
-        Route::resource('treatment-types', TreatmentTypeController::class)->missing(function () {
-            return abort(404);
+            Route::get("treatment-types/all", [TreatmentTypeController::class, 'all'])->name('treatment-types.all');
+            Route::resource('treatment-types', TreatmentTypeController::class)->missing(function () {
+                return abort(404);
+            });
         });
 
         Route::get("prescription", [PrescriptionController::class, 'index'])->name('prescription.index');

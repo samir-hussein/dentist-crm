@@ -50,4 +50,9 @@ class TreatmentDetail extends Model
     {
         return $this->hasOne(LabOrder::class);
     }
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

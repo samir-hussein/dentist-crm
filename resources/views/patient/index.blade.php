@@ -120,7 +120,7 @@
 
                         if (staff) {
                             return `
-                            <a href="${profileUrl}" class="btn btn-sm btn-info">Profile</a>
+                            <a href="${profileUrl}" class="btn btn-sm btn-info">Lab Orders</a>
                             <a href="${editUrl}" class="btn btn-sm btn-warning">Edit</a>
                         `;
                         }

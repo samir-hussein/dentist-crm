@@ -6,10 +6,8 @@
     <form class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="{{ route('login.submit') }}" method="post">
         @csrf
         <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="/">
-            <img src="{{ asset('images/logo.png') }}" alt="" width="100">
+            <img src="{{ asset('images/logo.png') }}" alt="" width="170">
         </a>
-        <h1 class="h6 mb-3" style="font-family: 'Sarina', cursive;font-size:25px">NORY DENTAL
-            CLINIC</h1>
         @if (session('error'))
             <div class="alert alert-danger" role="alert">
                 {{ session('error') }}

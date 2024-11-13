@@ -668,7 +668,7 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="doctor_id">Doctor</label>
+                                                    <label for="doctor_id">Dentist</label>
                                                     <select id="doctor_id" name="doctor_id" class="form-control">
                                                         @foreach ($data->doctors as $doctor)
                                                             <option
@@ -761,7 +761,7 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="doctor_id">Doctor</label>
+                                                    <label for="doctor_id">Dentist</label>
                                                     <select id="doctor_id" name="doctor_id" class="form-control">
                                                         @foreach ($data->doctors as $doctor)
                                                             <option

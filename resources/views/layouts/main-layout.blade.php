@@ -405,6 +405,16 @@
             e.preventDefault();
             requestPermission();
         });
+
+        $(".collapseSidebar").click(function() {
+            const $logo = $("#logo"); // Select the logo element
+
+            if ($logo.width() === 100) {
+                $logo.width(50); // Change width to 50px
+            } else {
+                $logo.width(100); // Change width back to 100px
+            }
+        });
     </script>
 
 

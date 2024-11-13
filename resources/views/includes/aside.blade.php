@@ -6,7 +6,7 @@
         <!-- nav bar -->
         <div class="w-100 mb-4 d-flex">
             <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{{ route('home') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="" width="50">
+                <img src="{{ asset('images/logo.png') }}" alt="logo" id="logo" width="100">
             </a>
         </div>
         <ul class="navbar-nav flex-fill w-100 mb-2">
@@ -41,7 +41,9 @@
                         <span class="ml-3 item-text">Prescription</span>
                     </a>
                 </li>
+            @endif
 
+            @if (auth()->user()->is_admin)
                 <li class="nav-item w-100">
                     <a class="nav-link {{ strpos($currentRouteName, 'tax') !== false ? 'active-link' : '' }}"
                         href="{{ route('invoices.tax.index') }}">

@@ -51,6 +51,11 @@
     box-sizing: border-box;
 }
 
+a,
+button {
+    color: var(--gray-dark) !important;
+}
+
 html {
     font-family: sans-serif;
     line-height: 1.15;

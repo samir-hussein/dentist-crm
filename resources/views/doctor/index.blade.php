@@ -1,6 +1,6 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Doctor')
+@section('title', 'Dentist')
 
 @section('page-path-prefix', 'SETTINGS > ')
 

@@ -36,11 +36,6 @@
             width: 100%;
             overflow-x: hidden !important;
         }
-
-        @font-face {
-            font-family: 'BlakaInk';
-            src: url('fonts/Sarina-Regular.ttf') format('truetype');
-        }
     </style>
 </head>
 

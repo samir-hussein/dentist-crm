@@ -46,7 +46,7 @@
                                     <h4 class="mb-1">{{ $data->name }}</h4>
                                     <p class="small mb-3">
                                         <span
-                                            class="badge badge-dark">{{ $data->is_doctor ? 'Doctor' : ($data->is_admin ? 'Admin' : 'Staff') }}</span>
+                                            class="badge badge-dark">{{ $data->is_doctor ? 'Dentist' : ($data->is_admin ? 'Admin' : 'Staff') }}</span>
                                     </p>
                                 </div>
                             </div>

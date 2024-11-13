@@ -35,9 +35,9 @@
                 </div>
 
                 <div class="form-group col-6 col-md-4">
-                    <label for="doctor_id">Filter By Doctor : </label>
+                    <label for="doctor_id">Filter By Dentist : </label>
                     <select id="doctor_id" name="doctor_id" class="form-control">
-                        <option value="0">All Doctors</option>
+                        <option value="0">All Dentists</option>
                         @foreach ($doctors as $doctor)
                             <option {{ request('doctor') == $doctor->id ? 'selected' : '' }} value="{{ $doctor->id }}">
                                 {{ $doctor->name }}
@@ -69,7 +69,7 @@
                                 <th>Patient Phone</th>
                                 <th>Patient Phone 2</th>
                                 <th>Branch</th>
-                                <th>Doctor Name</th>
+                                <th>Dentist</th>
                                 <th>Services</th>
                                 <th>Appointment</th>
                                 <th>Notes</th>
@@ -95,10 +95,10 @@
                                         @if (auth()->user()->is_admin || auth()->user()->is_doctor)
                                             <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
                                                 class="btn mb-1 btn-sm btn-success">Completed</a>
-                                        @endif
 
-                                        <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
-                                            class="btn mb-1 btn-sm btn-warning">Patient File</a>
+                                            <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
+                                                class="btn mb-1 btn-sm btn-warning">Patient File</a>
+                                        @endif
 
                                         <form class="d-inline mb-1" method="POST"
                                             action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">

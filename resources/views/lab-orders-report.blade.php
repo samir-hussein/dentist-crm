@@ -39,16 +39,16 @@
                         <thead>
                             <tr>
                                 <th>Order Date</th>
-                                <th>Patient</th>
                                 <th>Patient Id</th>
+                                <th>Patient</th>
+                                <th>Lab</th>
+                                <th>Tooth</th>
                                 <th>Work</th>
                                 <th>Extra Data</th>
-                                <th>Tooth</th>
-                                <th>Lab</th>
                                 <th>Sent Date</th>
                                 <th>Received Date</th>
-                                <th>Cost</th>
                                 <th>Done</th>
+                                <th>Cost</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,12 +146,20 @@
                         name: 'Order Date'
                     },
                     {
+                        data: 'patient_code',
+                        name: 'Patient Id'
+                    },
+                    {
                         data: 'patient_name',
                         name: 'Patient'
                     },
                     {
-                        data: 'patient_code',
-                        name: 'Patient Id'
+                        data: 'lab',
+                        name: 'Lab'
+                    },
+                    {
+                        data: 'tooth',
+                        name: 'Tooth'
                     },
                     {
                         data: 'work',
@@ -162,24 +170,12 @@
                         name: 'Extra Data'
                     },
                     {
-                        data: 'tooth',
-                        name: 'Tooth'
-                    },
-                    {
-                        data: 'lab',
-                        name: 'Lab'
-                    },
-                    {
                         data: 'sent',
                         name: 'Sent Date',
                     },
                     {
                         data: 'received',
                         name: 'Received Date',
-                    },
-                    {
-                        data: 'cost',
-                        name: 'Cost',
                     },
                     {
                         data: null,
@@ -192,7 +188,10 @@
                             }
                             return `<span class="badge badge-success">No</span>`;
                         }
-                    }
+                    }, {
+                        data: 'cost',
+                        name: 'Cost',
+                    },
                 ],
                 pageLength: 10, // You can change the default page size here
                 order: [] // Optional: Default sorting

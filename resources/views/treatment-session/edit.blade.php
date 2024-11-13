@@ -284,8 +284,9 @@
                                 <div class="form-row">
                                     <div class="form-group col-12 col-md-6">
                                         <label>Charges</label>
-                                        <input type="password" class="form-control" min="0" id="cost"
-                                            autocomplete="new-password" value="{{ $data->session->labOrder?->cost }}">
+                                        <input type="number" class="form-control" min="0" step="100"
+                                            id="cost" autocomplete="new-password"
+                                            value="{{ $data->session->labOrder?->cost }}">
                                     </div> <!-- form-group -->
                                     <div class="form-group col-12 col-md-6">
                                         <label>Date</label>
@@ -309,8 +310,7 @@
                                     value="{{ $data->session->invoice[0]->fees }}" step="100">
                             </div>
                             <div class="form-group col-6 col-md-3">
-                                <label for="paid">Down Payment (Paid :
-                                    {{ $data->session->invoice->sum('paid') }})</label>
+                                <label for="paid">Down Payment ({{ $data->session->invoice->sum('paid') }})</label>
                                 <input type="number" id="paid" class="form-control" min="0" value="0"
                                     step="100">
                             </div>
@@ -322,13 +322,13 @@
                                 <button class="btn w-100 btn-warning" data-toggle="modal"
                                     data-target=".prescription-modal">Prescription</button>
                             </div>
-                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-primary" id="save">Save & Close</button>
-                            </div>
                             <div class="form-group col-6 col-md-1 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-primary" id="save">Save</button>
+                            </div>
+                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
                                 <a class="w-100"
                                     href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
-                                        class="btn w-100 btn-danger">Exit</button></a>
+                                        class="btn w-100 btn-danger">Close</button></a>
                             </div>
                         </div>
                     </div>
@@ -478,28 +478,28 @@
                                         <table style="width: 80%; margin-top:110px">
                                             <tbody>
                                                 <tr>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         Date</td>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">:
                                                     </td>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         {{ date('d-m-Y') }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         Name</td>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">:
                                                     </td>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         {{ $data->patient->name }}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         Diagnosis</td>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">:
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">:
                                                     </td>
-                                                    <td style="padding-bottom: 15px;font-size: 19px;font-family: cursive"
+                                                    <td style="padding-bottom: 15px;font-size: 19px;"
                                                         id="print-diagnosis"></td>
                                                 </tr>
                                                 <tr>
@@ -866,7 +866,7 @@
                         .trim();
                     const dose = $(this).find(".dose option:selected").text().trim();
                     medicineList +=
-                        `<tr><td style="padding-bottom: 15px;font-size: 19px;font-family: cursive">${medicine}</td><td style="font-size: 19px;font-family: cursive"> ${dose}</td></tr>`;
+                        `<tr><td style="padding-bottom: 15px;font-size: 19px;">${medicine}</td><td style="font-size: 19px;"> ${dose}</td></tr>`;
                 });
                 $("#print-medicines-list").html(medicineList);
 

@@ -39,13 +39,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Patient</th>
+                                <th>Date</th>
                                 <th>Patient Id</th>
-                                <th>Treatment</th>
+                                <th>Patient</th>
                                 <th>Tooth</th>
+                                <th>Treatment</th>
                                 <th>Fees</th>
                                 <th>Paid</th>
-                                <th>Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -144,20 +144,24 @@
                         name: '#'
                     },
                     {
-                        data: 'patient_name',
-                        name: 'Patient'
+                        data: 'date',
+                        name: 'Date',
                     },
                     {
                         data: 'patient_code',
                         name: 'Patient Id'
                     },
                     {
-                        data: 'treatment',
-                        name: 'Treatment'
+                        data: 'patient_name',
+                        name: 'Patient'
                     },
                     {
                         data: 'tooth',
                         name: 'Tooth'
+                    },
+                    {
+                        data: 'treatment',
+                        name: 'Treatment'
                     },
                     {
                         data: 'fees',
@@ -166,10 +170,6 @@
                     {
                         data: 'paid',
                         name: 'Paid'
-                    },
-                    {
-                        data: 'date',
-                        name: 'Date',
                     },
                     {
                         data: null, // No field in the database for this, render buttons dynamically

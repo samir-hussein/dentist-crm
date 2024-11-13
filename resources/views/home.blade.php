@@ -14,70 +14,36 @@
     @endif
     <div class="row my-4">
         <!-- Small table -->
-        <div class="col-md-12">
-            <div class="card shadow">
-                <div class="card-body">
-                    <!-- table -->
-                    <table class="table datatables" id="dataTable-1">
-                        <thead>
-                            <tr>
-                                <th>Patient Id</th>
-                                <th>Patient Name</th>
-                                <th>Patient Phone</th>
-                                <th>Patient Phone 2</th>
-                                <th>Branch</th>
-                                <th>Doctor Name</th>
-                                <th>Services</th>
-                                <th>Appointment</th>
-                                <th>Notes</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data as $appointment)
-                                <tr>
-                                    <td>{{ $appointment->patient->code }}</td>
-                                    <td>{{ $appointment->patient->name }}</td>
-                                    <td>{{ $appointment->patient->phone }}</td>
-                                    <td>{{ $appointment->patient->phone2 }}</td>
-                                    <td>{{ $appointment->branch?->name }}</td>
-                                    <td>{{ $appointment->doctor->name }}</td>
-                                    <td>{{ $appointment->selectedServices }}</td>
-                                    <td>{{ $appointment->formatedTime }}</td>
-                                    <td>{{ $appointment->notes }}</td>
-                                    <td>
-                                        <a class="btn mb-1 btn-sm btn-info"
-                                            href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
+        <div class="col-12 text-center">
+            <img src="{{ asset('images/logo.png') }}" alt="logo" width="200">
+        </div> <!-- simple table -->
 
-                                        @if (auth()->user()->is_admin || auth()->user()->is_doctor)
-                                            <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
-                                                class="btn mb-1 btn-sm btn-success">Completed</a>
-                                        @endif
+        <div class="col-12 mt-5">
+            <div class="row">
+                <div class="col-6 text-center">
+                    <div>
+                        <a href="{{ route('appointments.index') }}"
+                            class="squircle bg-success justify-content-center text-decoration-none">
+                            <i class="fe fe-calendar fe-32 align-self-center text-white"></i>
+                        </a>
+                    </div>
+                    <a href="{{ route('appointments.index') }}" class="text-decoration-none">
+                        <p>Appoinements</p>
+                    </a>
+                </div>
 
-                                        <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
-                                            class="btn mb-1 btn-sm btn-warning">Patient File</a>
-
-                                        <form class="d-inline mb-1" method="POST"
-                                            action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="col-6 text-center">
+                    <div>
+                        <a href="{{ route('patients.index') }}"
+                            class="squircle bg-danger justify-content-center text-decoration-none">
+                            <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                        </a>
+                    </div>
+                    <a href="{{ route('patients.index') }}" class="text-decoration-none">
+                        <p>Patients</p>
+                    </a>
                 </div>
             </div>
-        </div> <!-- simple table -->
+        </div>
     </div> <!-- end section -->
-@endsection
-
-@section('script')
-    <script>
-        $('#dataTable-1').DataTable({
-            order: []
-        });
-    </script>
 @endsection

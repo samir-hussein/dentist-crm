@@ -127,8 +127,8 @@
         <div class="form-row">
             <div class="form-group col-12 col-md-6">
                 <label>Charges</label>
-                <input type="password" class="form-control" min="0" id="cost"
-                    autocomplete="new-password">
+                <input type="number" class="form-control" min="0" id="cost"
+                    autocomplete="new-password" step="100">
             </div> <!-- form-group -->
             <div class="form-group col-12 col-md-6">
                 <label>Date</label>

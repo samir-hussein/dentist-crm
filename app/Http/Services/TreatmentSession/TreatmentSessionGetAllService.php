@@ -12,7 +12,7 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
     public function boot(Request $request)
     {
         // Fetch all columns from your model's table
-        $data = $this->model->latest()->select(['id', 'tooth', 'created_at', 'diagnose_id']);
+        $data = $this->model->latest()->select(['id', 'tooth', 'created_at', 'diagnose_id', 'doctor_id']);
 
         if ($request->has("patient")) {
             $data->where("patient_id", $request->patient);
@@ -47,6 +47,9 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
             })
             ->addColumn('fees', function ($row) {
                 return $row->invoice[0]->fees;
+            })
+            ->addColumn('doctor', function ($row) {
+                return $row->doctor->name;
             })
             ->addColumn('paid', function ($row) {
                 return $row->invoice()->sum("paid");
