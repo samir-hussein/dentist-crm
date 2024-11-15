@@ -95,6 +95,10 @@
                                         <a class="btn mb-1 btn-sm btn-info"
                                             href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
 
+                                        <a class="btn mb-1 btn-sm btn-dark" style="font-size: 10px"
+                                            href="{{ route('appointments.next', ['appointment' => $appointment->id]) }}">Next
+                                            Appointment</a>
+
                                         @if (auth()->user()->is_admin || auth()->user()->is_doctor)
                                             <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
                                                 class="btn mb-1 btn-sm btn-success">Completed</a>

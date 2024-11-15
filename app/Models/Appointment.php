@@ -35,7 +35,7 @@ class Appointment extends Model
         static::creating(function ($appointment) {
             // Check if there's an existing appointment on the same date and time
             $lastVisitNo = Appointment::join('schdule_date_times', 'appointments.time_id', '=', 'schdule_date_times.id')
-                ->whereDate('schdule_date_times.time', '=', $appointment->time->time->format('d-m-Y'))
+                ->whereDate('schdule_date_times.time', '=', $appointment->time->time->format('Y-m-d'))
                 ->max('appointments.visit_no');
 
             // If there's no previous visit number for that date, start from 1, else increment by 1
@@ -45,7 +45,7 @@ class Appointment extends Model
         static::updating(function ($appointment) {
             // Check if there's an existing appointment on the same date and time
             $lastVisitNo = Appointment::join('schdule_date_times', 'appointments.time_id', '=', 'schdule_date_times.id')
-                ->whereDate('schdule_date_times.time', '=', $appointment->time->time->format('d-m-Y'))
+                ->whereDate('schdule_date_times.time', '=', $appointment->time->time->format('Y-m-d'))
                 ->max('appointments.visit_no');
 
             // If there's no previous visit number for that date, start from 1, else increment by 1

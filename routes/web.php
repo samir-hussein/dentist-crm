@@ -58,6 +58,8 @@ Route::middleware("auth")->group(function () {
         return abort(404);
     });
 
+    Route::get("appointments/{appointment}/next", [AppointmentController::class, 'next'])->name("appointments.next");
+    Route::post("appointments/{appointment}/next", [AppointmentController::class, 'nextStore'])->name("appointments.next.store");
     Route::resource('appointments', AppointmentController::class)->missing(function () {
         return abort(404);
     });

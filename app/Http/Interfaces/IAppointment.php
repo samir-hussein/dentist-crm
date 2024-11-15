@@ -10,6 +10,7 @@ interface IAppointment
     public function all($today);
     public function store(array $requestData);
     public function update(Appointment $appointment, array $requestData);
+    public function next(Appointment $appointment, array $requestData);
     public function delete(Appointment $appointment);
     public function findById(Appointment $appointment);
     public function markCompleted(Appointment $appointment);

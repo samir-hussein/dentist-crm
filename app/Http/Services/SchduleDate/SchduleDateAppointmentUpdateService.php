@@ -17,7 +17,7 @@ class SchduleDateAppointmentUpdateService extends SchduleDateService
 
         $time->update([
             'is_manually_updated' => true,
-            'manually_updated_time' => Carbon::parse($time->time->format("d-m-Y"))->setTimeFromTimeString($data['time'])
+            'manually_updated_time' => Carbon::parse($time->time->format("Y-m-d"))->setTimeFromTimeString($data['time'])
         ]);
 
         return $this->success();

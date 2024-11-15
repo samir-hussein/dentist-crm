@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Interfaces\IAppointment;
+use App\Http\Requests\Appointment\AppointmentNextRequest;
 use App\Http\Requests\Appointment\AppointmentStoreRequest;
 use App\Http\Requests\Appointment\AppointmentUpdateRequest;
 use App\Models\Appointment;
@@ -60,6 +61,19 @@ class AppointmentController extends Controller
         return $this->redirectWithSuccess("appointments.index");
     }
 
+    public function nextStore(AppointmentNextRequest $request, Appointment $appointment)
+    {
+        $data = $request->validated();
+
+        $response = $this->service->next($appointment, $data);
+
+        if ($response['status'] == "error") {
+            return $this->backWithError($response['errors']);
+        }
+
+        return $this->redirectWithSuccess("appointments.index");
+    }
+
     /**
      * Display the specified resource.
      */
@@ -76,6 +90,13 @@ class AppointmentController extends Controller
         $data = $this->service->findById($appointment);
 
         return $this->view("appointment.edit", ['data' => $data]);
+    }
+
+    public function next(Appointment $appointment)
+    {
+        $data = $this->service->findById($appointment);
+
+        return $this->view("appointment.next", ['data' => $data]);
     }
 
     /**

@@ -31,7 +31,7 @@ class SchduleDateStoreService extends SchduleDateService
 
         $uniqueBy = ['date'];
 
-        SchduleDate::where("date", "<", date("d-m-Y"))->delete();
+        SchduleDate::whereDate("date", "<", date("Y-m-d"))->delete();
 
         SchduleDate::upsert($insert, $uniqueBy);
 
