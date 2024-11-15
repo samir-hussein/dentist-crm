@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Interfaces\ILab;
 use App\Models\LabOrder;
 use Illuminate\Http\Request;
 use App\Http\Interfaces\ILabOrder;
@@ -11,7 +12,7 @@ class LabOrderController extends Controller
 {
     private $service;
 
-    public function __construct(ILabOrder $labOrderRepository)
+    public function __construct(ILabOrder $labOrderRepository, private ILab $labService)
     {
         $this->service = $labOrderRepository;
     }
@@ -36,7 +37,8 @@ class LabOrderController extends Controller
 
     public function reportView()
     {
-        return view("lab-orders-report");
+        $data = $this->labService->labList();
+        return view("lab-orders-report", ['labs' => $data]);
     }
 
     public function report()

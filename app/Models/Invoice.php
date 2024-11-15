@@ -48,4 +48,9 @@ class Invoice extends Model
     {
         return $this->belongsTo(TreatmentDetail::class);
     }
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

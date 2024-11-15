@@ -63,7 +63,7 @@
                 <li class="nav-item w-100">
                     <a class="nav-link {{ strpos($currentRouteName, 'lab-order.report') !== false ? 'active-link' : '' }}"
                         href="{{ route('lab-order.report.view') }}">
-                        <i class="fe fe-file-text fe-16"></i>
+                        <i class="fe fe-filter fe-16"></i>
                         <span class="ml-3 item-text">Lab Orders Report</span>
                     </a>
                 </li>

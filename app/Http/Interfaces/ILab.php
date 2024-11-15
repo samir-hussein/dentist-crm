@@ -12,4 +12,5 @@ interface ILab
     public function update(Lab $lab, array $requestData);
     public function delete(Lab $lab);
     public function findById(Lab $lab);
+    public function labList();
 }

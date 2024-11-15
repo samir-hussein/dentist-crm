@@ -38,6 +38,10 @@ class InvoiceAllService extends InvoiceService
             $data->where('doctor_id', auth()->user()->id);
         }
 
+        if ($request->doctor) {
+            $data->where('doctor_id', $request->doctor);
+        }
+
         if ($request->excel) {
             $invoices = $data->get();
             return Excel::download(new InvoiceTaxExport($invoices, $from?->format("d-m-Y"), $to?->format("d-m-Y")), 'invoices.xlsx');
@@ -51,6 +55,9 @@ class InvoiceAllService extends InvoiceService
             })
             ->addColumn('patient_code', function ($row) {
                 return $row->patient->code;
+            })
+            ->addColumn('doctor_name', function ($row) {
+                return $row->doctor->name;
             })
             ->addColumn('date', function ($row) {
                 return $row->created_at->format("d-m-Y");

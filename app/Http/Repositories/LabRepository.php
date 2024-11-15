@@ -10,6 +10,7 @@ use App\Http\Services\Lab\LabDeleteService;
 use App\Http\Services\Lab\LabGetAllService;
 use App\Http\Services\Lab\LabUpdateService;
 use App\Http\Services\Lab\LabFindByIdService;
+use App\Http\Services\Lab\LabListService;
 
 class LabRepository implements ILab
 {
@@ -18,24 +19,32 @@ class LabRepository implements ILab
     private $labDeleteService;
     private $labFindById;
     private $labUpdateService;
+    private $labListService;
 
     public function __construct(
         LabGetAllService $labGetAllService,
         LabStoreService $labStoreService,
         LabDeleteService $labDeleteService,
         LabFindByIdService $labFindById,
-        LabUpdateService $labUpdateService
+        LabUpdateService $labUpdateService,
+        LabListService $labListService
     ) {
         $this->labGetAllService = $labGetAllService;
         $this->labStoreService = $labStoreService;
         $this->labDeleteService = $labDeleteService;
         $this->labFindById = $labFindById;
         $this->labUpdateService = $labUpdateService;
+        $this->labListService = $labListService;
     }
 
     public function all(Request $request)
     {
         return $this->labGetAllService->boot($request);
+    }
+
+    public function labList()
+    {
+        return $this->labListService->boot();
     }
 
     public function findById(Lab $lab)

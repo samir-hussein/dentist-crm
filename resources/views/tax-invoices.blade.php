@@ -25,11 +25,25 @@
     <div class="row my-4">
         <!-- Small table -->
         <div class="col-md-12">
-            <div class="form-group">
-                <label for="reportrange">Filter By Date : </label>
-                <div id="reportrange" class="border px-2 py-2 bg-light">
-                    <i class="fe fe-calendar fe-16 mx-2"></i>
-                    <span id="date-range"></span>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label for="reportrange">Filter By Date : </label>
+                    <div id="reportrange" class="border px-2 py-2 bg-light">
+                        <i class="fe fe-calendar fe-16 mx-2"></i>
+                        <span id="date-range"></span>
+                    </div>
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="doctor_id">Filter By Dentist : </label>
+                    <select id="doctor_id" name="doctor_id" class="form-control">
+                        <option value="0">All Dentists</option>
+                        @foreach ($doctors as $doctor)
+                            <option {{ request('doctor') == $doctor->id ? 'selected' : '' }} value="{{ $doctor->id }}">
+                                {{ $doctor->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="card shadow">
@@ -42,6 +56,7 @@
                                 <th>Date</th>
                                 <th>Patient Id</th>
                                 <th>Patient</th>
+                                <th>Dentist</th>
                                 <th>Tooth</th>
                                 <th>Treatment</th>
                                 <th>Fees</th>
@@ -64,6 +79,12 @@
         // Set initial start and end dates
         var start = moment().startOf('month');
         var end = moment().endOf('month');
+        let doctor = 0;
+
+        $("#doctor_id").change(function() {
+            doctor = $(this).val();
+            getData();
+        })
 
         // Callback function to display selected range
         function cb(start, end) {
@@ -105,7 +126,8 @@
 
         $("#export-excel").click(function() {
             $.ajax({
-                url: "{{ route('invoices.tax') }}?from=" + start + "&to=" + end + "&excel=1",
+                url: "{{ route('invoices.tax') }}?from=" + start + "&to=" + end + "&doctor=" + doctor +
+                    "&excel=1",
                 type: 'GET',
                 xhrFields: {
                     responseType: 'blob' // Specify the response type as blob for file
@@ -133,7 +155,8 @@
                 serverSide: true,
                 ordering: false,
                 ajax: {
-                    url: "{{ route('invoices.tax') }}?from=" + from + "&to=" + to, // URL to fetch data
+                    url: "{{ route('invoices.tax') }}?from=" + from + "&to=" + to + "&doctor=" +
+                        doctor, // URL to fetch data
                     type: 'GET',
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
@@ -154,6 +177,10 @@
                     {
                         data: 'patient_name',
                         name: 'Patient'
+                    },
+                    {
+                        data: 'doctor_name',
+                        name: 'Dentist'
                     },
                     {
                         data: 'tooth',

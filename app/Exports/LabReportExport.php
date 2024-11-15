@@ -250,7 +250,7 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         foreach ($this->data as $order) {
             $data[] = [
                 'No.' => $i,
-                'Order Date' => $order->created_at->format("Y-m-d"),
+                'Order Date' => $order->created_at->format("d-m-Y"),
                 'Patient Id' => $order->patient->code,
                 'Patient' => $order->patient->name,
                 'Work' => $order->work,
@@ -262,8 +262,8 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
                     ->implode(', '),
                 'Tooth' => $order->tooth,
                 'Lab' => $order->lab->name,
-                'Sent Date' => $order->sent?->format("Y-m-d"),
-                'Received Date' => $order->received?->format("Y-m-d"),
+                'Sent Date' => $order->sent?->format("d-m-Y"),
+                'Received Date' => $order->received?->format("d-m-Y"),
                 'Done' => $order->done ? "YES" : "NO",
                 'Cost' => $order->cost,
             ];

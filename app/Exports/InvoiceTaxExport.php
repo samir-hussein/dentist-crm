@@ -42,7 +42,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     private function styleForDoctor(Worksheet &$sheet)
     {
         // Style header row
-        $sheet->getStyle("A3:H3")->applyFromArray([
+        $sheet->getStyle("A3:G3")->applyFromArray([
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
                 'startColor' => ['argb' => Color::COLOR_DARKGREEN],
@@ -57,7 +57,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A1:H1');
+        $sheet->mergeCells('A1:G1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -79,7 +79,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A2:H2');
+        $sheet->mergeCells('A2:G2');
         $sheet->getStyle('A2')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -102,9 +102,9 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
 
         // Style total row
         $lastRow = $this->data->count() + 4; // Adjust for headings and total row
-        $sheet->mergeCells("A{$lastRow}:F{$lastRow}"); // Merge first four cells in total row
+        $sheet->mergeCells("A{$lastRow}:E{$lastRow}"); // Merge first four cells in total row
         $sheet->setCellValue("A{$lastRow}", 'Total'); // Write "Total" directly in the merged cell
-        $sheet->getStyle("A{$lastRow}:F{$lastRow}")->applyFromArray([
+        $sheet->getStyle("A{$lastRow}:E{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 14,
@@ -125,7 +125,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Apply style for the total fees and paid columns (E and F)
-        $sheet->getStyle("E{$lastRow}:H{$lastRow}")->applyFromArray([
+        $sheet->getStyle("E{$lastRow}:G{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 14,
@@ -149,7 +149,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     private function styleForAdmin(Worksheet &$sheet)
     {
         // Style header row
-        $sheet->getStyle("A2:H2")->applyFromArray([
+        $sheet->getStyle("A2:G2")->applyFromArray([
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
                 'startColor' => ['argb' => Color::COLOR_DARKGREEN],
@@ -164,7 +164,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A1:H1');
+        $sheet->mergeCells('A1:G1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -187,9 +187,9 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
 
         // Style total row
         $lastRow = $this->data->count() + 3; // Adjust for headings and total row
-        $sheet->mergeCells("A{$lastRow}:F{$lastRow}"); // Merge first four cells in total row
+        $sheet->mergeCells("A{$lastRow}:E{$lastRow}"); // Merge first four cells in total row
         $sheet->setCellValue("A{$lastRow}", 'Total'); // Write "Total" directly in the merged cell
-        $sheet->getStyle("A{$lastRow}:F{$lastRow}")->applyFromArray([
+        $sheet->getStyle("A{$lastRow}:E{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 14,
@@ -210,7 +210,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Apply style for the total fees and paid columns (E and F)
-        $sheet->getStyle("E{$lastRow}:H{$lastRow}")->applyFromArray([
+        $sheet->getStyle("E{$lastRow}:G{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 14,
@@ -251,7 +251,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
             $data[] = [
                 'No.' => $i,
                 'Date' => $invoice->created_at->format('d-m-Y'),
-                'Patient ID' => $invoice->patient->code,
                 'Patient Name' => $invoice->patient->name,
                 'Tooth' => $invoice->tooth,
                 'Treatment' => $invoice->treatment,
@@ -265,7 +264,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         $data[] = [
             'No.' => '',  // Empty cell
             'Date' => "",
-            'Patient ID' => "",
             'Patient Name' => "",
             'Tooth' => "",        // Empty cell
             'Treatment' => '',    // Empty cell
@@ -289,12 +287,10 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     '',
                     '',
                     '',
-                    '',
                     '' // Merging to span across 6 columns
                 ],
                 [
                     $period,
-                    '',
                     '',
                     '',
                     '',
@@ -305,7 +301,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 [
                     'No.',
                     'Date',
-                    'Patient ID',
                     'Patient Name',
                     'Tooth',
                     'Treatment',
@@ -323,13 +318,11 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 '',
                 '',
                 '',
-                '',
                 '' // Merging to span across 6 columns
             ],
             [
                 'No.',
                 'Date',
-                'Patient ID',
                 'Patient Name',
                 'Tooth',
                 'Treatment',

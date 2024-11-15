@@ -25,11 +25,25 @@
     <div class="row my-4">
         <!-- Small table -->
         <div class="col-md-12">
-            <div class="form-group">
-                <label for="reportrange">Filter By Date : </label>
-                <div id="reportrange" class="border px-2 py-2 bg-light">
-                    <i class="fe fe-calendar fe-16 mx-2"></i>
-                    <span id="date-range"></span>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label for="reportrange">Filter By Date : </label>
+                    <div id="reportrange" class="border px-2 py-2 bg-light">
+                        <i class="fe fe-calendar fe-16 mx-2"></i>
+                        <span id="date-range"></span>
+                    </div>
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="lab_id">Filter By Lab : </label>
+                    <select id="lab_id" name="lab_id" class="form-control">
+                        <option value="0">All Labs</option>
+                        @foreach ($labs as $lab)
+                            <option {{ request('lab') == $lab->id ? 'selected' : '' }} value="{{ $lab->id }}">
+                                {{ $lab->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="card shadow">
@@ -66,6 +80,12 @@
         // Set initial start and end dates
         var start = moment().startOf('month');
         var end = moment().endOf('month');
+        let lab = 0;
+
+        $("#lab_id").change(function() {
+            lab = $(this).val();
+            getData(start, end);
+        })
 
         // Callback function to display selected range
         function cb(start, end) {
@@ -107,7 +127,8 @@
 
         $("#export-excel").click(function() {
             $.ajax({
-                url: "{{ route('lab-order.report') }}?from=" + start + "&to=" + end + "&excel=1",
+                url: "{{ route('lab-order.report') }}?from=" + start + "&to=" + end + "&lab=" + lab +
+                    "&excel=1",
                 type: 'GET',
                 xhrFields: {
                     responseType: 'blob' // Specify the response type as blob for file
@@ -135,7 +156,8 @@
                 serverSide: true,
                 ordering: false,
                 ajax: {
-                    url: "{{ route('lab-order.report') }}?from=" + from + "&to=" + to, // URL to fetch data
+                    url: "{{ route('lab-order.report') }}?from=" + from + "&to=" + to +
+                        "&lab=" + lab, // URL to fetch data
                     type: 'GET',
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Interfaces\IDoctor;
 use App\Http\Interfaces\IInvoice;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ class InvoiceController extends Controller
 {
     private $service;
 
-    public function __construct(IInvoice $invoiceRepository)
+    public function __construct(IInvoice $invoiceRepository, private IDoctor $doctorService)
     {
         $this->service = $invoiceRepository;
     }
@@ -50,7 +51,8 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return view("invoices");
+        $data = $this->doctorService->listService();
+        return view("invoices", ['doctors' => $data]);
     }
 
     /**
@@ -58,7 +60,8 @@ class InvoiceController extends Controller
      */
     public function taxReport()
     {
-        return view("tax-invoices");
+        $data = $this->doctorService->listService();
+        return view("tax-invoices", ['doctors' => $data]);
     }
 
     public function removeFromTax(Invoice $invoice)

@@ -165,7 +165,7 @@
                             <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
                                 <a class="w-100"
                                     href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
-                                        class="btn w-100 btn-danger">Close</button></a>
+                                        class="btn w-100 btn-danger">Cancel</button></a>
                             </div>
                         </div>
                     </div>

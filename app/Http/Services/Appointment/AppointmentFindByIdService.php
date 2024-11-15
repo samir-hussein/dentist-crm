@@ -22,6 +22,12 @@ class AppointmentFindByIdService extends AppointmentService
                 "patient" => function ($q) {
                     $q->select(["id", "name", "phone"]);
                 },
+                "patient.labOrder" => function ($q) {
+                    $q->select(['lab_orders.id', 'patient_id', 'lab_id', 'sent', 'received']);
+                },
+                "patient.labOrder.lab" => function ($q) {
+                    $q->select(['labs.id', 'name']);
+                },
                 "services" => function ($q) {
                     $q->select(["services.id", "services.name"]);
                 },

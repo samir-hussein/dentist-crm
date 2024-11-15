@@ -58,4 +58,9 @@ class Patient extends Model implements HasMedia
     {
         return $this->hasMany(TreatmentDetail::class);
     }
+
+    public function labOrder()
+    {
+        return $this->hasOne(LabOrder::class)->where("done", 0)->latest();
+    }
 }

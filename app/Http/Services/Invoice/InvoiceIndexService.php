@@ -47,6 +47,9 @@ class InvoiceIndexService extends InvoiceService
             ->addColumn('patient_code', function ($row) {
                 return $row->patient->code;
             })
+            ->addColumn('doctor_name', function ($row) {
+                return $row->doctor->name;
+            })
             ->addColumn('date', function ($row) {
                 return $row->created_at->format("d-m-Y");
             })

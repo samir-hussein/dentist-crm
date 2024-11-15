@@ -18,6 +18,13 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
+            @if ($data->appointment->patient->labOrder)
+                <div class="alert alert-danger" role="alert">
+                    There is lab work for this pateint in lab {{ $data->appointment->patient->labOrder->lab->name }} sent at
+                    {{ $data->appointment->patient->labOrder->sent?->format('d-m-Y') }} received at
+                    {{ $data->appointment->patient->labOrder->received?->format('d-m-Y') ?? '' }}
+                </div>
+            @endif
             @if (session('error'))
                 <div class="alert alert-danger" role="alert">
                     {{ session('error') }}

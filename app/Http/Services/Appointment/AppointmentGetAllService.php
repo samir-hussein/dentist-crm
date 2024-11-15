@@ -35,6 +35,12 @@ class AppointmentGetAllService extends AppointmentService
             "patient" => function ($q) {
                 $q->select(['patients.id', 'name', 'phone', 'phone2', 'code']);
             },
+            "patient.labOrder" => function ($q) {
+                $q->select(['lab_orders.id', 'patient_id', 'lab_id', 'sent', 'received']);
+            },
+            "patient.labOrder.lab" => function ($q) {
+                $q->select(['labs.id', 'name']);
+            },
             "doctor" => function ($q) {
                 $q->select(['users.id', 'name']);
             },
@@ -55,23 +61,23 @@ class AppointmentGetAllService extends AppointmentService
 
         $request = request();
 
-        if ($request->from && $request->from != "") {
-            // Convert milliseconds to seconds and format as date
-            $timestamp = $request->from / 1000;
-            $from = Carbon::createFromTimestamp($timestamp)->startOfDay(); // Set to 00:00:00 of the given date
-            $data->whereDate('schdule_date_times.time', '>=', $from);
-        }
+        // if ($request->from && $request->from != "") {
+        //     // Convert milliseconds to seconds and format as date
+        //     $timestamp = $request->from / 1000;
+        //     $from = Carbon::createFromTimestamp($timestamp)->startOfDay(); // Set to 00:00:00 of the given date
+        //     $data->whereDate('schdule_date_times.time', '>=', $from);
+        // }
 
-        if ($request->to && $request->to != "") {
-            // Convert milliseconds to seconds and format as date
-            $timestamp = $request->to / 1000;
-            $to = Carbon::createFromTimestamp($timestamp)->endOfDay(); // Set to 23:59:59 of the given date
-            $data->whereDate('schdule_date_times.time', '<=', $to);
-        }
+        // if ($request->to && $request->to != "") {
+        //     // Convert milliseconds to seconds and format as date
+        //     $timestamp = $request->to / 1000;
+        //     $to = Carbon::createFromTimestamp($timestamp)->endOfDay(); // Set to 23:59:59 of the given date
+        //     $data->whereDate('schdule_date_times.time', '<=', $to);
+        // }
 
-        if ((!$request->to && !$request->from) || ($request->from == "" && $request->to == "")) {
-            $data->whereDate('schdule_date_times.time', today());
-        }
+        // if ((!$request->to && !$request->from) || ($request->from == "" && $request->to == "")) {
+        //     $data->whereDate('schdule_date_times.time', today());
+        // }
 
         if ($request->doctor && $request->doctor != "") {
             $data->where("doctor_id", $request->doctor);

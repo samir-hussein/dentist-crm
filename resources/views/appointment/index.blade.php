@@ -73,6 +73,7 @@
                                 <th>Services</th>
                                 <th>Appointment</th>
                                 <th>Notes</th>
+                                <th>Lab Orders</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -88,6 +89,8 @@
                                     <td>{{ $appointment->selectedServices }}</td>
                                     <td>{{ $appointment->formatedTime }}</td>
                                     <td>{{ $appointment->notes }}</td>
+                                    <td>{{ $appointment->patient->labOrder ? 'sent to lab ' . $appointment->patient->labOrder->lab->name . ' at ' . $appointment->patient->labOrder->sent?->format('d-m-Y') . ' received at ' . $appointment->patient->labOrder->received?->format('d-m-Y') : 'No Orders' }}
+                                    </td>
                                     <td>
                                         <a class="btn mb-1 btn-sm btn-info"
                                             href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>

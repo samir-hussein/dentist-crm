@@ -18,6 +18,8 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
+            <div class="alert alert-danger d-none" id="patient-alert" role="alert">
+            </div>
             @if (session('error'))
                 <div class="alert alert-danger" role="alert">
                     {{ session('error') }}
@@ -737,6 +739,10 @@
                                     </div> <!-- /. card-body -->
                                 </div> <!-- /. card -->
                             </div>
+
+
+
+
                             <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                                 aria-labelledby="pills-profile-tab">
                                 <div class="mb-4">
@@ -746,10 +752,11 @@
                                             <div class="form-row">
                                                 <div class="form-group col-12">
                                                     <label for="simple-select2">Patient</label>
-                                                    <select class="form-control select2" id="simple-select2"
-                                                        name="patient_id">
+                                                    <select id="patient-list" class="form-control select2"
+                                                        id="simple-select2" name="patient_id">
+                                                        <option value="0">Select Patient</option>
                                                         @foreach ($data->patients as $patient)
-                                                            <option
+                                                            <option data-lab="{{ json_encode($patient->labOrder) }}"
                                                                 {{ old('patient_id') == $patient->id ? 'selected' : '' }}
                                                                 value="{{ $patient->id }}">#{{ $patient->code }} |
                                                                 {{ $patient->name }} |
@@ -834,4 +841,21 @@
             </div>
         </div> <!-- /. col -->
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $("#patient-list").change(function() {
+            let labOrder = $(this).find('option:selected').data('lab');
+            if (labOrder) {
+                $("#patient-alert").removeClass("d-none");
+                $("#patient-alert").html(
+                    `There is lab work for this pateint in lab ${labOrder.name} sent at ${labOrder.sentFormated} received at ${labOrder.receivedFormated??""}`
+                );
+            } else {
+                $("#patient-alert").addClass("d-none");
+            }
+
+        });
+    </script>
 @endsection

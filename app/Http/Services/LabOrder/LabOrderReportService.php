@@ -34,6 +34,10 @@ class LabOrderReportService extends LabOrderService
             $data->where('created_at', '<=', $to);
         }
 
+        if ($request->lab) {
+            $data->where('lab_id', $request->lab);
+        }
+
         if ($request->excel) {
             $invoices = $data->get();
             return Excel::download(new LabReportExport($invoices, $from?->format("d-m-Y"), $to?->format("d-m-Y")), 'lab_orders.xlsx');
@@ -52,13 +56,13 @@ class LabOrderReportService extends LabOrderService
                 return $row->lab->name;
             })
             ->addColumn('sent', function ($row) {
-                return $row->sent->format("Y-m-d");
+                return $row->sent->format("d-m-Y");
             })
             ->addColumn('received', function ($row) {
-                return $row->received?->format("Y-m-d");
+                return $row->received?->format("d-m-Y");
             })
             ->addColumn('date', function ($row) {
-                return $row->created_at?->format("Y-m-d");
+                return $row->created_at?->format("d-m-Y");
             })
             ->addColumn('custom_data', function ($row) {
                 return collect($row->custom_data)

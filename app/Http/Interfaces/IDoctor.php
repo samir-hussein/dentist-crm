@@ -10,4 +10,5 @@ interface IDoctor
     public function all(Request $request);
     public function store(array $requestData);
     public function delete(User $doctor);
+    public function listService();
 }

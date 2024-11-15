@@ -201,6 +201,7 @@
                                                             <tr>
                                                                 <th>#</th>
                                                                 <th>Date</th>
+                                                                <th>Dentist</th>
                                                                 <th>Treatment</th>
                                                                 <th>Tooth</th>
                                                                 <th>Fees</th>
@@ -457,6 +458,10 @@
                     {
                         data: 'date',
                         name: 'Date',
+                    },
+                    {
+                        data: 'doctor_name',
+                        name: 'Dentist',
                     },
                     {
                         data: 'treatment',
