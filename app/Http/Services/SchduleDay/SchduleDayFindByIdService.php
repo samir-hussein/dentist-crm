@@ -8,6 +8,6 @@ class SchduleDayFindByIdService extends SchduleDayService
 {
     public function boot(Model $model)
     {
-        return $model->load('pattern');
+        return $model->load(['pattern', 'pattern.doctor', 'pattern.branch']);
     }
 }

@@ -36,6 +36,8 @@
                         <thead>
                             <tr>
                                 <th>Time</th>
+                                <th>Dentist</th>
+                                <th>Branch</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -53,6 +55,12 @@
                                             <button id="time{{ $appointment->id }}" type="submit" hidden
                                                 class="btn btn-primary btn-sm">Save</button>
                                         </form>
+                                    </td>
+                                    <td>
+                                        {{ $appointment->doctor?->name }}
+                                    </td>
+                                    <td>
+                                        {{ $appointment->branch?->name }}
                                     </td>
                                     <td>
                                         <button data-id="time{{ $appointment->id }}"

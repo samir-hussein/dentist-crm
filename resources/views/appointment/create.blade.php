@@ -20,6 +20,15 @@
         <div class="col-md-12">
             <div class="alert alert-danger d-none" id="patient-alert" role="alert">
             </div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if (session('error'))
                 <div class="alert alert-danger" role="alert">
                     {{ session('error') }}
@@ -670,33 +679,65 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="doctor_id">Dentist</label>
-                                                    <select id="doctor_id" name="doctor_id" class="form-control">
-                                                        @foreach ($data->doctors as $doctor)
-                                                            <option
-                                                                {{ old('doctor_id') == $doctor->id ? 'selected' : '' }}
-                                                                value="{{ $doctor->id }}">{{ $doctor->name }}
+                                                    <label for="branch_id">Branch</label>
+                                                    <select onchange="changeBranch(this)"
+                                                        data-date-selector="new-sec-date"
+                                                        data-doctor-selector="new-sec-doctor"
+                                                        data-time-selector="new-sec-time" id="branch_id" name="branch_id"
+                                                        class="branchs form-control">
+                                                        <option data-doctors="{{ json_encode([]) }}"
+                                                            data-dates="{{ json_encode([]) }}" value="0">Select
+                                                            Branch</option>
+                                                        @foreach ($data->branches as $branch)
+                                                            <option data-dates="{{ json_encode($branch->schduleDates) }}"
+                                                                data-doctors="{{ json_encode($branch->doctors) }}"
+                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}
+                                                                value="{{ $branch->id }}">{{ $branch->name }}
                                                             </option>
                                                         @endforeach
+                                                    </select>
+                                                    @error('branch_id')
+                                                        <p style="color: red">* {{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="doctor_id">Dentist</label>
+                                                    <select onchange="changeDoctor(this)"
+                                                        data-date-selector="new-sec-date"
+                                                        data-time-selector="new-sec-time" id="doctor_id" name="doctor_id"
+                                                        class="new-sec-doctor form-control">
                                                     </select>
                                                     @error('doctor_id')
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="simple-select6">Appointment</label>
-                                                    <select class="form-control select2" id="simple-select6"
-                                                        name="time_id">
-                                                        @foreach ($data->times as $time)
-                                                            <option {{ old('time_id') == $time->id ? 'selected' : '' }}
-                                                                value="{{ $time->id }}">
-                                                                {{ $time->manually_updated_time?->format('l d-m-Y h:i a') ?? $time->time->format('l d-m-Y h:i a') }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
                                             </div>
                                             <div class="form-row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="simple-select6">Date</label>
+                                                    <select onchange="chageDate(this)"
+                                                        data-doctor-selector="new-sec-doctor"
+                                                        data-time-selector="new-sec-time"
+                                                        class="new-sec-date form-control select2" id="simple-select6"
+                                                        name="date_id">
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="simple-select8">Time</label>
+                                                    <div id="new-div-time">
+                                                        <select class="new-sec-time form-control select2"
+                                                            id="simple-select8" name="time_id">
+                                                        </select>
+                                                    </div>
+                                                    <input name="urgent_time" id="new-time-inp" type="time"
+                                                        class="form-control d-none">
+                                                    <div class="custom-control custom-switch mt-2">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="customSwitch1">
+                                                        <label class="custom-control-label"
+                                                            for="customSwitch1">Urgent</label>
+                                                    </div>
+                                                </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="multi-select">Services</label>
                                                     <select multiple name="service_ids[]"
@@ -710,20 +751,7 @@
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="branch_id">Branch</label>
-                                                    <select id="branch_id" name="branch_id" class="form-control">
-                                                        @foreach ($data->branches as $branch)
-                                                            <option
-                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}
-                                                                value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('branch_id')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
+
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-12">
@@ -768,33 +796,65 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="doctor_id">Dentist</label>
-                                                    <select id="doctor_id" name="doctor_id" class="form-control">
-                                                        @foreach ($data->doctors as $doctor)
-                                                            <option
-                                                                {{ old('doctor_id') == $doctor->id ? 'selected' : '' }}
-                                                                value="{{ $doctor->id }}">{{ $doctor->name }}
+                                                    <label for="branch_id">Branch</label>
+                                                    <select onchange="changeBranch(this)"
+                                                        data-date-selector="old-sec-date"
+                                                        data-doctor-selector="old-sec-doctor"
+                                                        data-time-selector="old-sec-time" id="branch_id" name="branch_id"
+                                                        class="branchs form-control">
+                                                        <option data-doctors="{{ json_encode([]) }}"
+                                                            data-dates="{{ json_encode([]) }}" value="0">Select
+                                                            Branch</option>
+                                                        @foreach ($data->branches as $branch)
+                                                            <option data-dates="{{ json_encode($branch->schduleDates) }}"
+                                                                data-doctors="{{ json_encode($branch->doctors) }}"
+                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}
+                                                                value="{{ $branch->id }}">{{ $branch->name }}
                                                             </option>
                                                         @endforeach
+                                                    </select>
+                                                    @error('branch_id')
+                                                        <p style="color: red">* {{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="doctor_id">Dentist</label>
+                                                    <select onchange="changeDoctor(this)"
+                                                        data-date-selector="old-sec-date"
+                                                        data-time-selector="old-sec-time" id="doctor_id" name="doctor_id"
+                                                        class="old-sec-doctor form-control">
                                                     </select>
                                                     @error('doctor_id')
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="simple-select4">Appointment</label>
-                                                    <select class="form-control select2" id="simple-select4"
-                                                        name="time_id">
-                                                        @foreach ($data->times as $time)
-                                                            <option {{ old('time_id') == $time->id ? 'selected' : '' }}
-                                                                value="{{ $time->id }}">
-                                                                {{ $time->manually_updated_time?->format('l d-m-Y h:i a') ?? $time->time->format('l d-m-Y h:i a') }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
                                             </div>
                                             <div class="form-row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="simple-select16">Date</label>
+                                                    <select onchange="chageDate(this)"
+                                                        data-doctor-selector="old-sec-doctor"
+                                                        data-time-selector="old-sec-time"
+                                                        class="old-sec-date form-control select2" id="simple-select16"
+                                                        name="date_id">
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="simple-select18">Time</label>
+                                                    <div id="old-div-time">
+                                                        <select class="old-sec-time form-control select2"
+                                                            id="simple-select18" name="time_id">
+                                                        </select>
+                                                    </div>
+                                                    <input name="urgent_time" id="old-time-inp" type="time"
+                                                        class="form-control d-none">
+                                                    <div class="custom-control custom-switch mt-2">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="customSwitch2">
+                                                        <label class="custom-control-label"
+                                                            for="customSwitch2">Urgent</label>
+                                                    </div>
+                                                </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="multi-select2" class="d-block">Services</label>
                                                     <select multiple name="service_ids[]"
@@ -805,20 +865,6 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="branch_id">Branch</label>
-                                                    <select id="branch_id" name="branch_id" class="form-control">
-                                                        @foreach ($data->branches as $branch)
-                                                            <option
-                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}
-                                                                value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('branch_id')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -845,6 +891,11 @@
 
 @section('script')
     <script>
+        let branch = 0;
+        let doctor = 0;
+        let day = 0;
+        let date = 0;
+
         $("#patient-list").change(function() {
             let labOrder = $(this).find('option:selected').data('lab');
             if (labOrder) {
@@ -855,7 +906,120 @@
             } else {
                 $("#patient-alert").addClass("d-none");
             }
+        });
 
+        function changeBranch(e) {
+            let doctors = $(e).find("option:selected").data("doctors");
+            let dates = $(e).find("option:selected").data("dates");
+            let date_selector = $(e).data("date-selector");
+            let doctor_selector = $(e).data("doctor-selector");
+            let time_selector = $(e).data("time-selector");
+            branch = $(e).val();
+
+            console.log(date_selector);
+
+
+            let options = `<option value="">Select Dentist</option>`;
+            $.each(doctors, function(index, value) {
+                options +=
+                    `<option value="${value.id}" ${doctor == value.id?"selected":""}>${value.name}</option>`;
+            });
+            $("." + doctor_selector).html(options);
+
+            options = `<option value="">Select Date</option>`;
+            $.each(dates, function(index, value) {
+                options +=
+                    `<option data-day-id="${value.schdule_day_id}" ${date == value.id?"selected":""} value="${value.id}">${value.dateFormated}</option>`;
+            });
+            $("." + date_selector).html(options);
+            getTimes(time_selector);
+        }
+
+        function changeDoctor(e) {
+            doctor = $(e).val();
+            let date_selector = $(e).data("date-selector");
+            let time_selector = $(e).data("time-selector");
+
+            $.ajax({
+                url: "/schdule-date-times/dates/" + branch + "/" + doctor,
+                type: "GET",
+                success: function(response) {
+                    options = `<option value="">Select Date</option>`;
+                    $.each(response, function(index, value) {
+                        options +=
+                            `<option data-day-id="${value.schdule_day_id}" ${date == value.id?"selected":""} value="${value.id}">${value.dateFormated}</option>`;
+                    });
+                    $("." + date_selector).html(options);
+                    getTimes(time_selector);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            })
+        }
+
+        function chageDate(e) {
+            day = $(e).find("option:selected").data("day-id");
+            let time_selector = $(e).data("time-selector");
+            let doctor_selector = $(e).data("doctor-selector");
+            date = $(e).val();
+
+            $.ajax({
+                url: "/schdule-date-times/doctors/" + branch + "/" + day,
+                type: "GET",
+                success: function(response) {
+                    let options = `<option value="">Select Dentist</option>`;
+                    $.each(response, function(index, value) {
+                        options +=
+                            `<option value="${value.id}" ${doctor == value.id?"selected":""}>${value.name}</option>`;
+                    });
+                    $("." + doctor_selector).html(options);
+                    getTimes(time_selector);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            })
+        }
+
+        function getTimes(time_selector) {
+            $.ajax({
+                url: "/schdule-date-times/times/" + branch + "/" + doctor + "/" + date,
+                type: "GET",
+                success: function(response) {
+                    let options = `<option value="">Select Time</option>`;
+                    $.each(response, function(index, value) {
+                        options +=
+                            `<option value="${value.id}">${value.timeFormated}</option>`;
+                    });
+                    $("." + time_selector).html(options);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            })
+        }
+
+        $('#customSwitch1').on('change', function() {
+            if ($(this).is(':checked')) {
+                $("#new-div-time").addClass("d-none");
+                $("#new-time-inp").removeClass("d-none");
+                $("#simple-select8").val("");
+            } else {
+                $("#new-time-inp").addClass("d-none");
+                $("#new-div-time").removeClass("d-none");
+            }
+        });
+
+        $('#customSwitch2').on('change', function() {
+            if ($(this).is(':checked')) {
+                $("#old-div-time").addClass("d-none");
+                $("#old-time-inp").removeClass("d-none");
+                $("#simple-select18").val("");
+            } else {
+                $("#old-time-inp").addClass("d-none");
+                $("#old-div-time").removeClass("d-none");
+            }
         });
     </script>
 @endsection

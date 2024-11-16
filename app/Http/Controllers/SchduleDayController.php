@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Interfaces\IBranch;
+use App\Http\Interfaces\IDoctor;
 use App\Http\Interfaces\ISchduleDay;
 use App\Http\Requests\SchduleDay\SchduleDayStoreRequest;
 use App\Http\Requests\SchduleDay\SchduleDayUpdateRequest;
@@ -12,7 +14,7 @@ class SchduleDayController extends Controller
 {
     private $service;
 
-    public function __construct(ISchduleDay $schduleDayRepository)
+    public function __construct(ISchduleDay $schduleDayRepository, private IDoctor $doctorService, private IBranch $branchService)
     {
         $this->service = $schduleDayRepository;
     }
@@ -40,7 +42,10 @@ class SchduleDayController extends Controller
      */
     public function create()
     {
-        return $this->view("schdule-day.create");
+        return $this->view("schdule-day.create", [
+            "doctors" => $this->doctorService->listService(),
+            "branchs" => $this->branchService->listService()
+        ]);
     }
 
     /**
@@ -50,7 +55,11 @@ class SchduleDayController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->store($data);
+        $response = $this->service->store($data);
+
+        if ($response['status'] == "error") {
+            return $this->backWithError($response['errors']);
+        }
 
         return $this->redirectWithSuccess("schdule-days.index");
     }
@@ -62,7 +71,11 @@ class SchduleDayController extends Controller
     {
         $data = $this->service->findById($schduleDay);
 
-        return $this->view("schdule-day.edit", ['data' => $data]);
+        return $this->view("schdule-day.edit", [
+            'data' => $data,
+            "doctors" => $this->doctorService->listService(),
+            "branchs" => $this->branchService->listService()
+        ]);
     }
 
     /**
@@ -72,7 +85,11 @@ class SchduleDayController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->update($schduleDay, $data);
+        $response = $this->service->update($schduleDay, $data);
+
+        if ($response['status'] == "error") {
+            return $this->backWithError($response['errors']);
+        }
 
         return $this->redirectWithSuccess("schdule-days.index");
     }

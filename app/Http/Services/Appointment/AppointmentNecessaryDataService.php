@@ -41,11 +41,11 @@ class AppointmentNecessaryDataService extends AppointmentService
 
         $data = new stdClass();
 
-        $data->doctors = $this->doctorListService->boot();
+        // $data->doctors = $this->doctorListService->boot();
         $data->patients = $this->patientListService->boot();
         $data->services = $this->serviceListService->boot();
-        $data->times = $this->schduleDateAvailableTimesService->boot();
-        $data->branches = $this->branchesService->boot();
+        // $data->times = $this->schduleDateAvailableTimesService->boot();
+        $data->branches = $this->branchesService->boot(withDates: true);
 
         return $data;
     }

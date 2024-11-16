@@ -10,6 +10,7 @@ use App\Http\Services\Branch\BranchDeleteService;
 use App\Http\Services\Branch\BranchGetAllService;
 use App\Http\Services\Branch\BranchUpdateService;
 use App\Http\Services\Branch\BranchFindByIdService;
+use App\Http\Services\Branch\BranchListService;
 
 class BranchRepository implements IBranch
 {
@@ -18,24 +19,32 @@ class BranchRepository implements IBranch
     private $branchDeleteService;
     private $branchFindById;
     private $branchUpdateService;
+    private $listService;
 
     public function __construct(
         BranchGetAllService $branchGetAllService,
         BranchStoreService $branchStoreService,
         BranchDeleteService $branchDeleteService,
         BranchFindByIdService $branchFindById,
-        BranchUpdateService $branchUpdateService
+        BranchUpdateService $branchUpdateService,
+        BranchListService $listService
     ) {
         $this->branchGetAllService = $branchGetAllService;
         $this->branchStoreService = $branchStoreService;
         $this->branchDeleteService = $branchDeleteService;
         $this->branchFindById = $branchFindById;
         $this->branchUpdateService = $branchUpdateService;
+        $this->listService = $listService;
     }
 
     public function all(Request $request)
     {
         return $this->branchGetAllService->boot($request);
+    }
+
+    public function listService()
+    {
+        return $this->listService->boot();
     }
 
     public function findById(Branch $branch)

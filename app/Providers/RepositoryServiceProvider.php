@@ -20,6 +20,7 @@ use App\Http\Interfaces\IMedicineType;
 use App\Http\Interfaces\IPatient;
 use App\Http\Interfaces\IPrescription;
 use App\Http\Interfaces\ISchduleDate;
+use App\Http\Interfaces\ISchduleDateTime;
 use App\Http\Interfaces\ISchduleDay;
 use App\Http\Interfaces\IService;
 use App\Http\Interfaces\IStaff;
@@ -45,6 +46,7 @@ use App\Http\Repositories\MedicineTypeRepository;
 use App\Http\Repositories\PatientRepository;
 use App\Http\Repositories\PrescriptionRepository;
 use App\Http\Repositories\SchduleDateRepository;
+use App\Http\Repositories\SchduleDateTimeRepository;
 use App\Http\Repositories\SchduleDayRepository;
 use App\Http\Repositories\ServiceRepository;
 use App\Http\Repositories\StaffRepository;
@@ -83,6 +85,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IInvoice::class, InvoiceRepository::class);
         $this->app->bind(ILabOrder::class, LabOrderRepository::class);
         $this->app->bind(IBranch::class, BranchRepository::class);
+        $this->app->bind(ISchduleDateTime::class, SchduleDateTimeRepository::class);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Requests\SchduleDay;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SchduleDayUpdateRequest extends SchduleDayStoreRequest
+class SchduleDayUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,24 @@ class SchduleDayUpdateRequest extends SchduleDayStoreRequest
     {
         $schduleDay = request()->route('schdule_day')?->day;
 
-        $rules = parent::rules();
-
-        $rules['day'] = "required|unique:schdule_days,day,$schduleDay,day";
-
-        return $rules;
+        return [
+            "day" => "required|unique:schdule_days,day,$schduleDay,day",
+            "times" => "required|array",
+            "times.*" => "required|array",
+            "times.*.time" => "required",
+            "times" => function ($attribute, $value, $fail) {
+                $uniquePairs = [];
+                foreach ($value as $index => $timeEntry) {
+                    $key = $timeEntry['doctor_id'] . '_' . $timeEntry['time'];
+                    if (isset($uniquePairs[$key])) {
+                        $fail("The time {$timeEntry['time']} is duplicated for doctor ID {$timeEntry['doctor_id']} at index $index.");
+                    }
+                    $uniquePairs[$key] = true;
+                }
+            },
+            "times.*.doctor_id" => "required|exists:users,id",
+            "times.*.old_time" => "required|sometimes|nullable",
+            "times.*.branch_id" => "required|exists:branches,id",
+        ];;
     }
 }

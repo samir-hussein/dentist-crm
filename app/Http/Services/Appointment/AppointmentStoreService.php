@@ -2,12 +2,15 @@
 
 namespace App\Http\Services\Appointment;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Facades\Firebase;
 use App\Models\Appointment;
+use App\Models\SchduleDateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\Patient\PatientStoreService;
+use App\Models\SchduleDate;
 
 class AppointmentStoreService extends AppointmentService
 {
@@ -37,6 +40,26 @@ class AppointmentStoreService extends AppointmentService
                 $data['patient_id'] = $patient->id;
             }
 
+            if ($data['urgent_time'] && !$data['time_id']) {
+                $date = SchduleDate::find($data['date_id']);
+                $time = Carbon::parse($date->date)->setTimeFromTimeString($data['urgent_time']);
+                $checkTime = SchduleDateTime::where("time", $time)->where("doctor_id", $data['doctor_id'])->first();
+
+                if ($checkTime) {
+                    return $this->error("The Doctor already have appointment in this time.", 400);
+                }
+
+                $time = SchduleDateTime::create([
+                    "time" => $time,
+                    "schdule_date_id" => $date->id,
+                    "urgent" => true,
+                    "doctor_id" => $data['doctor_id'],
+                    "branch_id" => $data['branch_id'],
+                ]);
+
+                $data['time_id'] = $time->id;
+            }
+
             $check_appointment = $this->model->where("patient_id", $data['patient_id'])->where("doctor_id", $data['doctor_id'])->where("time_id", $data['time_id'])->first();
 
             if ($check_appointment) {
@@ -54,6 +77,10 @@ class AppointmentStoreService extends AppointmentService
             }
 
             $appointment = $this->model->create($data);
+
+            SchduleDateTime::where("id", $data['time_id'])->update([
+                "patient_id" => $data['patient_id'],
+            ]);
 
             $services = array_map(function ($service_id) use ($appointment) {
                 return [

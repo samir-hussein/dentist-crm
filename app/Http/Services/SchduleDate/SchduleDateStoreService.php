@@ -14,6 +14,7 @@ class SchduleDateStoreService extends SchduleDateService
     {
         $days = SchduleDay::get(["day", "id"]);
         $dates = [];
+        $datesOnly = [];
 
         foreach ($days as $day) {
             $dates[$day->id] = $this->getDatesForDay($day->day);
@@ -26,12 +27,13 @@ class SchduleDateStoreService extends SchduleDateService
                     'date' => $val,
                     'schdule_day_id' => $day
                 ];
+                $datesOnly[] = $val;
             }
         }
 
-        $uniqueBy = ['date'];
+        SchduleDate::where("date", "<", date("Y-m-d"))->orWhereNotIn("date", $datesOnly)->delete();
 
-        SchduleDate::whereDate("date", "<", date("Y-m-d"))->delete();
+        $uniqueBy = ['date'];
 
         SchduleDate::upsert($insert, $uniqueBy);
 
@@ -44,20 +46,22 @@ class SchduleDateStoreService extends SchduleDateService
         foreach ($dates as $date) {
             foreach ($times as $time) {
                 if ($time->schdule_day_id == $date->schdule_day_id) {
-                    $time = Carbon::parse($date->date)->setTimeFromTimeString($time->time);
+                    $timeFormat = Carbon::parse($date->date)->setTimeFromTimeString($time->time);
                     $insert[] = [
-                        'time' => $time,
+                        'time' => $timeFormat,
+                        'doctor_id' => $time->doctor_id,
+                        'branch_id' => $time->branch_id,
                         'schdule_date_id' => $date->id,
                     ];
 
-                    $onlyValidTimes[] = $time;
+                    $onlyValidTimes[] = $timeFormat;
                 }
             }
         }
 
-        $uniqueBy = ['time'];
+        $uniqueBy = ['time', 'doctor_id', 'schdule_date_id'];
 
-        SchduleDateTime::whereNotIn("time", $onlyValidTimes)->delete();
+        SchduleDateTime::whereNotIn("time", $onlyValidTimes)->where("urgent", 0)->delete();
         SchduleDateTime::upsert($insert, $uniqueBy);
 
         return $dates;

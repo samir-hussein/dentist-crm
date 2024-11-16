@@ -8,6 +8,7 @@ use App\Http\Controllers\DoseController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PatientController;
@@ -20,12 +21,12 @@ use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\SchduleDayController;
 use App\Models\TreatmentSectionAttributeInput;
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\BranchController;
 use App\Http\Controllers\SchduleDateController;
 use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\MedicalHistoryController;
+use App\Http\Controllers\SchduleDateTimeController;
 use App\Http\Controllers\TreatmentSessionController;
 use App\Http\Controllers\SubscribeNotificationController;
 
@@ -71,6 +72,10 @@ Route::middleware("auth")->group(function () {
     Route::get("treatment-session", [TreatmentSessionController::class, 'getAll'])->name("treatment.session.getAll");
     Route::get("lab-orders/all", [LabOrderController::class, 'all'])->name("lab-orders.all");
     Route::put("lab-orders/{lab_order}", [LabOrderController::class, 'update'])->name("lab-orders.update");
+
+    Route::get("schdule-date-times/doctors/{branchId}/{dayId}", [SchduleDateTimeController::class, 'doctorList'])->name("schdule.date.time.doctors");
+    Route::get("schdule-date-times/dates/{branchId}/{doctorId}", [SchduleDateTimeController::class, 'datesList'])->name("schdule.date.time.dates");
+    Route::get("schdule-date-times/times/{branchId}/{doctorId}/{dateId}", [SchduleDateTimeController::class, 'timeList'])->name("schdule.date.time.times");
 
     Route::middleware("notStaff")->group(function () {
 

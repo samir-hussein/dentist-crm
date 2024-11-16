@@ -19,7 +19,11 @@ class SchduleDateTime extends Model
         'is_manually_updated',
         'is_deleted',
         'schdule_date_id',
-        'manually_updated_time'
+        'manually_updated_time',
+        'doctor_id',
+        'branch_id',
+        'patient_id',
+        'urgent'
     ];
 
     /**
@@ -37,8 +41,18 @@ class SchduleDateTime extends Model
     /**
      * Get the schedule date associated with the time.
      */
-    public function scheduleDate()
+    public function schduleDate()
     {
         return $this->belongsTo(SchduleDate::class);
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

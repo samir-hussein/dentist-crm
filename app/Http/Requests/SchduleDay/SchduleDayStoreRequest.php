@@ -3,6 +3,7 @@
 namespace App\Http\Requests\SchduleDay;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SchduleDayStoreRequest extends FormRequest
 {
@@ -22,9 +23,22 @@ class SchduleDayStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "day" => "required|unique:schdule_days,day",
+            "day" => "required",
             "times" => "required|array",
-            "times.*" => "required"
+            "times.*" => "required|array",
+            "times.*.time" => "required",
+            "times" => function ($attribute, $value, $fail) {
+                $uniquePairs = [];
+                foreach ($value as $index => $timeEntry) {
+                    $key = $timeEntry['doctor_id'] . '_' . $timeEntry['time'];
+                    if (isset($uniquePairs[$key])) {
+                        $fail("The time {$timeEntry['time']} is duplicated for doctor ID {$timeEntry['doctor_id']} at index $index.");
+                    }
+                    $uniquePairs[$key] = true;
+                }
+            },
+            "times.*.doctor_id" => "required|exists:users,id",
+            "times.*.branch_id" => "required|exists:branches,id",
         ];
     }
 }

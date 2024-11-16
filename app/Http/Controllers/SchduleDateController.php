@@ -76,7 +76,7 @@ class SchduleDateController extends Controller
 
         $this->service->update($appointmentId, $data);
 
-        return $this->redirectWithSuccess("schdule-days.index");
+        return $this->redirectWithSuccess("schdule-dates.index");
     }
 
     /**

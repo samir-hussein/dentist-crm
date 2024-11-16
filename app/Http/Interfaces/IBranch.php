@@ -12,4 +12,5 @@ interface IBranch
     public function update(Branch $branch, array $requestData);
     public function delete(Branch $branch);
     public function findById(Branch $branch);
+    public function listService();
 }
