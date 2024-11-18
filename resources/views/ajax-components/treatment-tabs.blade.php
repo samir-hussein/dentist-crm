@@ -130,7 +130,7 @@
                 <input type="number" class="form-control" min="0" id="cost"
                     autocomplete="new-password" step="100">
             </div> <!-- form-group -->
-            <div class="form-group col-12 col-md-6">
+            <div class="form-group col-12 col-md-6" id="lab_sent_date">
                 <label>Date</label>
                 <input type="date" class="form-control" id="sent">
             </div> <!-- form-group -->

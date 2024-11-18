@@ -1,6 +1,6 @@
 @extends('layouts.treatment-layout')
 
-@section('title', 'Treatment Session')
+@section('title', 'Dental History')
 
 @section('style')
     <style>
@@ -14,6 +14,13 @@
             path {
                 -webkit-transition: fill 0.25s;
                 transition: fill 0.25s;
+            }
+
+            polygon:hover,
+            polygon:active,
+            path:hover,
+            path:active {
+                cursor: pointer;
             }
 
             .selected {
@@ -39,17 +46,12 @@
             width: 100% !important;
         }
 
-        .disabled {
-            pointer-events: none;
-            /* Prevent clicks */
-            color: gray;
-            /* Change color to indicate it's disabled */
-            cursor: not-allowed;
-            /* Change cursor to indicate it's not clickable */
-        }
-
         .tooth-chart {
             margin: auto;
+        }
+
+        #lab_sent_date {
+            display: none;
         }
     </style>
 @endsection
@@ -80,10 +82,6 @@
                     @endif
                 </span>
             </div>
-            <p class="col-6 col-md-2 mb-0 d-flex align-items-baseline">
-                <span class="fe fe-16 fe-clock"></span>
-                <span id="counter" class="ml-2">00:00:00</span>
-            </p>
         </div>
     </div>
     <div class="row">
@@ -92,39 +90,40 @@
                 <div class="card-body">
                     <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link {{ $data->session->tooth[0] < 50 ? 'active' : '' }} disabled"
-                                onclick="clearDataTeeth()" id="Permanent-tab" data-toggle="pill" href="#Permanent"
-                                role="tab" aria-controls="Permanent" aria-selected="true">Permanent</a>
+                            <a class="nav-link active" onclick="clearDataTeeth('permanent')" id="Permanent-tab"
+                                data-toggle="pill" href="#Permanent" role="tab" aria-controls="Permanent"
+                                aria-selected="true">Permanent</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ $data->session->tooth[0] < 50 ? '' : 'active' }} disabled"
-                                onclick="clearDataTeeth()" id="Deciduous-tab" data-toggle="pill" href="#Deciduous"
-                                role="tab" aria-controls="Deciduous" aria-selected="false">Deciduous</a>
+                            <a class="nav-link" onclick="clearDataTeeth('deciduous')" id="Deciduous-tab" data-toggle="pill"
+                                href="#Deciduous" role="tab" aria-controls="Deciduous"
+                                aria-selected="false">Deciduous</a>
                         </li>
                     </ul>
                     <div class="tab-content mb-1" id="pills-tabContent">
-                        <div class="tab-pane fade {{ $data->session->tooth[0] < 50 ? 'show active' : '' }}" id="Permanent"
-                            role="tabpanel" aria-labelledby="Permanent-tab">
+                        <div class="tab-pane fade show active" id="Permanent" role="tabpanel"
+                            aria-labelledby="Permanent-tab">
                             <x-tooth-chart nameAttr="permanent" />
                         </div>
-                        <div class="tab-pane fade {{ $data->session->tooth[0] < 50 ? '' : 'show active' }}" id="Deciduous"
-                            role="tabpanel" aria-labelledby="Deciduous-tab">
+                        <div class="tab-pane fade" id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
                             <x-child-tooth-chart nameAttr="deciduous" />
                         </div>
                     </div>
                 </div>
-                <div class="card-body pt-0 pb-0" id="div-diagnosis">
+                <div class="card-body invisible pt-0 pb-0" id="div-diagnosis">
                     <div class="form-group">
                         <label for="diagnose">Diagnosis</label>
-                        <select class="form-control select2" id="diagnose" name="patient_id" disabled>
-                            <option value="{{ $data->session->diagnose->id }}" selected>
-                                {{ $data->session->diagnose->name }}
-                            </option>
+                        <select class="form-control select2" id="diagnose" name="patient_id">
+                            <option value="0"></option>
+                            @foreach ($data->diagnosis as $diagnose)
+                                <option value="{{ $diagnose->id }}">{{ $diagnose->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="card-body form-row pt-0 pb-0">
-                    <div class="form-group col-6 col-md-12" id="div-upload-tooth">
+                    <div class="form-group col-6 col-md-12 invisible" id="div-upload-tooth">
                         <button class="btn btn-secondary w-100" id="tooth-btn">Upload Tooth X-Ray</button>
                         <input type="file" hidden id="tooth-inp" multiple>
                     </div>
@@ -140,162 +139,6 @@
             <div class="mb-2">
                 <div class="card shadow">
                     <div class="card-body" id="treatment-tabs">
-                        @if (count($treatments) > 0)
-                            <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
-                                @foreach ($treatments as $treatment)
-                                    <li class="nav-item tab-btn" data-needlab="{{ $treatment->treatmentType->need_labs }}"
-                                        data-first="{{ $loop->first ? 1 : 0 }}">
-                                        <a class="nav-link {{ $loop->first ? 'active' : '' }}"
-                                            id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab"
-                                            data-toggle="pill"
-                                            href="#{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
-                                            role="tab"
-                                            aria-controls="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
-                                            aria-selected="true">{{ $treatment->treatmentType->name }}</a>
-                                    </li>
-                                @endforeach
-                                <li class="nav-item tab-btn" data-needlab="0">
-                                    <a class="nav-link" id="notes-tab" data-toggle="pill" href="#notes" role="tab"
-                                        aria-controls="notes" aria-selected="false">Write Notes</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content mb-1" id="pills-tabContent">
-                                @foreach ($treatments as $treatment)
-                                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
-                                        id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
-                                        role="tabpanel"
-                                        aria-labelledby="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab">
-                                        <div class="row">
-                                            @foreach ($treatment->treatmentType->sections as $section)
-                                                <div class="card-body col-6">
-                                                    <h6>{{ $section->title }}</h6>
-                                                    @if ($section->multi_selection)
-                                                        @foreach ($section->attributes as $attribute)
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox" data-attr="{{ $attribute->id }}"
-                                                                    data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
-                                                                    class="checkbox-inp custom-control-input"
-                                                                    id="{{ $section->id }}-{{ $attribute->id }}"
-                                                                    {{ in_array($attribute->id, $data->session->data['attr']) ? 'checked' : '' }}>
-                                                                <label class="custom-control-label"
-                                                                    for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
-                                                            </div>
-                                                            @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                                                <div class="mt-2 d-none"
-                                                                    id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}">
-                                                                    @foreach ($attribute->inputs as $input)
-                                                                        <div class="form-group row">
-                                                                            <label for="{{ $input->id }}"
-                                                                                class="col-sm-3 col-form-label">{{ $input->name }}</label>
-                                                                            <div class="col-sm-9">
-                                                                                <input type="text"
-                                                                                    class="form-control attr-inputs {{ $treatment->treatmentType->need_labs ? 'lab-inputs' : '' }}"
-                                                                                    id="{{ $input->id }}"
-                                                                                    data-name="{{ $input->name }}"
-                                                                                    data-attr="{{ $attribute->id }}"
-                                                                                    data-id="{{ $input->id }}"
-                                                                                    value="{{ $data->session->data['inputs'] ? (in_array($input->id, array_keys($data->session->data['inputs'])) ? $data->session->data['inputs'][$input->id] : '') : '' }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    @else
-                                                        @foreach ($section->attributes as $attribute)
-                                                            <div class="custom-control custom-radio">
-                                                                <input type="radio" data-attr="{{ $attribute->id }}"
-                                                                    data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
-                                                                    id="{{ $section->id }}-{{ $attribute->id }}"
-                                                                    name="customRadio" class="custom-control-input"
-                                                                    {{ in_array($attribute->id, $data->session->data['attr']) ? 'checked' : '' }}>
-                                                                <label class="custom-control-label"
-                                                                    for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
-                                                            </div>
-                                                            @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                                                <div class="mt-2 d-none {{ str_replace([' ', '.'], '_', $section->title) }}"
-                                                                    id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}">
-                                                                    @foreach ($attribute->inputs as $input)
-                                                                        <div class="form-group row">
-                                                                            <label for="{{ $input->id }}"
-                                                                                class="col-sm-3 col-form-label">{{ $input->name }}</label>
-                                                                            <div class="col-sm-9">
-                                                                                <input type="text"
-                                                                                    class="form-control attr-inputs {{ $treatment->treatmentType->need_labs ? 'lab-inputs' : '' }}"
-                                                                                    id="{{ $input->id }}"
-                                                                                    data-id="{{ $input->id }}"
-                                                                                    data-name="{{ $input->name }}"
-                                                                                    data-attr="{{ $attribute->id }}"
-                                                                                    value="{{ $data->session->data['inputs'] ? (in_array($input->id, array_keys($data->session->data['inputs'])) ? $data->session->data['inputs'][$input->id] : '') : '' }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endforeach
-                                <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
-                                    <h6>Write Notes</h6>
-                                    <textarea name="" dir="auto" class="form-control" id="notes-inp" cols="30" rows="10">{{ $data->session->data['notes'] }}</textarea>
-                                </div>
-                            </div>
-
-                            <div id="lab-div" class="d-none p-2">
-                                <div class="form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input lab-done"
-                                            id="cementation-delivery"
-                                            {{ $data->session->labOrder?->done ? 'checked' : '' }}>
-                                        <label class="custom-control-label" for="cementation-delivery">Done</label>
-                                    </div> <!-- form-group -->
-                                </div>
-                                <h6>Lab Service</h6>
-                                <div class="form-row">
-                                    <div class="form-group col-12 col-md-6">
-                                        <label for="select" class="d-block">Services</label>
-                                        <select multiple class="form-control select2-multi lab-work d-block w-100"
-                                            id="select" autocomplete="off">
-                                            @foreach ($labsServices as $service)
-                                                <option
-                                                    {{ in_array($service->name, $data->session->labOrder?->work ? explode(' - ', $data->session->labOrder->work) : []) ? 'selected' : '' }}
-                                                    value="{{ $service->name }}">{{ $service->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-12 col-md-6">
-                                        <label for="simple-select">Labs</label>
-                                        <select class="form-control select2 lab" id="simple-select">
-                                            <option value="">select lab</option>
-                                            @foreach ($labs as $lab)
-                                                <option
-                                                    {{ $data->session->labOrder?->lab_id == $lab->id ? 'selected' : '' }}
-                                                    value="{{ $lab->id }}">{{ $lab->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div> <!-- form-group -->
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-12 col-md-6">
-                                        <label>Charges</label>
-                                        <input type="number" class="form-control" min="0" step="100"
-                                            id="cost" autocomplete="new-password"
-                                            value="{{ $data->session->labOrder?->cost }}">
-                                    </div> <!-- form-group -->
-                                    <div class="form-group col-12 col-md-6">
-                                        <label>Date</label>
-                                        <input type="date" class="form-control" id="sent"
-                                            value="{{ optional($data->session->labOrder)->sent ? \Carbon\Carbon::parse($data->session->labOrder->sent)->format('Y-m-d') : '' }}">
-                                    </div> <!-- form-group -->
-                                </div>
-                            </div>
-                        @endif
 
                     </div>
                 </div>
@@ -306,26 +149,27 @@
                         <div class="form-row">
                             <div class="form-group col-6 col-md-2">
                                 <label for="fees">Fees</label>
-                                <input type="number" id="fees" class="form-control" min="0" disabled
-                                    value="{{ $data->session->invoice[0]->fees }}" step="100">
+                                <input type="number" step="100" id="fees" class="form-control" min="0">
                             </div>
                             <div class="form-group col-6 col-md-3">
-                                <label for="paid">Down Payment ({{ $data->session->invoice->sum('paid') }})</label>
-                                <input type="number" id="paid" class="form-control" min="0" value="0"
-                                    step="100">
+                                <label for="paid">Dentist</label>
+                                <select id="doctor_id" name="doctor_id" class="form-control">
+                                    @foreach ($doctors as $doctor)
+                                        <option {{ request('doctor') == $doctor->id ? 'selected' : '' }}
+                                            value="{{ $doctor->id }}">
+                                            {{ $doctor->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-info" data-toggle="modal"
-                                    data-target=".invoices-modal">Invoices</button>
+                            <div class="form-group col-4 col-md-3">
+                                <label for="paid">Date</label>
+                                <input type="date" id="history_date" class="form-control">
                             </div>
-                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-warning" data-toggle="modal"
-                                    data-target=".prescription-modal">Prescription</button>
-                            </div>
-                            <div class="form-group col-6 col-md-1 d-flex align-items-end justify-content-center">
+                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
                                 <button class="btn w-100 btn-primary" id="save">Save</button>
                             </div>
-                            <div class="form-group col-6 col-md-2 d-flex align-items-end justify-content-center">
+                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
                                 <a class="w-100"
                                     href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
                                         class="btn w-100 btn-danger">Cancel</button></a>
@@ -357,7 +201,14 @@
                     </div>
 
                     <div id="tooth-img">
-                        {!! $data->tooth->slider !!}
+                        <h5 class="card-title">Tooth</h5>
+                        <div id="teeth" class="splide" role="group" aria-label="Splide">
+                            <div class="splide__track">
+                                <ul class="splide__list" id="tooth-panorama-slider">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -386,43 +237,7 @@
     </div>
 
     <div id="tooth-modals">
-        {!! $data->tooth->modals !!}
-    </div>
 
-    <div class="modal fade invoices-modal" tabindex="-1" role="dialog" aria-labelledby="verticalModalTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    @php
-                        $balance = $data->session->invoice->sum('paid') - $data->session->invoice[0]->fees;
-                    @endphp
-                    <h5 class="modal-title" id="verticalModalTitle">
-                        {{ $balance > 0 ? 'Advance  ' . $balance : 'Balance  ' . $balance }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Paid</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data->session->invoice as $invoice)
-                                <tr>
-                                    <td>{{ $invoice->paid }}</td>
-                                    <td>{{ $invoice->created_at->format('d-m-Y') }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="modal fade prescription-modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
@@ -478,29 +293,29 @@
                                         <table style="width: 80%; margin-top:110px">
                                             <tbody>
                                                 <tr>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         Date</td>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">:
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">:
                                                     </td>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         {{ date('d-m-Y') }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         Name</td>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">:
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">:
                                                     </td>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         {{ $data->patient->name }}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">
                                                         Diagnosis</td>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">:
+                                                    <td style="padding-bottom: 15px;font-size: 19px;">:
                                                     </td>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;" id="print-diagnosis">
-                                                    </td>
+                                                    <td style="padding-bottom: 15px;font-size: 19px;"
+                                                        id="print-diagnosis"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="font-size: 60px;font-family:cursive;font-weight:bolder">R/
@@ -508,7 +323,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table style="width: 95%;margin-left:auto;margin-top:5px">
+                                        <table style="width: 85%;margin:auto;margin-top:15px">
                                             <tbody id="print-medicines-list">
 
                                             </tbody>
@@ -528,14 +343,15 @@
 @section('script')
     <script>
         let totalSeconds = 0;
-        let selectedTooth = {!! json_encode($data->session->tooth ?? []) !!};
+        let selectedTooth = [];
         let selectedAttr = [];
-        let diagnose = "{{ $data->session->diagnose->id }}";
-        let labWork = {!! json_encode($data->session->labOrder?->work ? explode(' - ', $data->session->labOrder->work) : []) !!};
-        let attrInputs = {!! json_encode($data->session->data['inputs'] ?? []) !!};
-        let labData = {!! json_encode($data->session->labOrder?->custom_data ?? []) !!};
-        let lab_id = {!! json_encode($data->session->labOrder?->lab_id ?? null) !!};
-        let lab_done = {!! json_encode($data->session->labOrder?->done ?? false) !!};
+        let diagnose = null;
+        let labWork = [];
+        let attrInputs = {};
+        let labData = {};
+        let lab_id = null;
+        let lab_done = false;
+        let tooth_type = "permanent";
 
         $("#panorama-btn").click(function() {
             $("#panorama-inp").trigger("click");
@@ -648,11 +464,6 @@
             });
         })
 
-        selectedTooth.forEach(toothNumber => {
-            $("polygon[data-key='" + toothNumber + "']").addClass("selected");
-            $("path[data-key='" + toothNumber + "']").addClass("selected");
-        });
-
         setInterval(() => {
             totalSeconds++;
             document.getElementById("counter").textContent = formatTime(totalSeconds);
@@ -667,8 +478,47 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             new Splide('#panorama').mount();
-            new Splide('#tooth-uploaded').mount();
+            new Splide('#teeth').mount();
         });
+
+        $(document).ready(function() {
+            // Event listener for selecting/deselecting a tooth
+            $(document).on("click", "polygon, path", function() {
+                const toothNumber = $(this).data("key"); // Get the data-key attribute (tooth number)
+
+                // Ensure the toothNumber is defined before processing
+                if (toothNumber !== undefined) {
+                    // Toggle the selected class to change the color
+                    $(this).toggleClass("selected");
+
+                    if ($(this).hasClass("selected")) {
+                        // Add tooth number to the array if selected
+                        if (!selectedTooth.includes(toothNumber)) {
+                            selectedTooth.push(toothNumber);
+                        }
+                    } else {
+                        // Remove tooth number from the array if deselected
+                        selectedTooth = selectedTooth.filter(num => num !== toothNumber);
+                    }
+
+                    if (selectedTooth.length > 0) {
+                        $("#div-diagnosis").removeClass("invisible");
+                        $("#div-upload-tooth").removeClass("invisible");
+                    } else {
+                        $("#div-upload-tooth").addClass("invisible");
+                        $("#div-diagnosis").addClass("invisible");
+                    }
+
+                    getTreatmentsTabs();
+                    getToothPanorama(selectedTooth.join("-"));
+                }
+            });
+        });
+
+        $(document).on("change", "#diagnose", function() {
+            diagnose = $(this).val();
+            getTreatmentsTabs();
+        })
 
         $(document).on("change", ".select2", function() {
             lab_id = $(this).val();
@@ -701,6 +551,72 @@
             labData[$(this).data("attr")]['value'] = $(this).val();
         });
 
+        function clearDataTeeth(type) {
+            selectedTooth = [];
+            selectedAttr = [];
+            labWork = [];
+            attrInputs = {};
+            labData = {};
+            lab_id = null;
+            lab_done = false;
+            tooth_type = type;
+
+            $("polygon").removeClass("selected");
+            $("path").removeClass("selected");
+            $("#div-diagnosis").addClass("invisible");
+            $("#div-upload-tooth").addClass("invisible");
+            $("#treatment-tabs").html("");
+        }
+
+        function getTreatmentsTabs() {
+            const diagnose = $("#diagnose").val();
+
+            if (diagnose != 0 && selectedTooth.length != 0) {
+                $.ajax({
+                    url: "{{ route('treatment.tabs') }}",
+                    type: "GET",
+                    data: {
+                        diagnose: diagnose,
+                        teeth: selectedTooth,
+                        tooth_type: tooth_type,
+                    },
+                    success: function(response) {
+                        $("#treatment-tabs").html(response.html);
+
+                        // Initialize Select2 on newly loaded elements
+                        $('.select2').select2({
+                            theme: 'bootstrap4',
+                        });
+
+                        $('.select2-multi').select2({
+                            multiple: true,
+                            theme: 'bootstrap4',
+                        });
+
+                        let need_lab = $("li[data-first='1']").data("needlab");
+
+                        if (need_lab == 1) {
+                            $('#lab-div').removeClass('d-none');
+                        } else {
+                            $('#lab-div').addClass('d-none');
+                        }
+                    }
+                });
+            }
+        }
+
+        function getToothPanorama(toothNumber) {
+            $.ajax({
+                url: `/patient/{{ $data->patient->id }}/tooth-panorama/${toothNumber}`,
+                type: "GET",
+                success: function(response) {
+                    $("#tooth-img").html(response.html.slider);
+                    $("#tooth-modals").html(response.html.modals);
+                    new Splide('#tooth-uploaded').mount();
+                }
+            });
+        }
+
         $(document).on('click', ".checkbox-inp", function() {
             const id = $(this).data('id');
             const attrId = $(this).data('attr');
@@ -719,24 +635,6 @@
             }
         })
 
-        $(".checkbox-inp").each(function() {
-            const id = $(this).data('id');
-            const attrId = $(this).data('attr');
-            const checked = $(this).is(':checked');
-
-            if (checked) {
-                $('#' + id).removeClass('d-none'); // Show corresponding element
-                selectedAttr.push(attrId); // Add to selected attributes
-            } else {
-                $('#' + id).addClass('d-none'); // Hide corresponding element
-                selectedAttr = selectedAttr.filter(attr => attr != attrId); // Remove from selected attributes
-                if (labData.hasOwnProperty(attrId)) {
-                    delete labData[attrId]; // Remove from labData if it exists
-                }
-                $("input[data-attr='" + attrId + "']").val(""); // Clear input value
-            }
-        });
-
         $(document).on('click', ".lab-done", function() {
             const checked = $(this).is(':checked');
 
@@ -748,20 +646,6 @@
         })
 
         let lastChecked = null;
-
-        $('input[type="radio"]').each(function() {
-            const id = $(this).data('id');
-            const attrId = $(this).data('attr');
-            const section = id.split('-')[0];
-
-            if ($(this).is(':checked')) {
-                $('#' + id).removeClass('d-none'); // Show the relevant section
-                lastChecked = this; // Set lastChecked to the currently checked radio button
-                selectedAttr.push(attrId); // Add to selected attributes
-            } else {
-                $('#' + id).addClass('d-none'); // Hide the section if not checked
-            }
-        });
 
         // Use event delegation on the document or a static container
         document.addEventListener('click', function(event) {
@@ -790,7 +674,9 @@
                 }
             }
         });
+    </script>
 
+    <script>
         $(document).on("change", ".types", function() {
             // Get the selected option
             let selectedOption = $(this).find('option:selected');
@@ -855,7 +741,13 @@
         $(document).ready(function() {
             $("#generate-print").click(function() {
                 // Gather data for printing
-                const diagnosis = "{{ $data->session->diagnose->name }}"
+                const diagnosis = $("#diagnose").find('option:selected').text()
+                    .trim(); // Diagnose select
+
+                if (!diagnose || diagnose == "") {
+                    alert("Please select a diagnosis");
+                    return false;
+                }
 
                 $("#print-diagnosis").text(diagnosis);
 
@@ -866,7 +758,7 @@
                         .trim();
                     const dose = $(this).find(".dose option:selected").text().trim();
                     medicineList +=
-                        `<tr><td style="padding-bottom: 5px;font-size: 19px;width:72%">${medicine}</td><td style="padding-bottom: 5px;font-size: 19px;"> ${dose}</td></tr>`;
+                        `<tr><td style="padding-bottom: 15px;font-size: 19px;">${medicine}</td><td style="font-size: 19px;"> ${dose}</td></tr>`;
                 });
                 $("#print-medicines-list").html(medicineList);
 
@@ -886,35 +778,37 @@
                 };
             });
         });
+    </script>
 
+    <script>
         $("#save").click(function() {
             const patient_id = "{{ $data->patient->id }}";
             const fees = $("#fees").val();
-            const paid = $("#paid").val();
+            const paid = fees;
             let lab = {};
-            lab_id = $("#simple-select").val();
+
+            if (!diagnose) {
+                alert("Please select diagnose");
+                return;
+            }
 
             if (selectedAttr.length == 0) {
                 alert("Please select at least one treatment");
                 return;
             }
 
-            if (!fees || !paid) {
-                alert("Please enter fees and paid amount");
+            if (!fees) {
+                alert("Please enter fees amount");
                 return;
             }
 
-            if (labWork.length > 0) {
-                let sent = $("#sent").val();
-                let cost = $("#cost").val();
+            let sent = $("#history_date").val();
+            let doctor_id = $("#doctor_id").val();
 
+            if (labWork.length > 0) {
+                let cost = $("#cost").val();
                 if (!lab_id || lab_id == "") {
                     alert("Please select lab");
-                    return;
-                }
-
-                if (!sent || sent == "") {
-                    alert("Please select date");
                     return;
                 }
 
@@ -929,9 +823,15 @@
             }
 
             $.ajax({
-                url: "{{ route('treatment.session.update', ['treatment_detail' => $data->session->id, 'patient' => $data->patient->id]) }}",
-                method: "PUT",
+                url: "{{ route('appointments.dental.history.store', ['patient' => $data->patient->id]) }}",
+                method: "POST",
                 data: {
+                    diagnose_id: diagnose,
+                    tooth: selectedTooth,
+                    tooth_type: tooth_type,
+                    fees: fees,
+                    date: sent,
+                    doctor_id: doctor_id,
                     paid: paid,
                     data: {
                         attr: selectedAttr,
@@ -954,16 +854,8 @@
             });
         });
 
-        let need_lab = $("li[data-first='1']").data("needlab");
-
-        if (need_lab == 1) {
-            $('#lab-div').removeClass('d-none');
-        } else {
-            $('#lab-div').addClass('d-none');
-        }
-
         $(document).on('click', '.tab-btn', function() {
-            need_lab = $(this).data('needlab');
+            let need_lab = $(this).data('needlab');
 
             if (need_lab == 1) {
                 $('#lab-div').removeClass('d-none');

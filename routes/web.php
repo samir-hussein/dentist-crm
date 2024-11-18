@@ -180,6 +180,7 @@ Route::middleware("auth")->group(function () {
         Route::get("appointments/{appointment}/completed", [AppointmentController::class, 'markCompleted'])->name('appointments.markCompleted');
 
         Route::get("appointments/{patient}/treatment-session", [TreatmentSessionController::class, 'index'])->name('appointments.treatment');
+        Route::get("appointments/{patient}/dental-history", [TreatmentSessionController::class, 'dentalHistory'])->name('appointments.dental.history');
         Route::get("treatment-tabs", [TreatmentSessionController::class, 'getTreatmentTabs'])->name('treatment.tabs');
         Route::get("patient/{patient}/tooth-panorama/{tooth_number}", [TreatmentSessionController::class, 'getToothPanorama'])->name('tooth.panorama');
         Route::post("panorama/{patient}/upload-files", [TreatmentSessionController::class, 'panoramaUploadFiles'])->name('panorama.uploadFiles');
@@ -187,6 +188,7 @@ Route::middleware("auth")->group(function () {
         Route::post("tooth/{patient}/upload-files/{toothNumber}", [TreatmentSessionController::class, 'toothUploadFiles'])->name('tooth.uploadFiles');
         Route::delete("tooth/{patient}/{id}/{toothNumber}", [TreatmentSessionController::class, 'toothDelete'])->name('tooth.delete');
         Route::post("treatment-session/{patient}", [TreatmentSessionController::class, 'storeTreatmentSession'])->name("treatment.session.store");
+        Route::post("dental-history/{patient}", [TreatmentSessionController::class, 'storeDentalHistory'])->name("appointments.dental.history.store");
         Route::get("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'edit'])->name("treatment.session.edit");
         Route::put("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'update'])->name("treatment.session.update");
 

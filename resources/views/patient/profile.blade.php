@@ -3,13 +3,19 @@
 @section('title', 'Patient File')
 
 @section('buttons')
-    <a href="{{ route('patients.index') }}"><button type="button" class="btn btn-dark"><span
+    <a href="{{ route('patients.index') }}"><button type="button" class="btn btn-dark mb-1"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 
     @if (auth()->user()->is_admin || auth()->user()->is_doctor)
         <a href="{{ route('appointments.treatment', ['patient' => $patient->id]) }}">
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn mb-1 btn-primary">
                 <span class="fe fe-plus fe-12 mr-2"></span>Start New Session
+            </button>
+        </a>
+
+        <a href="{{ route('appointments.dental.history', ['patient' => $patient->id]) }}">
+            <button type="button" class="btn btn-secondary mb-1">
+                <span class="fe fe-plus fe-12 mr-2"></span>Dental History
             </button>
         </a>
     @endif
@@ -332,6 +338,7 @@
             startDate: start,
             endDate: end,
             ranges: {
+                'ALL': [0, moment()],
                 'Today': [moment(), moment()],
                 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
@@ -372,6 +379,10 @@
             if ($.fn.DataTable.isDataTable('#treatments')) {
                 $('#treatments').DataTable().destroy();
             }
+
+            console.log(start);
+            console.log(end);
+
 
             $('#treatments').DataTable({
                 processing: true,

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Interfaces\IDoctor;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use App\Http\Interfaces\ITreatmentSession;
+use App\Http\Requests\TreatmentSession\DentalHistoryStoreRequest;
 use App\Http\Requests\TreatmentSession\TreatmentTabsRequest;
 use App\Http\Requests\TreatmentSession\PanoramaUploadFilesRequest;
 use App\Http\Requests\TreatmentSession\TreatmentSessionStoreRequest;
@@ -15,7 +17,7 @@ class TreatmentSessionController extends Controller
 {
     private $service;
 
-    public function __construct(ITreatmentSession $treatmentSessionRepository)
+    public function __construct(ITreatmentSession $treatmentSessionRepository, private IDoctor $doctorService)
     {
         $this->service = $treatmentSessionRepository;
     }
@@ -24,6 +26,12 @@ class TreatmentSessionController extends Controller
     {
         $data = $this->service->start($patient);
         return view('treatment-session.create', ['data' => $data]);
+    }
+
+    public function dentalHistory(Patient $patient)
+    {
+        $data = $this->service->start($patient);
+        return view('treatment-session.dental-history', ['data' => $data, 'doctors' => $this->doctorService->listService()]);
     }
 
     public function getAll(Request $request)
@@ -94,6 +102,13 @@ class TreatmentSessionController extends Controller
         $data = $request->validated();
 
         return $this->service->storeTreatmentSession($patient, $data);
+    }
+
+    public function storeDentalHistory(DentalHistoryStoreRequest $request, Patient $patient)
+    {
+        $data = $request->validated();
+
+        return $this->service->storeDentalHistory($patient, $data);
     }
 
     public function update(TreatmentSessionUpdateRequest $request, TreatmentDetail $treatmentDetail, Patient $patient)

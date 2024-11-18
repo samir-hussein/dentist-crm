@@ -23,7 +23,7 @@ class AppointmentStoreRequest extends FormRequest
     {
         return [
             "name" => "string|required_with:phone",
-            "phone" => "unique:patients,phone|required_without:patient_id",
+            "phone" => "required_without:patient_id",
             "phone2" => "sometimes|string|nullable",
             "date_of_birth" => "required_with:phone|date",
             "nationality" => "sometimes|nullable|string",

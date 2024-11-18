@@ -19,4 +19,5 @@ interface ITreatmentSession
     public function updateTreatmentSession(TreatmentDetail $treatmentDetail, Patient $patient, array $data);
     public function showById(TreatmentDetail $treatmentDetail, Patient $patient);
     public function getAll(Request $request);
+    public function storeDentalHistory(Patient $patient, array $data);
 }

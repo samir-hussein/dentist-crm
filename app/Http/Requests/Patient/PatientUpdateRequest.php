@@ -24,7 +24,7 @@ class PatientUpdateRequest extends FormRequest
         $patientPhone = request()->route("patient")?->phone;
         return [
             "name" => "required|string",
-            "phone" => "required|unique:patients,phone,$patientPhone,phone",
+            "phone" => "required",
             "date_of_birth" => "required|date",
             "gender" => "required|in:Male,Female",
             "nationality" => "required|string",
