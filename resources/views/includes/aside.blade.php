@@ -75,7 +75,9 @@
                     <span class="ml-3 item-text">Lab Orders</span>
                 </a>
             </li> --}}
+            @endif
 
+            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
                 <li class="nav-item w-100">
                     <a class="nav-link @yield('settings-active', $currentRouteName == 'settings' ? 'active-link' : '')" href="{{ route('settings') }}">
                         <i class="fe fe-settings fe-16"></i>

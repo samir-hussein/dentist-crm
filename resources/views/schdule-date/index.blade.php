@@ -92,6 +92,14 @@
                         var editUrl = '/schdule-dates/' + row.id + "/make-holiday";
                         var showUrl = '/schdule-dates/' + row.id;
 
+                        let doctor = {{ auth()->user()->is_doctor ?? false }};
+
+                        if (doctor) {
+                            return `
+                            <a href="${showUrl}" class="btn btn-sm btn-dark">Show Appointments</a>
+                        `;
+                        }
+
                         if (row.is_holiday) {
                             return `
                             <a href="${editUrl}" class="btn btn-sm btn-warning">Make Work Day</a>

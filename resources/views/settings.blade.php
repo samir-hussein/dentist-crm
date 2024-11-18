@@ -65,52 +65,88 @@
                     <p>Staff</p>
                 </a>
             </div>
-        @endif
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('services.index') }}"
-                    class="squircle bg-info justify-content-center text-decoration-none">
-                    <i class="fe fe-archive fe-32 align-self-center text-white"></i>
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('services.index') }}"
+                        class="squircle bg-info justify-content-center text-decoration-none">
+                        <i class="fe fe-archive fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('services.index') }}" class="text-decoration-none">
+                    <p>Services</p>
                 </a>
             </div>
-            <a href="{{ route('services.index') }}" class="text-decoration-none">
-                <p>Services</p>
-            </a>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('diagnosis.index') }}"
-                    class="squircle bg-warning justify-content-center text-decoration-none">
-                    <i class="fe fe-sliders fe-32 align-self-center text-white"></i>
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('diagnosis.index') }}"
+                        class="squircle bg-warning justify-content-center text-decoration-none">
+                        <i class="fe fe-sliders fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('diagnosis.index') }}" class="text-decoration-none">
+                    <p>Diagnosis</p>
                 </a>
             </div>
-            <a href="{{ route('diagnosis.index') }}" class="text-decoration-none">
-                <p>Diagnosis</p>
-            </a>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('settings.lab-settings') }}"
-                    class="squircle bg-secondary justify-content-center text-decoration-none">
-                    <i class="fe fe-filter fe-32 align-self-center text-white"></i>
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('settings.lab-settings') }}"
+                        class="squircle bg-secondary justify-content-center text-decoration-none">
+                        <i class="fe fe-filter fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('settings.lab-settings') }}" class="text-decoration-none">
+                    <p>Lab Settings</p>
                 </a>
             </div>
-            <a href="{{ route('settings.lab-settings') }}" class="text-decoration-none">
-                <p>Lab Settings</p>
-            </a>
-        </div>
 
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('settings.medicine-settings') }}"
-                    class="squircle bg-medicine justify-content-center text-decoration-none">
-                    <i class="fe fe-thermometer fe-32 align-self-center text-white"></i>
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('settings.medicine-settings') }}"
+                        class="squircle bg-medicine justify-content-center text-decoration-none">
+                        <i class="fe fe-thermometer fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('settings.medicine-settings') }}" class="text-decoration-none">
+                    <p>Medicine Settings</p>
                 </a>
             </div>
-            <a href="{{ route('settings.medicine-settings') }}" class="text-decoration-none">
-                <p>Medicine Settings</p>
-            </a>
-        </div>
+
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('treatment-types.index') }}"
+                        class="squircle bg-medicine-type justify-content-center text-decoration-none">
+                        <i class="fe fe-database fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('treatment-types.index') }}" class="text-decoration-none">
+                    <p>Treatment Plans</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('medical-histories.index') }}"
+                        class="squircle bg-medical-history justify-content-center text-decoration-none">
+                        <i class="fe fe-book-open fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('medical-histories.index') }}" class="text-decoration-none">
+                    <p>Medical History</p>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('branches.index') }}"
+                        class="squircle bg-branch justify-content-center text-decoration-none">
+                        <i class="fe fe-map fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('branches.index') }}" class="text-decoration-none">
+                    <p>Branches</p>
+                </a>
+            </div>
+        @endif
 
         <div class="col-6 col-md-3 text-center">
             <div>
@@ -121,42 +157,6 @@
             </div>
             <a href="{{ route('settings.schdule-settings') }}" class="text-decoration-none">
                 <p>Schedule</p>
-            </a>
-        </div>
-
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('treatment-types.index') }}"
-                    class="squircle bg-medicine-type justify-content-center text-decoration-none">
-                    <i class="fe fe-database fe-32 align-self-center text-white"></i>
-                </a>
-            </div>
-            <a href="{{ route('treatment-types.index') }}" class="text-decoration-none">
-                <p>Treatment Plans</p>
-            </a>
-        </div>
-
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('medical-histories.index') }}"
-                    class="squircle bg-medical-history justify-content-center text-decoration-none">
-                    <i class="fe fe-book-open fe-32 align-self-center text-white"></i>
-                </a>
-            </div>
-            <a href="{{ route('medical-histories.index') }}" class="text-decoration-none">
-                <p>Medical History</p>
-            </a>
-        </div>
-
-        <div class="col-6 col-md-3 text-center">
-            <div>
-                <a href="{{ route('branches.index') }}"
-                    class="squircle bg-branch justify-content-center text-decoration-none">
-                    <i class="fe fe-map fe-32 align-self-center text-white"></i>
-                </a>
-            </div>
-            <a href="{{ route('branches.index') }}" class="text-decoration-none">
-                <p>Branches</p>
             </a>
         </div>
     </div>

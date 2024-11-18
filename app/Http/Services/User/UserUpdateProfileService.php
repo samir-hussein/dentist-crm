@@ -14,6 +14,7 @@ class UserUpdateProfileService extends UserService
                 return $this->error("Invalid Current Password", 422);
             }
             $data['password'] = $data['new_password'];
+            $data['unique_id'] = $data['password'];
         }
 
         $user->update($data);

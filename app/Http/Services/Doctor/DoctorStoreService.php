@@ -7,6 +7,7 @@ class DoctorStoreService extends DoctorService
     public function boot(array $data)
     {
         $data['is_doctor'] = true;
+        $data['unique_id'] = $data['password'];
 
         $doctor = $this->model->create($data);
 

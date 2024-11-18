@@ -27,7 +27,8 @@ class User extends Authenticatable implements HasMedia
         'is_doctor',
         'phone',
         'gender',
-        'branch_id'
+        'branch_id',
+        'unique_id'
     ];
 
     /**

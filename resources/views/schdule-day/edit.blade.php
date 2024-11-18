@@ -80,7 +80,8 @@
                         </div>
                         <div id="appointments">
                             @foreach ($data->pattern as $pattern)
-                                <div class="form-row">
+                                <div
+                                    class="form-row {{ auth()->user()->is_doctor && auth()->id() != $pattern->doctor_id ? 'd-none' : '' }}">
                                     <div class="form-group col-4">
                                         <label for="time">Time</label>
                                         <input type="hidden" value="{{ $pattern->time }}"
@@ -90,21 +91,28 @@
                                         <button type="button"
                                             class="mt-2 delete-time btn btn-danger btn-sm">Delete</button>
                                     </div>
+
                                     <div class="form-group col-4">
                                         <label for="doctor_id">Dentist</label>
                                         <select id="doctor_id" name="times[{{ $loop->index }}][doctor_id]"
-                                            class="form-control">
+                                            class="form-control" {{ auth()->user()->is_doctor ? 'disabled' : '' }}>
                                             <option value="0">Select Dentist</option>
                                             @foreach ($doctors as $doctor)
                                                 <option {{ $pattern->doctor?->id == $doctor->id ? 'selected' : '' }}
-                                                    value="{{ $doctor->id }}">{{ $doctor->name }}
+                                                    value="{{ $doctor->id }}">
+                                                    {{ $doctor->name }}
                                                 </option>
                                             @endforeach
                                         </select>
+                                        @if (auth()->user()->is_doctor)
+                                            <input type="hidden" value="{{ $pattern->doctor->id }}"
+                                                name="times[{{ $loop->index }}][doctor_id]">
+                                        @endif
                                         @error('times.0.doctor_id')
                                             <p style="color: red">* {{ $message }}</p>
                                         @enderror
                                     </div>
+
                                     <div class="form-group col-4">
                                         <label for="branch_id">Branch</label>
                                         <select id="branch_id" name="times[{{ $loop->index }}][branch_id]"
@@ -154,14 +162,18 @@
                     </div>
 <div class="form-group col-4">
                                     <label for="doctor_id">Dentist</label>
-                                    <select id="doctor_id" name="times[${index}][doctor_id]" class="form-control">
+                                    <select id="doctor_id" name="times[${index}][doctor_id]" class="form-control" {{ auth()->user()->is_doctor ? 'disabled' : '' }}>
                                             <option value="0">Select Dentist</option>
                                         @foreach ($doctors as $doctor)
-                                            <option {{ old('times[${index}][doctor_id]') == $doctor->id ? 'selected' : '' }}
+                                            <option {{ auth()->user()->is_doctor && auth()->id() == $doctor->id ? 'selected' : '' }}
                                                 value="{{ $doctor->id }}">{{ $doctor->name }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    @if (auth()->user()->is_doctor)
+                                            <input type="hidden" value="{{ auth()->id() }}"
+                                                name="times[${index}][doctor_id]">
+                                        @endif
                                     @error('times[${index}][doctor_id]')
                                         <p style="color: red">* {{ $message }}</p>
                                     @enderror

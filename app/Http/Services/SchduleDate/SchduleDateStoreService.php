@@ -7,6 +7,7 @@ use App\Models\SchduleDay;
 use App\Models\SchduleDate;
 use App\Models\SchduleDateTime;
 use App\Models\SchduleDayPattern;
+use Illuminate\Support\Facades\DB;
 
 class SchduleDateStoreService extends SchduleDateService
 {
@@ -54,14 +55,28 @@ class SchduleDateStoreService extends SchduleDateService
                         'schdule_date_id' => $date->id,
                     ];
 
-                    $onlyValidTimes[] = $timeFormat;
+                    $onlyValidTimes[] = [
+                        "time" => $timeFormat,
+                        "doctor_id" => $time->doctor_id,
+                        "schdule_date_id" => $date->id,
+                    ];
                 }
             }
         }
 
-        $uniqueBy = ['time', 'doctor_id', 'schdule_date_id'];
 
-        SchduleDateTime::whereNotIn("time", $onlyValidTimes)->where("urgent", 0)->delete();
+        // Optionally, delete invalid entries
+        $compositeKeys = collect($onlyValidTimes)->map(function ($item) {
+            return $item['time'] . '|' . $item['doctor_id'] . '|' . $item['schdule_date_id'];
+        })->toArray();
+
+        SchduleDateTime::whereNotIn(
+            DB::raw('CONCAT(time, "|", doctor_id, "|", schdule_date_id)'),
+            $compositeKeys
+        )->where('urgent', 0)
+            ->delete();
+
+        $uniqueBy = ['time', 'doctor_id', 'schdule_date_id'];
         SchduleDateTime::upsert($insert, $uniqueBy);
 
         return $dates;

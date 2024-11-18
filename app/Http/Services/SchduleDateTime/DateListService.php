@@ -6,12 +6,24 @@ class DateListService extends SchduleDateTimeService
 {
     public function boot(int $branchId, int $doctorId)
     {
-        $distinctDates = $this->model->where('doctor_id', $doctorId)
+        $distinctDates = $this->model
             ->where('branch_id', $branchId)
+            ->where("is_deleted", 0)
             ->with(['schduleDate' => function ($q) {
-                $q->distinct()->where("is_holiday", 0)->select(['schdule_dates.id', 'date', 'schdule_day_id'])->orderBy('date');
-            }]) // Load only `id` and `date` from related schduleDate
-            ->where("is_deleted", 0)->get()
+                $q->where("is_holiday", 0)
+                    ->select(['schdule_dates.id', 'date', 'schdule_day_id'])
+                    ->orderBy('date');
+            }]);
+
+        if ($doctorId != 0) {
+            $distinctDates->where('doctor_id', $doctorId);
+        }
+
+        // Fetch distinct dates by using a subquery or group by the date portion of `time`
+        $distinctDates = $distinctDates->get()
+            ->unique(function ($item) {
+                return \Carbon\Carbon::parse($item->time)->toDateString(); // Extract the date part
+            })
             ->map(function ($item) {
                 return [
                     'id' => $item->schduleDate->id,

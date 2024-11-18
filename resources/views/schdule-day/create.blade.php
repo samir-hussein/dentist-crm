@@ -72,14 +72,20 @@
                                 </div>
                                 <div class="form-group col-4">
                                     <label for="doctor_id">Dentist</label>
-                                    <select id="doctor_id" name="times[0][doctor_id]" class="form-control">
+                                    <select id="doctor_id" name="times[0][doctor_id]" class="form-control"
+                                        {{ auth()->user()->is_doctor ? 'disabled' : '' }}>
                                         <option value="0">Select Dentist</option>
                                         @foreach ($doctors as $doctor)
-                                            <option {{ old('times.0.doctor_id') == $doctor->id ? 'selected' : '' }}
+                                            <option
+                                                {{ auth()->user()->is_doctor && auth()->id() == $doctor->id ? 'selected' : '' }}
+                                                {{ old('times.0.doctor_id') == $doctor->id ? 'selected' : '' }}
                                                 value="{{ $doctor->id }}">{{ $doctor->name }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    @if (auth()->user()->is_doctor)
+                                        <input type="hidden" value="{{ auth()->id() }}" name="times[0][doctor_id]">
+                                    @endif
                                     @error('times.0.doctor_id')
                                         <p style="color: red">* {{ $message }}</p>
                                     @enderror
@@ -129,14 +135,18 @@
                     </div>
 <div class="form-group col-4">
                                     <label for="doctor_id">Dentist</label>
-                                    <select id="doctor_id" name="times[${index}][doctor_id]" class="form-control">
+                                    <select id="doctor_id" name="times[${index}][doctor_id]" class="form-control" {{ auth()->user()->is_doctor ? 'disabled' : '' }}>
                                             <option value="0">Select Dentist</option>
                                         @foreach ($doctors as $doctor)
-                                            <option {{ old('times[${index}][doctor_id]') == $doctor->id ? 'selected' : '' }}
+                                            <option {{ auth()->user()->is_doctor && auth()->id() == $doctor->id ? 'selected' : '' }}
                                                 value="{{ $doctor->id }}">{{ $doctor->name }}
                                             </option>
                                         @endforeach
                                     </select>
+                                     @if (auth()->user()->is_doctor)
+                                            <input type="hidden" value="{{ auth()->id() }}"
+                                                name="times[${index}][doctor_id]">
+                                        @endif
                                     @error('times[${index}][doctor_id]')
                                         <p style="color: red">* {{ $message }}</p>
                                     @enderror

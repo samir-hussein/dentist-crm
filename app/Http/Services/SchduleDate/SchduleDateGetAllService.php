@@ -21,6 +21,12 @@ class SchduleDateGetAllService extends SchduleDateService
         // Fetch all columns from your model's table
         $data = $this->model->select('*')->orderBy("date");
 
+        if (auth()->user()->is_doctor) {
+            $data->whereHas("appointments", function ($data) {
+                $data->where("doctor_id", auth()->user()->id);
+            });
+        }
+
         return $this->dataTableForSchduleDate($data, "schdule_dates", $request);
     }
 }

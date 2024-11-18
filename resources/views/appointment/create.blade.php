@@ -916,17 +916,14 @@
             let time_selector = $(e).data("time-selector");
             branch = $(e).val();
 
-            console.log(date_selector);
-
-
-            let options = `<option value="">Select Dentist</option>`;
+            let options = `<option value="0">Select Dentist</option>`;
             $.each(doctors, function(index, value) {
                 options +=
                     `<option value="${value.id}" ${doctor == value.id?"selected":""}>${value.name}</option>`;
             });
             $("." + doctor_selector).html(options);
 
-            options = `<option value="">Select Date</option>`;
+            options = `<option value="0" data-day-id="0">Select Date</option>`;
             $.each(dates, function(index, value) {
                 options +=
                     `<option data-day-id="${value.schdule_day_id}" ${date == value.id?"selected":""} value="${value.id}">${value.dateFormated}</option>`;
@@ -944,7 +941,7 @@
                 url: "/schdule-date-times/dates/" + branch + "/" + doctor,
                 type: "GET",
                 success: function(response) {
-                    options = `<option value="">Select Date</option>`;
+                    options = `<option value="0" data-day-id="0">Select Date</option>`;
                     $.each(response, function(index, value) {
                         options +=
                             `<option data-day-id="${value.schdule_day_id}" ${date == value.id?"selected":""} value="${value.id}">${value.dateFormated}</option>`;
@@ -968,7 +965,7 @@
                 url: "/schdule-date-times/doctors/" + branch + "/" + day,
                 type: "GET",
                 success: function(response) {
-                    let options = `<option value="">Select Dentist</option>`;
+                    let options = `<option value="0">Select Dentist</option>`;
                     $.each(response, function(index, value) {
                         options +=
                             `<option value="${value.id}" ${doctor == value.id?"selected":""}>${value.name}</option>`;

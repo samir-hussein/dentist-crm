@@ -2,9 +2,11 @@
 
 namespace App\Http\Services\Appointment;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Facades\Firebase;
 use App\Models\Appointment;
+use App\Models\SchduleDate;
 use App\Models\SchduleDateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,9 +15,31 @@ class AppointmentNextService extends AppointmentService
 {
     public function boot(Appointment $appointment, array $data)
     {
+        DB::beginTransaction();
+
         try {
             if ($appointment->completed) {
                 return $this->error('Cannot set next appointment for completed appointment.', 403);
+            }
+
+            if ($data['urgent_time'] && !$data['time_id']) {
+                $date = SchduleDate::find($data['date_id']);
+                $time = Carbon::parse($date->date)->setTimeFromTimeString($data['urgent_time']);
+                $checkTime = SchduleDateTime::where("time", $time)->where("doctor_id", $data['doctor_id'])->first();
+
+                if ($checkTime) {
+                    return $this->error("The Doctor already have appointment in this time.", 400);
+                }
+
+                $time = SchduleDateTime::create([
+                    "time" => $time,
+                    "schdule_date_id" => $date->id,
+                    "urgent" => true,
+                    "doctor_id" => $data['doctor_id'],
+                    "branch_id" => $data['branch_id'],
+                ]);
+
+                $data['time_id'] = $time->id;
             }
 
             $check_appointment = $this->model->where("patient_id", $data['patient_id'])->where("doctor_id", $data['doctor_id'])->where("time_id", $data['time_id'])->first();
@@ -35,6 +59,10 @@ class AppointmentNextService extends AppointmentService
             ]);
 
             $appointment = $this->model->create($data);
+
+            SchduleDateTime::where("id", $data['time_id'])->update([
+                "patient_id" => $data['patient_id'],
+            ]);
 
             $services = array_map(function ($service_id) use ($appointment) {
                 return [

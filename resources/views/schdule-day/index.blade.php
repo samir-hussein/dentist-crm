@@ -81,6 +81,12 @@
                         var editUrl = '/schdule-days/' + row.id + "/edit";
                         var deleteUrl = '/schdule-days/' + row.id;
 
+                        let doctor = {{ auth()->user()->is_doctor ?? false }};
+
+                        if (doctor) {
+                            return `<a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>`;
+                        }
+
                         return `
                             <a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">

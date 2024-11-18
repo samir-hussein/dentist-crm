@@ -16,8 +16,6 @@ class HomePageController extends Controller
 
     public function index()
     {
-        $data = $this->service->all(true);
-
-        return $this->view("home", ['data' => $data['data']]);
+        return $this->view("home");
     }
 }

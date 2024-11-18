@@ -58,6 +58,7 @@
                             <strong class="card-title my-0">{{ $row->name }}</strong>
                             <p class="text-muted mb-0">{{ $row->gender }}</p>
                             <p class="text-muted mb-0">{{ $row->email }}</p>
+                            <p class="text-muted mb-0">{{ $row->unique_id }}</p>
                             <p><span class="badge badge-light text-muted">{{ $row->phone }}</span></p>
                         </div>
                     </div> <!-- ./card-text -->

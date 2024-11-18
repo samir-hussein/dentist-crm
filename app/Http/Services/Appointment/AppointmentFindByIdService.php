@@ -37,7 +37,8 @@ class AppointmentFindByIdService extends AppointmentService
                 "branch" => function ($q) {
                     $q->select(["id", "name"]);
                 },
-                "time"
+                "time",
+                "time.schduleDate"
             ]
         );
 

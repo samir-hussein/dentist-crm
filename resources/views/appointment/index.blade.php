@@ -34,17 +34,20 @@
                     </div>
                 </div>
 
-                <div class="form-group col-6 col-md-4">
-                    <label for="doctor_id">Filter By Dentist : </label>
-                    <select id="doctor_id" name="doctor_id" class="form-control">
-                        <option value="0">All Dentists</option>
-                        @foreach ($doctors as $doctor)
-                            <option {{ request('doctor') == $doctor->id ? 'selected' : '' }} value="{{ $doctor->id }}">
-                                {{ $doctor->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                @if (!auth()->user()->is_doctor)
+                    <div class="form-group col-6 col-md-4">
+                        <label for="doctor_id">Filter By Dentist : </label>
+                        <select id="doctor_id" name="doctor_id" class="form-control">
+                            <option value="0">All Dentists</option>
+                            @foreach ($doctors as $doctor)
+                                <option {{ request('doctor') == $doctor->id ? 'selected' : '' }}
+                                    value="{{ $doctor->id }}">
+                                    {{ $doctor->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
 
                 <div class="form-group col-6 col-md-4">
                     <label for="branch_id">Filter By Branch : </label>

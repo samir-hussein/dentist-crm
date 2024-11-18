@@ -79,6 +79,28 @@ Route::middleware("auth")->group(function () {
 
     Route::middleware("notStaff")->group(function () {
 
+        Route::get("/settings", function () {
+            return view('settings', ["currentRouteName" => Route::currentRouteName()]);
+        })->name('settings');
+
+        Route::get("schdule-days/all", [SchduleDayController::class, 'all'])->name('schdule-days.all');
+        Route::resource('schdule-days', SchduleDayController::class)->missing(function () {
+            return abort(404);
+        });
+
+        Route::get("schdule-dates/all", [SchduleDateController::class, 'all'])->name('schdule-dates.all');
+        Route::get("schdule-dates/{schdule_date}/make-holiday", [SchduleDateController::class, 'makeHoliday'])->name('schdule-dates.make-holiday');
+        Route::resource('schdule-dates', SchduleDateController::class)->missing(function () {
+            return abort(404);
+        })->except(['destroy']);
+        Route::resource('times', SchduleDateController::class)->missing(function () {
+            return abort(404);
+        })->only(['destroy', 'update']);
+
+        Route::get("/settings/schdule", function () {
+            return view('schdule-settings', ["currentRouteName" => Route::currentRouteName()]);
+        })->name('settings.schdule-settings');
+
         Route::middleware("admin")->group(function () {
             Route::get("admins/all", [AdminController::class, 'all'])->name('admins.all');
             Route::resource('admins', AdminController::class)->missing(function () {
@@ -94,10 +116,6 @@ Route::middleware("auth")->group(function () {
                 return abort(404);
             });
 
-            Route::get("/settings", function () {
-                return view('settings', ["currentRouteName" => Route::currentRouteName()]);
-            })->name('settings');
-
             Route::get("/settings/lab", function () {
                 return view('lab-settings', ["currentRouteName" => Route::currentRouteName()]);
             })->name('settings.lab-settings');
@@ -105,10 +123,6 @@ Route::middleware("auth")->group(function () {
             Route::get("/settings/medicine", function () {
                 return view('medicine-settings', ["currentRouteName" => Route::currentRouteName()]);
             })->name('settings.medicine-settings');
-
-            Route::get("/settings/schdule", function () {
-                return view('schdule-settings', ["currentRouteName" => Route::currentRouteName()]);
-            })->name('settings.schdule-settings');
 
             Route::get("diagnosis/all", [DiagnosisController::class, 'all'])->name('diagnosis.all');
             Route::resource('diagnosis', DiagnosisController::class)->missing(function () {
@@ -129,20 +143,6 @@ Route::middleware("auth")->group(function () {
             Route::resource('branches', BranchController::class)->missing(function () {
                 return abort(404);
             });
-
-            Route::get("schdule-days/all", [SchduleDayController::class, 'all'])->name('schdule-days.all');
-            Route::resource('schdule-days', SchduleDayController::class)->missing(function () {
-                return abort(404);
-            });
-
-            Route::get("schdule-dates/all", [SchduleDateController::class, 'all'])->name('schdule-dates.all');
-            Route::get("schdule-dates/{schdule_date}/make-holiday", [SchduleDateController::class, 'makeHoliday'])->name('schdule-dates.make-holiday');
-            Route::resource('schdule-dates', SchduleDateController::class)->missing(function () {
-                return abort(404);
-            })->except(['destroy']);
-            Route::resource('times', SchduleDateController::class)->missing(function () {
-                return abort(404);
-            })->only(['destroy', 'update']);
 
             Route::get("doses/all", [DoseController::class, 'all'])->name('doses.all');
             Route::resource('doses', DoseController::class)->missing(function () {

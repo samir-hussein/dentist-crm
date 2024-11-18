@@ -80,7 +80,7 @@ class AppointmentGetAllService extends AppointmentService
         }
 
         if ($request->doctor && $request->doctor != "") {
-            $data->where("doctor_id", $request->doctor);
+            $data->where("appointments.doctor_id", $request->doctor);
         }
 
         if ($request->branch && $request->branch != "") {
@@ -88,7 +88,7 @@ class AppointmentGetAllService extends AppointmentService
         }
 
         if (auth()->user()->is_doctor) {
-            $data->where("doctor_id", auth()->user()->id);
+            $data->where("appointments.doctor_id", auth()->user()->id);
         }
 
         $data = $data->get()->map(function ($appointment) {

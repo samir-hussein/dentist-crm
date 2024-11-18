@@ -31,6 +31,13 @@ class SchduleDayGetAllService extends SchduleDayService
                 'friday'
             ]);
 
+        if (auth()->user()->is_doctor) {
+            // Filter by doctor's ID if the user is a doctor
+            $data->whereHas('pattern', function ($data) {
+                $data->where('doctor_id', auth()->user()->id);
+            });
+        }
+
         return $this->dataTable($data, "schdule_days", $request);
     }
 }

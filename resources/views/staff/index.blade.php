@@ -42,6 +42,7 @@
                                 <th>Gender</th>
                                 <th>Phone</th>
                                 <th>Email</th>
+                                <th>Password</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -83,6 +84,10 @@
                 {
                     data: 'email',
                     name: 'email'
+                },
+                {
+                    data: 'unique_id',
+                    name: 'Password'
                 },
                 {
                     data: null, // No field in the database for this, render buttons dynamically

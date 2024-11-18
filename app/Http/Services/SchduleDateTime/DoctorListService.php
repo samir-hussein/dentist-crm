@@ -8,12 +8,15 @@ class DoctorListService extends SchduleDateTimeService
 {
     public function boot(int $branchId, int $dayId)
     {
-        $datesId = SchduleDate::where("schdule_day_id", $dayId)->pluck("id")->toArray();
+        $distinctDoctors = $this->model->where('branch_id', $branchId)
+            ->with('doctor:id,name');
 
-        $distinctDoctors = $this->model->whereIn('schdule_date_id', $datesId)
-            ->where('branch_id', $branchId)
-            ->with('doctor:id,name')
-            ->get()
+        if ($dayId != 0) {
+            $datesId = SchduleDate::where("schdule_day_id", $dayId)->pluck("id")->toArray();
+            $distinctDoctors->whereIn('schdule_date_id', $datesId);
+        }
+
+        $distinctDoctors = $distinctDoctors->get()
             ->map(function ($item) {
                 return [
                     'id' => $item->doctor->id,
