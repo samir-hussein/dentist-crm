@@ -42,6 +42,7 @@ class AppointmentController extends Controller
     public function create()
     {
         $data = $this->service->necessaryData();
+
         return $this->view("appointment.create", ['data' => $data]);
     }
 

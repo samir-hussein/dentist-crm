@@ -9,6 +9,7 @@ use App\Http\Services\Patient\PatientListService;
 use App\Http\Services\Service\ServiceListService;
 use App\Http\Services\SchduleDate\SchduleDateStoreService;
 use App\Http\Services\SchduleDate\SchduleDateAvailableTimesService;
+use App\Models\TreatmentDetail;
 
 class AppointmentNecessaryDataService extends AppointmentService
 {

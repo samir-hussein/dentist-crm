@@ -63,4 +63,10 @@ class Patient extends Model implements HasMedia
     {
         return $this->hasOne(LabOrder::class)->where("done", 0)->latest();
     }
+
+    public function latestTreatmentSession()
+    {
+        return $this->hasOne(TreatmentDetail::class)
+            ->latest('updated_at'); // Order by updated_at descending
+    }
 }

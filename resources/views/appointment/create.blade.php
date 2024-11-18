@@ -20,6 +20,8 @@
         <div class="col-md-12">
             <div class="alert alert-danger d-none" id="patient-alert" role="alert">
             </div>
+            <div class="alert alert-primary d-none" id="last-appointment-alert" role="alert">
+            </div>
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -784,7 +786,9 @@
                                                         id="simple-select2" name="patient_id">
                                                         <option value="0">Select Patient</option>
                                                         @foreach ($data->patients as $patient)
-                                                            <option data-lab="{{ json_encode($patient->labOrder) }}"
+                                                            <option
+                                                                data-last-appointment="{{ $patient->lastTreatmentUpdated }}"
+                                                                data-lab="{{ json_encode($patient->labOrder) }}"
                                                                 {{ old('patient_id') == $patient->id ? 'selected' : '' }}
                                                                 value="{{ $patient->id }}">#{{ $patient->code }} |
                                                                 {{ $patient->name }} |
@@ -898,6 +902,8 @@
 
         $("#patient-list").change(function() {
             let labOrder = $(this).find('option:selected').data('lab');
+            let lastTreatmentUpdated = $(this).find('option:selected').data('last-appointment');
+
             if (labOrder) {
                 $("#patient-alert").removeClass("d-none");
                 $("#patient-alert").html(
@@ -905,6 +911,15 @@
                 );
             } else {
                 $("#patient-alert").addClass("d-none");
+            }
+
+            if (lastTreatmentUpdated) {
+                $("#last-appointment-alert").removeClass("d-none");
+                $("#last-appointment-alert").html(
+                    `The Last Appointment was at ${lastTreatmentUpdated}`
+                );
+            } else {
+                $("#last-appointment-alert").addClass("d-none");
             }
         });
 
