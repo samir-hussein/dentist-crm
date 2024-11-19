@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Interfaces\IAdmin;
 use App\Http\Interfaces\IAppointment;
+use App\Http\Interfaces\IAssistant;
 use App\Http\Interfaces\IAuth;
 use App\Http\Interfaces\IBranch;
 use App\Http\Interfaces\IDiagnosis;
@@ -23,12 +24,14 @@ use App\Http\Interfaces\ISchduleDate;
 use App\Http\Interfaces\ISchduleDateTime;
 use App\Http\Interfaces\ISchduleDay;
 use App\Http\Interfaces\IService;
+use App\Http\Interfaces\IShift;
 use App\Http\Interfaces\IStaff;
 use App\Http\Interfaces\ITrearmentType;
 use App\Http\Interfaces\ITreatmentSession;
 use App\Http\Interfaces\IUser;
 use App\Http\Repositories\AdminRepository;
 use App\Http\Repositories\AppointmentRepository;
+use App\Http\Repositories\AssistantRepository;
 use App\Http\Repositories\AuthRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Repositories\BaseRepository;
@@ -49,6 +52,7 @@ use App\Http\Repositories\SchduleDateRepository;
 use App\Http\Repositories\SchduleDateTimeRepository;
 use App\Http\Repositories\SchduleDayRepository;
 use App\Http\Repositories\ServiceRepository;
+use App\Http\Repositories\ShiftRepository;
 use App\Http\Repositories\StaffRepository;
 use App\Http\Repositories\TreatmentSessionRepository;
 use App\Http\Repositories\TreatmentTypeRepository;
@@ -86,6 +90,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ILabOrder::class, LabOrderRepository::class);
         $this->app->bind(IBranch::class, BranchRepository::class);
         $this->app->bind(ISchduleDateTime::class, SchduleDateTimeRepository::class);
+        $this->app->bind(IAssistant::class, AssistantRepository::class);
+        $this->app->bind(IShift::class, ShiftRepository::class);
     }
 
     /**

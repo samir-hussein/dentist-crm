@@ -65,6 +65,19 @@
                     <p>Staff</p>
                 </a>
             </div>
+
+            <div class="col-6 col-md-3 text-center">
+                <div>
+                    <a href="{{ route('assistants.index') }}"
+                        class="squircle bg-primary justify-content-center text-decoration-none">
+                        <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                    </a>
+                </div>
+                <a href="{{ route('assistants.index') }}" class="text-decoration-none">
+                    <p>Assistants</p>
+                </a>
+            </div>
+
             <div class="col-6 col-md-3 text-center">
                 <div>
                     <a href="{{ route('services.index') }}"

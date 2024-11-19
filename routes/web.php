@@ -21,12 +21,14 @@ use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\SchduleDayController;
 use App\Models\TreatmentSectionAttributeInput;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\SchduleDateController;
 use App\Http\Controllers\MedicineTypeController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\SchduleDateTimeController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\TreatmentSessionController;
 use App\Http\Controllers\SubscribeNotificationController;
 
@@ -111,6 +113,13 @@ Route::middleware("auth")->group(function () {
             Route::resource('staff', StaffController::class)->missing(function () {
                 return abort(404);
             })->only(['index', 'create', 'store', 'destroy']);
+
+            Route::get("assistants/{assistant_id}/shift", [ShiftController::class, 'index'])->name('assistants.shift');
+            Route::post("assistants/{assistant_id}/shift", [ShiftController::class, 'store'])->name('assistants.shift.store');
+            Route::get("assistants/all", [AssistantController::class, 'all'])->name('assistants.all');
+            Route::resource('assistants', AssistantController::class)->missing(function () {
+                return abort(404);
+            });
 
             Route::resource('doctors', DoctorController::class)->missing(function () {
                 return abort(404);
