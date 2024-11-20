@@ -7,7 +7,8 @@
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 
     @if (auth()->user()->is_admin || auth()->user()->is_doctor)
-        <a href="{{ route('appointments.treatment', ['patient' => $patient->id]) }}">
+        <a
+            href="{{ route('appointments.treatment', ['patient' => $patient->id, 'appointment_id' => request('appointment_id')]) }}">
             <button type="button" class="btn mb-1 btn-primary">
                 <span class="fe fe-plus fe-12 mr-2"></span>Start New Session
             </button>
@@ -24,7 +25,7 @@
 @section('style')
     <style>
         .tooth-chart {
-            width: 200px;
+            width: 100%;
         }
 
         .Spots {
@@ -429,7 +430,8 @@
                         searchable: false, // Action buttons are not searchable
                         render: function(data, type, row) {
                             // Use JavaScript to construct URLs
-                            var url = "/treatment-session/" + row.id + "/{{ $patient->id }}";
+                            var url = "/treatment-session/" + row.id +
+                                "/{{ $patient->id }}?appointment_id={{ request('appointment_id') }}";
                             var staff =
                                 "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
 

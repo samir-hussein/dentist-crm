@@ -3,12 +3,19 @@
 namespace App\Http\Services\TreatmentSession;
 
 use App\Models\Patient;
+use App\Models\Appointment;
 use App\Models\TreatmentSectionAttribute;
 
 class TreatmentSessionStoreService extends TreatmentSessionService
 {
     public function boot(Patient $patient, array $data)
     {
+        if (request('appointment_id') && request('appointment_id') != "") {
+            Appointment::where("id", request('appointment_id'))->update([
+                "completed" => true
+            ]);
+        }
+
         $treatmentSession = $this->model->create([
             'patient_id' => $patient->id,
             'diagnose_id' => $data['diagnose_id'],

@@ -101,28 +101,26 @@
                                     </td>
                                     <td>
                                         @if ($appointment->completed)
-                                            <span class="badge badge-success">Completed</span>
+                                            <span class="badge badge-success col-12">Done</span>
                                         @else
-                                            <a class="btn mb-1 btn-sm btn-info"
+                                            <a class="btn mb-1 btn-sm btn-info col-12 w-100"
                                                 href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
 
-                                            <a class="btn mb-1 btn-sm btn-dark" style="font-size: 10px"
+                                            <a class="btn mb-1 btn-sm btn-dark col-12 w-100" style="font-size: 10px"
                                                 href="{{ route('appointments.next', ['appointment' => $appointment->id]) }}">Next
                                                 Appointment</a>
 
                                             @if (auth()->user()->is_admin || auth()->user()->is_doctor)
-                                                <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
-                                                    class="btn mb-1 btn-sm btn-success">Completed</a>
-
-                                                <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
-                                                    class="btn mb-1 btn-sm btn-warning">Patient File</a>
+                                                <a href="{{ route('patients.file', ['patient' => $appointment->patient->id, 'appointment_id' => $appointment->id]) }}"
+                                                    class="btn mb-1 btn-sm btn-warning col-12 w-100">Patient File</a>
                                             @endif
 
-                                            <form class="d-inline mb-1" method="POST"
+                                            <form class="w-100" method="POST"
                                                 action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                <button type="submit"
+                                                    class="btn col-12 w-100 mb-1 btn-sm btn-danger">Delete</button>
                                             </form>
                                         @endif
                                     </td>

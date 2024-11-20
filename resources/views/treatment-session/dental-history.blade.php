@@ -5,7 +5,7 @@
 @section('style')
     <style>
         .tooth-chart {
-            width: 200px;
+            width: 100%;
         }
 
         .Spots {

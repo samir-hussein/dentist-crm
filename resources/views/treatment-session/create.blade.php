@@ -5,7 +5,7 @@
 @section('style')
     <style>
         .tooth-chart {
-            width: 200px;
+            width: 100%;
         }
 
         .Spots {
@@ -147,22 +147,25 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="form-row">
-                            <div class="form-group col-6 col-md-3">
+                            <div class="form-group col-6 col-md-4">
                                 <label for="fees">Fees</label>
                                 <input type="number" step="100" id="fees" class="form-control" min="0">
                             </div>
-                            <div class="form-group col-6 col-md-3">
+                            <div class="form-group col-6 col-md-4">
                                 <label for="paid">Down Payment</label>
                                 <input type="number" step="100" id="paid" class="form-control" min="0">
                             </div>
-                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
+                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
                                 <button class="btn w-100 btn-warning" data-toggle="modal"
                                     data-target=".prescription-modal">Prescription</button>
                             </div>
-                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
+                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
                                 <button class="btn w-100 btn-primary" id="save">Save</button>
                             </div>
-                            <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
+                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
+                                <button class="btn w-100 btn-success" id="done">Done</button>
+                            </div>
+                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
                                 <a class="w-100"
                                     href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
                                         class="btn w-100 btn-danger">Cancel</button></a>
@@ -820,6 +823,80 @@
 
             $.ajax({
                 url: "{{ route('treatment.session.store', ['patient' => $data->patient->id]) }}",
+                method: "POST",
+                data: {
+                    diagnose_id: diagnose,
+                    tooth: selectedTooth,
+                    tooth_type: tooth_type,
+                    fees: fees,
+                    paid: paid,
+                    data: {
+                        attr: selectedAttr,
+                        inputs: Object.keys(attrInputs).length > 0 ? attrInputs : null,
+                        notes: $("#notes-inp").val() || null,
+                    },
+                    lab: Object.keys(lab).length > 0 ? lab : null,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.href =
+                            "{{ route('patients.file', ['patient' => $data->patient->id]) }}";
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert(error.message);
+                }
+            });
+        });
+
+        $("#done").click(function() {
+            const patient_id = "{{ $data->patient->id }}";
+            const fees = $("#fees").val();
+            const paid = $("#paid").val();
+            let lab = {};
+
+            if (!diagnose) {
+                alert("Please select diagnose");
+                return;
+            }
+
+            if (selectedAttr.length == 0) {
+                alert("Please select at least one treatment");
+                return;
+            }
+
+            if (!fees || !paid) {
+                alert("Please enter fees and paid amount");
+                return;
+            }
+
+            if (labWork.length > 0) {
+                let sent = $("#sent").val();
+                let cost = $("#cost").val();
+                if (!lab_id || lab_id == "") {
+                    alert("Please select lab");
+                    return;
+                }
+
+                if (!sent || sent == "") {
+                    alert("Please select date");
+                    return;
+                }
+
+                lab = {
+                    work: labWork,
+                    custom_data: Object.keys(labData).length > 0 ? labData : null,
+                    cost: cost,
+                    sent: sent,
+                    lab_id: lab_id,
+                    done: lab_done ? 1 : 0
+                };
+            }
+
+            $.ajax({
+                url: "{{ route('treatment.session.store', ['patient' => $data->patient->id, 'appointment_id' => request('appointment_id')]) }}",
                 method: "POST",
                 data: {
                     diagnose_id: diagnose,
