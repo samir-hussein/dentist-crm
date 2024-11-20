@@ -77,6 +77,7 @@
                                 <th>Appointment</th>
                                 <th>Notes</th>
                                 <th>Lab Orders</th>
+                                <th>Last Seen</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -92,30 +93,38 @@
                                     <td>{{ $appointment->selectedServices }}</td>
                                     <td>{{ $appointment->formatedTime }}</td>
                                     <td>{{ $appointment->notes }}</td>
-                                    <td>{{ $appointment->patient->labOrder ? 'sent to lab ' . $appointment->patient->labOrder->lab->name . ' at ' . $appointment->patient->labOrder->sent?->format('d-m-Y') . ' received at ' . $appointment->patient->labOrder->received?->format('d-m-Y') : 'No Orders' }}
+                                    <td><span
+                                            class="badge badge-info">{{ $appointment->patient->labOrder ? 'sent to lab ' . $appointment->patient->labOrder->lab->name . ' at ' . $appointment->patient->labOrder->sent?->format('d-m-Y') . ' received at ' . $appointment->patient->labOrder->received?->format('d-m-Y') : 'No Orders' }}</span>
+                                    </td>
+                                    <td><span
+                                            class="badge badge-danger">{{ $appointment->patient->latestTreatmentSession?->updated_at->format('Y-m-d') ?? 'No Appointments Were Found' }}</span>
                                     </td>
                                     <td>
-                                        <a class="btn mb-1 btn-sm btn-info"
-                                            href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
+                                        @if ($appointment->completed)
+                                            <span class="badge badge-success">Completed</span>
+                                        @else
+                                            <a class="btn mb-1 btn-sm btn-info"
+                                                href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
 
-                                        <a class="btn mb-1 btn-sm btn-dark" style="font-size: 10px"
-                                            href="{{ route('appointments.next', ['appointment' => $appointment->id]) }}">Next
-                                            Appointment</a>
+                                            <a class="btn mb-1 btn-sm btn-dark" style="font-size: 10px"
+                                                href="{{ route('appointments.next', ['appointment' => $appointment->id]) }}">Next
+                                                Appointment</a>
 
-                                        @if (auth()->user()->is_admin || auth()->user()->is_doctor)
-                                            <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
-                                                class="btn mb-1 btn-sm btn-success">Completed</a>
+                                            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                                <a href="{{ route('appointments.markCompleted', ['appointment' => $appointment->id]) }}"
+                                                    class="btn mb-1 btn-sm btn-success">Completed</a>
 
-                                            <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
-                                                class="btn mb-1 btn-sm btn-warning">Patient File</a>
+                                                <a href="{{ route('patients.file', ['patient' => $appointment->patient->id]) }}"
+                                                    class="btn mb-1 btn-sm btn-warning">Patient File</a>
+                                            @endif
+
+                                            <form class="d-inline mb-1" method="POST"
+                                                action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            </form>
                                         @endif
-
-                                        <form class="d-inline mb-1" method="POST"
-                                            action="{{ route('appointments.destroy', ['appointment' => $appointment->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

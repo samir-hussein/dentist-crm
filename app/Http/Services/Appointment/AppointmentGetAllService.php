@@ -52,11 +52,13 @@ class AppointmentGetAllService extends AppointmentService
             },
             "time" => function ($q) {
                 $q->select(['schdule_date_times.id', 'time', 'manually_updated_time']);
+            },
+            "patient.latestTreatmentSession" => function ($q) {
+                $q->select("treatment_details.id", "treatment_details.updated_at", 'treatment_details.patient_id');
             }
         ])->join('schdule_date_times', 'schdule_date_times.id', '=', 'appointments.time_id')
             ->orderBy('schdule_date_times.time')
             ->select("appointments.*")
-            ->where("completed", false)
             ->where("schdule_date_times.is_deleted", false);
 
         $request = request();
@@ -84,7 +86,7 @@ class AppointmentGetAllService extends AppointmentService
         }
 
         if ($request->branch && $request->branch != "") {
-            $data->where("branch_id", $request->branch);
+            $data->where("appointments.branch_id", $request->branch);
         }
 
         if (auth()->user()->is_doctor) {
