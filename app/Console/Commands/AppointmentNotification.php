@@ -52,7 +52,7 @@ class AppointmentNotification extends Command
             $payload = [
                 'title' => 'Appointment within the next 5 minutes',
                 'message' => 'Schduled at ' . $appointment->time?->manually_updated_time?->format("d-m-Y H:i a") ?? $appointment->time?->time->format("d-m-Y H:i a"),
-                'url' => route("patients.file", ['patient' => $appointment->patient_id])
+                'url' => route("patients.file", ['patient' => $appointment->patient_id, "appointment_id" => $appointment->id])
             ];
 
             Firebase::sendNotification($appointment->doctor->tokens(), $payload);

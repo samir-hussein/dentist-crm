@@ -4,7 +4,7 @@ namespace App\Http\Services\Shift;
 
 class ShiftStoreService extends ShiftService
 {
-    public function boot(int $assistant_id, array $data)
+    public function boot(array $data)
     {
         $shifts = $data['shifts'];
 
@@ -22,22 +22,20 @@ class ShiftStoreService extends ShiftService
 
         // Prepare data for insert/update
         foreach ($shifts as $date => $shift) {
-            $morning = isset($shift['morning']) ? true : false;
-            $night = isset($shift['night']) ? true : false;
+            $morning = $shift['morning'] ?? [];
+            $night = $shift['night'] ?? [];
 
             $insert[] = [
                 'date' => $date,
-                'morning_shift' => $morning,
-                'night_shift' => $night,
-                'assistant_id' => $assistant_id,
+                'morning_shift' => json_encode($morning),
+                'night_shift' => json_encode($night),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }
 
         // Remove shifts not submitted within the same month
-        $this->model->where('assistant_id', $assistant_id)
-            ->whereBetween('date', [$startOfSubmittedMonth, $endOfSubmittedMonth])
+        $this->model->whereBetween('date', [$startOfSubmittedMonth, $endOfSubmittedMonth])
             ->whereNotIn('date', $submittedDates)
             ->delete();
 
@@ -45,7 +43,7 @@ class ShiftStoreService extends ShiftService
         if (count($insert) > 0) {
             $this->model->upsert(
                 $insert, // Data to insert/update
-                ['assistant_id', 'date'], // Unique keys to check for existing rows
+                ['date'], // Unique keys to check for existing rows
                 ['morning_shift', 'night_shift', 'updated_at'] // Columns to update if a row already exists
             );
         }

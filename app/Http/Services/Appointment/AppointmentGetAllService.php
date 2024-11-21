@@ -59,6 +59,7 @@ class AppointmentGetAllService extends AppointmentService
         ])->join('schdule_date_times', 'schdule_date_times.id', '=', 'appointments.time_id')
             ->orderBy('schdule_date_times.time')
             ->select("appointments.*")
+            ->where("appointments.completed", false)
             ->where("schdule_date_times.is_deleted", false);
 
         $request = request();

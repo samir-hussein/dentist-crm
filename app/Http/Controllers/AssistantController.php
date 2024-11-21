@@ -27,6 +27,20 @@ class AssistantController extends Controller
         return $data;
     }
 
+    public function assistantShift()
+    {
+        $data = $this->service->assistantShift();
+
+        return $this->view("shift-report", ["data" => $data, "assistants" => $this->service->listService()]);
+    }
+
+    public function assistantShiftDates(int $assistantId, string $shift, string $from, string $to)
+    {
+        $data = $this->service->assistantShiftDates($assistantId, $from, $to, $shift);
+
+        return $data;
+    }
+
     /**
      * Display a listing of the resource.
      */

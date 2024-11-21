@@ -14,13 +14,13 @@ class ShiftRepository implements IShift
         private ShiftStoreService $shiftStoreService,
     ) {}
 
-    public function all(Request $request, int $assistant_id)
+    public function all(Request $request)
     {
-        return $this->shiftGetAllService->boot($request, $assistant_id);
+        return $this->shiftGetAllService->boot($request);
     }
 
-    public function store(array $data, int $assistant_id)
+    public function store(array $data)
     {
-        return $this->shiftStoreService->boot($assistant_id, $data);
+        return $this->shiftStoreService->boot($data);
     }
 }

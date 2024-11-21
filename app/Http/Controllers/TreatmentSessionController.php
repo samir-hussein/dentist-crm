@@ -25,7 +25,7 @@ class TreatmentSessionController extends Controller
     public function index(Patient $patient)
     {
         $data = $this->service->start($patient);
-        return view('treatment-session.create', ['data' => $data]);
+        return view('treatment-session.create', ['data' => $data, 'doctors' => $this->doctorService->listService()]);
     }
 
     public function dentalHistory(Patient $patient)
@@ -44,7 +44,7 @@ class TreatmentSessionController extends Controller
     {
         $data = $this->service->showById($treatmentDetail, $patient);
 
-        return view('treatment-session.edit', ['data' => $data, 'treatments' => $data->treatments, 'labs' => $data->labs, 'labsServices' => $data->labsServices]);
+        return view('treatment-session.edit', ['data' => $data, 'treatments' => $data->treatments, 'labs' => $data->labs, 'labsServices' => $data->labsServices, 'doctors' => $this->doctorService->listService()]);
     }
 
     public function getTreatmentTabs(TreatmentTabsRequest $request)

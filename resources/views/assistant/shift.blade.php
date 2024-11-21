@@ -1,17 +1,21 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Assistants')
+@section('title', 'Assistants Shift')
 
-@section('page-path', 'SETTINGS > Shift > ' . $assistant->name)
-
-@section('settings-active', 'active-link')
+@section('style')
+    <style>
+        .select2 {
+            width: 100% !important;
+        }
+    </style>
+@endsection
 
 @section('buttons')
     <button type="button" id="save-btn" class="btn btn-primary">
         <span class="fe fe-plus fe-12 mr-2"></span>Save
     </button>
 
-    <a href="{{ route('assistants.index') }}"><button type="button" class="btn btn-dark"><span
+    <a href="{{ route('home') }}"><button type="button" class="btn btn-dark"><span
                 class="fe fe-arrow-left fe-12 mr-2"></span>Back</button></a>
 @endsection
 
@@ -37,12 +41,11 @@
                             value="{{ sprintf('%04d-%02d', $year, $month) }}">
                     </div>
                     <!-- table -->
-                    <form action="{{ route('assistants.shift.store', ['assistant_id' => $assistant->id]) }}" method="post">
+                    <form action="{{ route('assistants.shift.store') }}" method="post">
                         @csrf
                         <table class="table datatables" id="dataTable-1">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Day</th>
                                     <th>Date</th>
                                     <th>Morning Shift</th>
@@ -50,25 +53,44 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $today = 0;
+                                @endphp
                                 @for ($day = 1; $day <= $daysInMonth; $day++)
                                     @php
                                         $currentDate = \Carbon\Carbon::create($year, $month, $day)->format('Y-m-d');
-                                        $morningShift = $shifts[$currentDate]['morning_shift'] ?? false;
-                                        $nightShift = $shifts[$currentDate]['night_shift'] ?? false;
+                                        $morningShift = $shifts[$currentDate]['morning_shift'] ?? [];
+                                        $nightShift = $shifts[$currentDate]['night_shift'] ?? [];
+                                        if ($currentDate == date('Y-m-d')) {
+                                            $today = $day - 1;
+                                        }
                                     @endphp
                                     <tr>
-                                        <td>{{ $day }}</td>
                                         <td>{{ \Carbon\Carbon::create($year, $month, $day)->format('l') }}</td>
-                                        <td>{{ $currentDate }}</td>
+                                        <td class="w-25">{{ $currentDate }}</td>
                                         <td>
-                                            <input type="checkbox" class="form-control w-25"
-                                                name="shifts[{{ $currentDate }}][morning]" value="1"
-                                                {{ $morningShift ? 'checked' : '' }}>
+                                            <select multiple name="shifts[{{ $currentDate }}][morning][]"
+                                                class="form-control select2-multi d-block w-100"
+                                                id="multi-select{{ $day }}">
+                                                @foreach ($assistants as $assistant)
+                                                    <option value="{{ $assistant->id }}"
+                                                        {{ in_array($assistant->id, $morningShift) ? 'selected' : '' }}>
+                                                        {{ $assistant->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </td>
                                         <td>
-                                            <input type="checkbox" class="form-control w-25"
-                                                name="shifts[{{ $currentDate }}][night]" value="1"
-                                                {{ $nightShift ? 'checked' : '' }}>
+                                            <select multiple name="shifts[{{ $currentDate }}][night][]"
+                                                class="form-control select2-multi d-block w-100"
+                                                id="multi-select-{{ $day }}">
+                                                @foreach ($assistants as $assistant)
+                                                    <option value="{{ $assistant->id }}"
+                                                        {{ in_array($assistant->id, $nightShift) ? 'selected' : '' }}>
+                                                        {{ $assistant->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </td>
                                     </tr>
                                 @endfor
@@ -85,9 +107,18 @@
 
 @section('script')
     <script>
-        $('#dataTable-1').DataTable({
-            "pageLength": 31,
-            "lengthMenu": [7, 10, 15, 31],
+        let table = $('#dataTable-1').DataTable({
+            "pageLength": 1,
+            "lengthMenu": [1, 31],
+            order: []
+        });
+
+        table.page({!! json_encode($today) !!}).draw(false);
+
+        table.on('length.dt', function(e, settings, len) {
+            if (len == 1) {
+                table.page({!! json_encode($today) !!}).draw(false);
+            }
         });
 
         $("#save-btn").click(function() {
@@ -99,7 +130,7 @@
             var date = $(this).val();
             if (!date) return false;
 
-            window.location.href = "{{ route('assistants.shift', ['assistant_id' => $assistant->id]) }}?date=" +
+            window.location.href = "{{ route('assistants.shift') }}?date=" +
                 date;
         });
     </script>

@@ -19,6 +19,7 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
 
         $treatmentDetail->update([
             'data' => $data['data'],
+            'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),
         ]);
 
         if ($data['paid'] > 0) {
@@ -26,11 +27,11 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
                 "fees" => 0,
                 "paid" => $data['paid'],
                 "tooth" => $treatmentDetail->tooth,
-                "treatment" => "Follow Up For Date : " . $treatmentDetail->created_at->format("d-m-Y"),
+                "treatment" => "Follow Up For Date : " . $treatmentDetail->updated_at->format("d-m-Y"),
                 "tax_invoice" => $patient->need_invoice,
                 'patient_id' => $patient->id,
                 "treatment_detail_id" => $treatmentDetail->id,
-                'doctor_id' => auth()->id()
+                'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),
             ]);
         }
 

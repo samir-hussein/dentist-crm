@@ -83,10 +83,8 @@
                         // Use JavaScript to construct URLs
                         var editUrl = '/assistants/' + row.id + "/edit";
                         var deleteUrl = '/assistants/' + row.id;
-                        var shiftUrl = '/assistants/' + row.id + "/shift";
 
                         return `
-                            <a href="${shiftUrl}" class="btn btn-sm btn-warning">Shift</a>
                             <a href="${editUrl}" class="btn btn-sm btn-info">Edit</a>
                             <form method="POST" action="${deleteUrl}" class="d-inline"">
                                 @csrf

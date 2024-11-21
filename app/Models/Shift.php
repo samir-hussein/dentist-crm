@@ -18,14 +18,10 @@ class Shift extends Model
         'date',
         'morning_shift',
         'night_shift',
-        'assistant_id',
     ];
 
-    /**
-     * Define the relationship to the Assistant model.
-     */
-    public function assistant()
-    {
-        return $this->belongsTo(Assistant::class);
-    }
+    protected $casts = [
+        'morning_shift' => 'array',
+        'night_shift' => 'array',
+    ];
 }

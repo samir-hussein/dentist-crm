@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Interfaces\IAssistant;
 use Illuminate\Http\Request;
 use App\Http\Interfaces\IShift;
 use App\Http\Requests\Shift\ShiftStoreRequest;
@@ -10,7 +11,7 @@ class ShiftController extends Controller
 {
     private $service;
 
-    public function __construct(IShift $shiftRepository)
+    public function __construct(IShift $shiftRepository, private IAssistant $assistantService)
     {
         $this->service = $shiftRepository;
     }
@@ -18,28 +19,28 @@ class ShiftController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, int $assistant_id)
+    public function index(Request $request)
     {
-        $data = $this->service->all($request, $assistant_id);
+        $data = $this->service->all($request);
 
         return $this->view("assistant.shift", [
             'shifts' => $data['shifts'],
             'daysInMonth' => $data['daysInMonth'],
             'month' => $data['month'],
             'year' => $data['year'],
-            'assistant' => $data['assistant'],
+            'assistants' => $this->assistantService->listService(),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ShiftStoreRequest $request, int $assistant_id)
+    public function store(ShiftStoreRequest $request)
     {
         $data = $request->validated();
 
-        $this->service->store($data, $assistant_id);
+        $this->service->store($data);
 
-        return $this->redirectWithSuccess("assistants.index");
+        return $this->redirectWithSuccess("home");
     }
 }

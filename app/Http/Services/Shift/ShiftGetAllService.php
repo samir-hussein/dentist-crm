@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ShiftGetAllService extends ShiftService
 {
-    public function boot(Request $request, int $assistant_id)
+    public function boot(Request $request)
     {
         $date = $request->input('date', now()->format('Y-m')); // Default to the current month if 'date' is not provided
         [$year, $month] = explode('-', $date);
@@ -21,7 +21,6 @@ class ShiftGetAllService extends ShiftService
 
         // Fetch shifts for the given month and year
         $shifts = $this->model
-            ->where('assistant_id', $assistant_id)
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->get(['date', 'morning_shift', 'night_shift'])
@@ -34,7 +33,6 @@ class ShiftGetAllService extends ShiftService
             'daysInMonth' => $daysInMonth,
             'month' => $month,
             'year' => $year,
-            'assistant' => Assistant::find($assistant_id)
         ];
     }
 }

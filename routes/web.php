@@ -79,6 +79,9 @@ Route::middleware("auth")->group(function () {
     Route::get("schdule-date-times/dates/{branchId}/{doctorId}", [SchduleDateTimeController::class, 'datesList'])->name("schdule.date.time.dates");
     Route::get("schdule-date-times/times/{branchId}/{doctorId}/{dateId}", [SchduleDateTimeController::class, 'timeList'])->name("schdule.date.time.times");
 
+    Route::get("assistants/shift", [ShiftController::class, 'index'])->name('assistants.shift');
+    Route::post("assistants/shift", [ShiftController::class, 'store'])->name('assistants.shift.store');
+
     Route::middleware("notStaff")->group(function () {
 
         Route::get("/settings", function () {
@@ -114,9 +117,9 @@ Route::middleware("auth")->group(function () {
                 return abort(404);
             })->only(['index', 'create', 'store', 'destroy']);
 
-            Route::get("assistants/{assistant_id}/shift", [ShiftController::class, 'index'])->name('assistants.shift');
-            Route::post("assistants/{assistant_id}/shift", [ShiftController::class, 'store'])->name('assistants.shift.store');
             Route::get("assistants/all", [AssistantController::class, 'all'])->name('assistants.all');
+            Route::get("assistants/shift/report", [AssistantController::class, 'assistantShift'])->name('assistants.shift.report');
+            Route::get("assistants/{assistantId}/shift/{shift}/dates/{from}/{to}", [AssistantController::class, 'assistantShiftDates'])->name('assistants.shift.dates');
             Route::resource('assistants', AssistantController::class)->missing(function () {
                 return abort(404);
             });

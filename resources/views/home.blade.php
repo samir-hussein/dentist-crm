@@ -20,7 +20,7 @@
 
         <div class="col-12 mt-5">
             <div class="row">
-                <div class="col-6 text-center">
+                <div class="col-4 text-center">
                     <div>
                         <a href="{{ route('appointments.index') }}"
                             class="squircle bg-success justify-content-center text-decoration-none">
@@ -32,7 +32,7 @@
                     </a>
                 </div>
 
-                <div class="col-6 text-center">
+                <div class="col-4 text-center">
                     <div>
                         <a href="{{ route('patients.index') }}"
                             class="squircle bg-danger justify-content-center text-decoration-none">
@@ -43,6 +43,19 @@
                         <p>Patients</p>
                     </a>
                 </div>
+
+                <div class="col-4 text-center">
+                    <div>
+                        <a href="{{ route('assistants.shift') }}"
+                            class="squircle bg-info justify-content-center text-decoration-none">
+                            <i class="fe fe-file-text fe-32 align-self-center text-white"></i>
+                        </a>
+                    </div>
+                    <a href="{{ route('assistants.shift') }}" class="text-decoration-none">
+                        <p>Shifts</p>
+                    </a>
+                </div>
+
             </div>
         </div>
     </div> <!-- end section -->

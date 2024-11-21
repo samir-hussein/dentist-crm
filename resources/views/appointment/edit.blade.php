@@ -243,14 +243,28 @@
                     let options = `<option value="">Select Time</option>`;
 
                     if (!urgent && selected_date == date) {
-                        options += `<option value="{{ $data->appointment->time->id }}" selected>
-                            {{ $data->appointment->time->manually_updated_time ? $data->appointment->time->manually_updated_time->format('h:i a') : $data->appointment->time->time->format('h:i a') }}
-                            </option>`;
+                        let selectedOption = {
+                            id: "{{ $data->appointment->time->id }}",
+                            timeFormated: "{{ $data->appointment->time->manually_updated_time ? $data->appointment->time->manually_updated_time->format('h:i a') : $data->appointment->time->time->format('h:i a') }}"
+                        };
+                        response.push(selectedOption);
                     }
 
+                    response.sort(function(a, b) {
+                        let timeA = a.timeFormated.replace(/am/gi, 'AM').replace(/pm/gi, 'PM');
+                        let timeB = b.timeFormated.replace(/am/gi, 'AM').replace(/pm/gi, 'PM');
+                        let dateA = new Date('1970-01-01 ' + timeA);
+                        let dateB = new Date('1970-01-01 ' + timeB);
+                        return dateA - dateB;
+                    });
+
                     $.each(response, function(index, value) {
-                        options +=
-                            `<option value="${value.id}">${value.timeFormated}</option>`;
+                        if (value.id == "{{ $data->appointment->time->id }}") {
+                            options +=
+                                `<option value="${value.id}" selected>${value.timeFormated}</option>`;
+                        } else {
+                            options += `<option value="${value.id}">${value.timeFormated}</option>`;
+                        }
                     });
 
                     $("." + time_selector).html(options);

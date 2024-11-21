@@ -24,6 +24,7 @@ class TreatmentSessionUpdateRequest extends FormRequest
         return [
             "paid" => "required|numeric|min:0",
             "data" => "required|array",
+            "doctor_id" => "sometimes|nullable|exists:users,id",
             "data.attr" => "required|array",
             "data.attr.*" => "required|exists:treatment_section_attributes,id",
             "data.inputs" => "sometimes|nullable|array",

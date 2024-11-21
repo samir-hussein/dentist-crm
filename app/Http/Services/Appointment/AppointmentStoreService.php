@@ -99,7 +99,7 @@ class AppointmentStoreService extends AppointmentService
             $payload = [
                 'title' => 'New Appointment',
                 'message' => 'Schduled at ' . $appointment->time->time->format("d-m-Y H:i a"),
-                'url' => route("patients.file", ['patient' => $appointment->patient_id])
+                'url' => route("patients.file", ['patient' => $appointment->patient_id, 'appointment_id' => $appointment->id])
             ];
 
             try {

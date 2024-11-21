@@ -104,10 +104,7 @@
                                             <span class="badge badge-success col-12">Done</span>
                                         @else
                                             <a class="btn mb-1 btn-sm btn-info col-12 w-100"
-                                                href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Edit</a>
-
-                                            <a class="btn mb-1 btn-sm btn-dark col-12 w-100" style="font-size: 10px"
-                                                href="{{ route('appointments.next', ['appointment' => $appointment->id]) }}">Next
+                                                href="{{ route('appointments.edit', ['appointment' => $appointment->id]) }}">Next
                                                 Appointment</a>
 
                                             @if (auth()->user()->is_admin || auth()->user()->is_doctor)

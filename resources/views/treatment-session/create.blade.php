@@ -155,20 +155,36 @@
                                 <label for="paid">Down Payment</label>
                                 <input type="number" step="100" id="paid" class="form-control" min="0">
                             </div>
-                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-warning" data-toggle="modal"
-                                    data-target=".prescription-modal">Prescription</button>
-                            </div>
-                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-primary" id="save">Save</button>
-                            </div>
-                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-success" id="done">Done</button>
-                            </div>
-                            <div class="form-group col-6 col-md-4 d-flex align-items-end justify-content-center">
-                                <a class="w-100"
-                                    href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
-                                        class="btn w-100 btn-danger">Cancel</button></a>
+                            @if (auth()->user()->is_admin)
+                                <div class="form-group col-12 col-md-4">
+                                    <label for="paid">Dentist</label>
+                                    <select id="doctor_id" name="doctor_id" class="form-control">
+                                        <option value="">Select Dentist</option>
+                                        @foreach ($doctors as $doctor)
+                                            <option {{ request('doctor') == $doctor->id ? 'selected' : '' }}
+                                                value="{{ $doctor->id }}">
+                                                {{ $doctor->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                            <div class="row col-12">
+                                <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
+                                    <button class="btn w-100 btn-warning" data-toggle="modal"
+                                        data-target=".prescription-modal">Prescription</button>
+                                </div>
+                                <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
+                                    <button class="btn w-100 btn-primary" id="save">Save</button>
+                                </div>
+                                <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
+                                    <button class="btn w-100 btn-success" id="done">Done</button>
+                                </div>
+                                <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
+                                    <a class="w-100"
+                                        href="{{ route('patients.file', ['patient' => $data->patient->id]) }}"><button
+                                            class="btn w-100 btn-danger">Cancel</button></a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -830,6 +846,7 @@
                     tooth_type: tooth_type,
                     fees: fees,
                     paid: paid,
+                    doctor_id: $("#doctor_id").val(),
                     data: {
                         attr: selectedAttr,
                         inputs: Object.keys(attrInputs).length > 0 ? attrInputs : null,
@@ -904,6 +921,7 @@
                     tooth_type: tooth_type,
                     fees: fees,
                     paid: paid,
+                    doctor_id: $("#doctor_id").val(),
                     data: {
                         attr: selectedAttr,
                         inputs: Object.keys(attrInputs).length > 0 ? attrInputs : null,

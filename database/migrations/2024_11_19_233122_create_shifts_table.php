@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->boolean('morning_shift')->default(false);
-            $table->boolean('night_shift')->default(false);
-            $table->unsignedBigInteger('assistant_id');
-            $table->foreign('assistant_id')->references('id')->on('assistants')->onDelete('cascade')->onUpdate('cascade');
+            $table->date('date')->unique();
+            $table->json('morning_shift');
+            $table->json('night_shift');
             $table->timestamps();
-
-            $table->unique(['assistant_id', 'date'], 'unique_assistant_date');
         });
     }
 

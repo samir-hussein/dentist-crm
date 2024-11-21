@@ -27,6 +27,7 @@ class TreatmentSessionStoreRequest extends FormRequest
             "tooth" => "required|array",
             "fees" => "required|numeric|min:0",
             "paid" => "required|numeric|min:0",
+            "doctor_id" => "sometimes|nullable|exists:users,id",
             "data" => "required|array",
             "data.attr" => "required|array",
             "data.attr.*" => "required|exists:treatment_section_attributes,id",
