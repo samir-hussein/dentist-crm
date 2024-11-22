@@ -1,6 +1,6 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Assistants Shift')
+@section('title', 'STAFF')
 
 @section('style')
     <style>

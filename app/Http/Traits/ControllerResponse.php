@@ -19,14 +19,14 @@ trait ControllerResponse
         return redirect()->back()->with("error", $message);
     }
 
-    public function redirectWithSuccess($route, $message = "Your request was processed successfully!")
+    public function redirectWithSuccess($route, $message = "Your request was processed successfully!", $params = [])
     {
-        return redirect()->route($route)->with("success", $message);
+        return redirect()->route($route, $params)->with("success", $message);
     }
 
-    public function redirectWithError($route, $message = "Oops! There was an issue processing your request.")
+    public function redirectWithError($route, $message = "Oops! There was an issue processing your request.", $params = [])
     {
-        return redirect()->route($route)->with("error", $message);
+        return redirect()->route($route, $params)->with("error", $message);
     }
 
     public function intended($route = 'home')

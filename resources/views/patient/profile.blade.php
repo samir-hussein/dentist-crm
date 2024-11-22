@@ -77,6 +77,17 @@
 @endsection
 
 @section('content')
+    @if (session('error'))
+        <div class="alert alert-danger" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="row">
         <div class="col-md-12">
             <div class="card shadow mb-4">
@@ -435,10 +446,19 @@
                             var staff =
                                 "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
 
+                            var deleteUrl = "/treatment-session/" + row.id;
+
                             if (staff) {
                                 return ``;
                             }
-                            return `<a href="${url}" class="btn btn-sm btn-warning">Follow Up</a>`;
+                            return `
+                            <a href="${url}" class="btn mb-2 btn-sm btn-warning">Follow Up</a>
+                            <form method="POST" action="${deleteUrl}" class="d-inline"">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger mb-2">Delete</button>
+                            </form>
+                            `;
                         }
                     }
                 ],

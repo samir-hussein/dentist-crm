@@ -72,7 +72,7 @@
                     <a class="nav-link {{ strpos($currentRouteName, 'assistants.shift.report') !== false ? 'active-link' : '' }}"
                         href="{{ route('assistants.shift.report') }}">
                         <i class="fe fe-inbox fe-16"></i>
-                        <span class="ml-3 item-text">Assistant Shift Report</span>
+                        <span class="ml-3 item-text">Staff Report</span>
                     </a>
                 </li>
 

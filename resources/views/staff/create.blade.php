@@ -2,7 +2,7 @@
 
 @section('title', 'Staff')
 
-@section('page-path-prefix', 'SETTINGS > ')
+@section('page-path', 'SETTINGS > RECEPTION > CREATE')
 
 @section('settings-active', 'active-link')
 

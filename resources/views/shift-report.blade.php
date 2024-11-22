@@ -1,6 +1,8 @@
 @extends('layouts.main-layout')
 
-@section('title', 'Assistant Shift Report')
+@section('title', 'Staff Report')
+
+@section('page-path', 'STAFF REPORT')
 
 @section('content')
     @if (session('error'))

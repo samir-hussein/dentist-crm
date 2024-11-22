@@ -20,4 +20,5 @@ interface ITreatmentSession
     public function showById(TreatmentDetail $treatmentDetail, Patient $patient);
     public function getAll(Request $request);
     public function storeDentalHistory(Patient $patient, array $data);
+    public function destroy(TreatmentDetail $treatmentDetail);
 }

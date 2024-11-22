@@ -1,5 +1,15 @@
 @extends('layouts.main-layout')
 
+@section('style')
+    <style>
+        a,
+        button {
+            color: inherit;
+            text-decoration: none;
+        }
+    </style>
+@endsection
+
 @section('content')
     @if (session('error'))
         <div class="alert alert-danger" role="alert">
@@ -52,7 +62,7 @@
                         </a>
                     </div>
                     <a href="{{ route('assistants.shift') }}" class="text-decoration-none">
-                        <p>Shifts</p>
+                        <p>Staff</p>
                     </a>
                 </div>
 

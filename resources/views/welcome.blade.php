@@ -42,8 +42,8 @@
                 <input type="checkbox" value="1" name="remember">Stay logged in</label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Let me in</button>
-        <p class="mt-5 mb-3 text-muted">2024 © Designed & Developed By <a
-                href="https://www.facebook.com/profile.php?id=61566190455839&mibextid=LQQJ4d" target="_blank">Samir
+        <p class="mt-5 mb-3 text-muted">2024 © Designed & Developed By <a href="https://wa.me/201144435326"
+                target="_blank">Samir
                 Hussein</a></p>
     </form>
 @endsection

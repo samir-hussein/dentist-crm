@@ -117,4 +117,11 @@ class TreatmentSessionController extends Controller
 
         return $this->service->updateTreatmentSession($treatmentDetail, $patient, $data);
     }
+
+    public function destroy(TreatmentDetail $treatmentDetail)
+    {
+        $this->service->destroy($treatmentDetail);
+
+        return $this->backWithSuccess();
+    }
 }

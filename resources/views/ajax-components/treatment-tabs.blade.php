@@ -58,8 +58,8 @@
                                     <div class="custom-control custom-radio">
                                         <input type="radio" data-attr="{{ $attribute->id }}"
                                             data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
-                                            id="{{ $section->id }}-{{ $attribute->id }}" name="customRadio"
-                                            class="custom-control-input">
+                                            id="{{ $section->id }}-{{ $attribute->id }}"
+                                            name="customRadio{{ $section->id }}" class="custom-control-input">
                                         <label class="custom-control-label"
                                             for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                     </div>

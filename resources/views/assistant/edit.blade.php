@@ -2,7 +2,7 @@
 
 @section('title', 'Assistants')
 
-@section('page-path-prefix', 'SETTINGS > ')
+@section('page-path', 'SETTINGS > STAFF > EDIT')
 
 @section('settings-active', 'active-link')
 

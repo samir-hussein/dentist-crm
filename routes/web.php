@@ -203,6 +203,7 @@ Route::middleware("auth")->group(function () {
         Route::post("dental-history/{patient}", [TreatmentSessionController::class, 'storeDentalHistory'])->name("appointments.dental.history.store");
         Route::get("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'edit'])->name("treatment.session.edit");
         Route::put("treatment-session/{treatment_detail}/{patient}", [TreatmentSessionController::class, 'update'])->name("treatment.session.update");
+        Route::delete("treatment-session/{treatment_detail}", [TreatmentSessionController::class, 'destroy'])->name("treatment.session.delete");
 
         Route::get("invoices/all", [InvoiceController::class, 'all'])->name("invoices.all");
         Route::get("invoices/report", [InvoiceController::class, 'report'])->name("invoices.report");

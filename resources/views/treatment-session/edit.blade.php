@@ -207,7 +207,8 @@
                                                                 <input type="radio" data-attr="{{ $attribute->id }}"
                                                                     data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
                                                                     id="{{ $section->id }}-{{ $attribute->id }}"
-                                                                    name="customRadio" class="custom-control-input"
+                                                                    name="customRadio{{ $section->id }}"
+                                                                    class="custom-control-input"
                                                                     {{ in_array($attribute->id, $data->session->data['attr']) ? 'checked' : '' }}>
                                                                 <label class="custom-control-label"
                                                                     for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
@@ -766,16 +767,17 @@
             }
         })
 
-        let lastChecked = null;
+        let lastChecked = {};
 
         $('input[type="radio"]').each(function() {
             const id = $(this).data('id');
             const attrId = $(this).data('attr');
             const section = id.split('-')[0];
+            const groupName = $(this).attr('name'); // Get the group name of the radio button
 
             if ($(this).is(':checked')) {
                 $('#' + id).removeClass('d-none'); // Show the relevant section
-                lastChecked = this; // Set lastChecked to the currently checked radio button
+                lastChecked[groupName] = this; // Set lastChecked to the currently checked radio button
                 selectedAttr.push(attrId); // Add to selected attributes
             } else {
                 $('#' + id).addClass('d-none'); // Hide the section if not checked
@@ -788,23 +790,41 @@
                 const id = $(event.target).data('id');
                 const attrId = $(event.target).data('attr');
                 const section = id.split('-')[0];
-                if (lastChecked === event.target) {
+                const groupName = event.target.name; // Get the group name of the radio button
+
+                if (lastChecked[groupName] === event.target) {
+                    // Uncheck and reset if the same radio button is clicked again
                     $('#' + id).addClass('d-none');
                     event.target.checked = false;
-                    lastChecked = null;
-                    selectedAttr = selectedAttr.filter(attr => attr != attrId);
+                    lastChecked[groupName] = null;
+
+                    // Remove the current attribute from selectedAttr
+                    selectedAttr = selectedAttr.filter(attr => attr !== attrId);
                     if (labData.hasOwnProperty(attrId)) {
                         delete labData[attrId];
                     }
                     $("input[data-attr='" + attrId + "']").val("");
                 } else {
-                    $('.' + section).addClass('d-none');
+                    // Hide all sections in the same group
+                    $("input[name='" + groupName + "']").each(function() {
+                        const otherId = $(this).data('id');
+                        const otherAttrId = $(this).data('attr');
+
+                        if (otherId !== id) {
+                            $('#' + otherId).addClass('d-none');
+                            selectedAttr = selectedAttr.filter(attr => attr !== otherAttrId);
+                        }
+                    });
+
+                    // Show the current section
                     $('#' + id).removeClass('d-none');
-                    if (lastChecked) {
-                        let lastAttr = $(lastChecked).data('attr');
+
+                    // Update the selectedAttr list
+                    if (lastChecked[groupName]) {
+                        let lastAttr = $(lastChecked[groupName]).data('attr');
                         selectedAttr = selectedAttr.filter(attr => attr !== lastAttr);
                     }
-                    lastChecked = event.target;
+                    lastChecked[groupName] = event.target;
                     selectedAttr.push(attrId);
                 }
             }
