@@ -28,6 +28,22 @@ class AssistantShiftDatesService extends AssistantService
             });
         }
 
-        return $query->orderBy("date")->pluck("date");
+        $shifts = $query->orderBy("date")->get(["date", "morning_shift", "night_shift"]);
+
+        $result = $shifts->map(function ($shift) use ($assistantId) {
+            $shiftType = [];
+            if (in_array($assistantId, $shift->morning_shift ?? [])) {
+                $shiftType[] = 'morning';
+            }
+            if (in_array($assistantId, $shift->night_shift ?? [])) {
+                $shiftType[] = 'night';
+            }
+            return [
+                'date' => $shift->date,
+                'shift' => $shiftType ?: ['morning', 'night'], // Default to "all" if both shifts apply
+            ];
+        });
+
+        return $result;
     }
 }

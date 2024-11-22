@@ -60,11 +60,14 @@
                                     <td>{{ $row->total_night_shifts }}</td>
                                     <td>{{ $row->total_shifts }}</td>
                                     <td>
-                                        <button class="btn shift-dates btn-sm btn-warning" data-shift="morning"
+                                        <button class="btn shift-dates btn-sm btn-warning"
+                                            data-name="{{ $row->assistant_name }}" data-shift="morning"
                                             data-assistant="{{ $row->assistant_id }}">Morning Dates</button>
-                                        <button class="btn shift-dates btn-info btn-sm" data-shift="night"
+                                        <button class="btn shift-dates btn-info btn-sm"
+                                            data-name="{{ $row->assistant_name }}" data-shift="night"
                                             data-assistant="{{ $row->assistant_id }}">Night Dates</button>
-                                        <button class="btn shift-dates btn-info btn-sm" data-shift="all"
+                                        <button class="btn shift-dates btn-info btn-sm"
+                                            data-name="{{ $row->assistant_name }}" data-shift="all"
                                             data-assistant="{{ $row->assistant_id }}">All Dates</button>
                                     </td>
                                 </tr>
@@ -91,6 +94,7 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>Date</th>
+                                <th>Shift</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,17 +175,23 @@
         $(".shift-dates").on('click', function() {
             var shift = $(this).data('shift');
             var assistantId = $(this).data('assistant');
+            var assistantName = $(this).data('name');
 
             $.ajax({
                 url: `/assistants/${assistantId}/shift/${shift}/dates/${start}/${end}`,
                 type: 'GET',
                 success: function(response) {
                     $(".shift-modal").modal('show');
-                    $(".modal-title").html(shift + " " + " shift dates");
+                    $(".modal-title").html(assistantName + " : " + shift + " " + " shift dates");
                     $("#shift-dates-table tbody").html("");
-                    response.forEach(function(date) {
+                    response.forEach(function(item) {
+                        const shifts = item.shift.join(
+                            " - "); // Combine shifts into a comma-separated string
                         $("#shift-dates-table tbody").append(
-                            '<tr><td>' + date + '</td></tr>'
+                            `<tr>
+                                <td>${item.date}</td>
+                                <td>${shifts}</td>
+                            </tr>`
                         );
                     });
                 }

@@ -71,7 +71,8 @@
                                         <td>
                                             <select multiple name="shifts[{{ $currentDate }}][morning][]"
                                                 class="form-control select2-multi d-block w-100"
-                                                id="multi-select{{ $day }}">
+                                                id="multi-select{{ $day }}"
+                                                data-shift="shifts[{{ $currentDate }}][morning]">
                                                 @foreach ($assistants as $assistant)
                                                     <option value="{{ $assistant->id }}"
                                                         {{ in_array($assistant->id, $morningShift) ? 'selected' : '' }}>
@@ -83,7 +84,8 @@
                                         <td>
                                             <select multiple name="shifts[{{ $currentDate }}][night][]"
                                                 class="form-control select2-multi d-block w-100"
-                                                id="multi-select-{{ $day }}">
+                                                id="multi-select-{{ $day }}"
+                                                data-shift="shifts[{{ $currentDate }}][night]">
                                                 @foreach ($assistants as $assistant)
                                                     <option value="{{ $assistant->id }}"
                                                         {{ in_array($assistant->id, $nightShift) ? 'selected' : '' }}>
@@ -95,14 +97,20 @@
                                     </tr>
 
                                     <!-- Hidden inputs for all rows to ensure they are submitted -->
-                                    @foreach ($morningShift as $assistantId)
-                                        <input type="text" hidden name="shifts[{{ $currentDate }}][morning][]"
-                                            value="{{ $assistantId }}">
-                                    @endforeach
-                                    @foreach ($nightShift as $assistantId)
-                                        <input type="text" hidden name="shifts[{{ $currentDate }}][night][]"
-                                            value="{{ $assistantId }}">
-                                    @endforeach
+                                    <div data-shift="shifts[{{ $currentDate }}][morning]">
+                                        @foreach ($morningShift as $assistantId)
+                                            <input type="text" hidden name="shifts[{{ $currentDate }}][morning][]"
+                                                value="{{ $assistantId }}"
+                                                data-shift="shifts[{{ $currentDate }}][morning]">
+                                        @endforeach
+                                    </div>
+                                    <div data-shift="shifts[{{ $currentDate }}][night]">
+                                        @foreach ($nightShift as $assistantId)
+                                            <input type="text" hidden name="shifts[{{ $currentDate }}][night][]"
+                                                value="{{ $assistantId }}"
+                                                data-shift="shifts[{{ $currentDate }}][night]">
+                                        @endforeach
+                                    </div>
                                 @endfor
                             </tbody>
                         </table>
@@ -142,6 +150,21 @@
 
             window.location.href = "{{ route('assistants.shift') }}?date=" +
                 date;
+        });
+
+        $(document).on("change", ".select2-multi", function() {
+            let id = $(this).val();
+            let shift = $(this).data('shift');
+            $('input[data-shift="' + shift + '"]').remove();
+            $.each(id, function(index, value) {
+                $('<input>').attr({
+                    type: 'text',
+                    name: shift + "[]",
+                    value: value,
+                    'data-shift': shift,
+                    hidden: true
+                }).appendTo($('div[data-shift="' + shift + '"]'));
+            });
         });
     </script>
 @endsection
