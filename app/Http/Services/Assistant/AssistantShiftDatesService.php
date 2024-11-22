@@ -22,6 +22,10 @@ class AssistantShiftDatesService extends AssistantService
         } elseif ($shift == "night") {
             // Make sure the assistant ID exists in the night_shift JSON column
             $query->whereJsonContains('night_shift', (string)$assistantId);
+        } else {
+            $query->where(function ($q) use ($assistantId) {
+                $q->whereJsonContains('night_shift', (string)$assistantId)->orWhereJsonContains('morning_shift', (string)$assistantId);
+            });
         }
 
         return $query->orderBy("date")->pluck("date");

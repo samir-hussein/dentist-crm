@@ -93,6 +93,16 @@
                                             </select>
                                         </td>
                                     </tr>
+
+                                    <!-- Hidden inputs for all rows to ensure they are submitted -->
+                                    @foreach ($morningShift as $assistantId)
+                                        <input type="text" hidden name="shifts[{{ $currentDate }}][morning][]"
+                                            value="{{ $assistantId }}">
+                                    @endforeach
+                                    @foreach ($nightShift as $assistantId)
+                                        <input type="text" hidden name="shifts[{{ $currentDate }}][night][]"
+                                            value="{{ $assistantId }}">
+                                    @endforeach
                                 @endfor
                             </tbody>
                         </table>

@@ -22,8 +22,8 @@ class ShiftStoreService extends ShiftService
 
         // Prepare data for insert/update
         foreach ($shifts as $date => $shift) {
-            $morning = $shift['morning'] ?? [];
-            $night = $shift['night'] ?? [];
+            $morning = array_unique($shift['morning'] ?? []);
+            $night = array_unique($shift['night'] ?? []);
 
             $insert[] = [
                 'date' => $date,

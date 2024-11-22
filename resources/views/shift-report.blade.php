@@ -64,6 +64,8 @@
                                             data-assistant="{{ $row->assistant_id }}">Morning Dates</button>
                                         <button class="btn shift-dates btn-info btn-sm" data-shift="night"
                                             data-assistant="{{ $row->assistant_id }}">Night Dates</button>
+                                        <button class="btn shift-dates btn-info btn-sm" data-shift="all"
+                                            data-assistant="{{ $row->assistant_id }}">All Dates</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -73,7 +75,6 @@
             </div>
         </div> <!-- simple table -->
     </div> <!-- end section -->
-
 
     <div class="modal fade shift-modal" tabindex="-1" role="dialog" aria-labelledby="verticalModalTitle"
         aria-hidden="true">
@@ -129,7 +130,9 @@
                 "&to=" + end;
         })
 
-        $('#dataTable-1').DataTable();
+        $('#dataTable-1').DataTable({
+            order: []
+        });
 
         // Callback function to display selected range
         function cb(start, end) {
