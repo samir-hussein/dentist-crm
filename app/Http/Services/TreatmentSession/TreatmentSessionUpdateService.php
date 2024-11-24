@@ -22,6 +22,18 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
             'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),
         ]);
 
+        if (isset($data['voice_note']) && $data['voice_note'] != "") {
+            $treatmentDetail->clearMediaCollection('voice_notes');
+
+            $audioData = base64_decode($data['voice_note']);
+
+            // Add the voice note to the model using Spatie Media Library
+            $treatmentDetail
+                ->addMediaFromString($audioData) // Use the Spatie method to directly upload
+                ->usingFileName('voice_note_' . time() . '.webm')
+                ->toMediaCollection('voice_notes');
+        }
+
         if ($data['paid'] > 0) {
             $treatmentDetail->invoice()->create([
                 "fees" => 0,

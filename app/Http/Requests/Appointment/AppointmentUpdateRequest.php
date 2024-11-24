@@ -30,7 +30,8 @@ class AppointmentUpdateRequest extends FormRequest
             "time_id" => "sometimes|nullable|exists:schdule_date_times,id",
             "old_time_id" => "required|exists:schdule_date_times,id",
             "service_ids" => "required|array",
-            "service_ids.*" => "required|exists:services,id"
+            "service_ids.*" => "required|exists:services,id",
+            "voice_note" => "sometimes|nullable",
         ];
     }
 }

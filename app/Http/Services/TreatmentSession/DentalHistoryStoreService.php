@@ -24,6 +24,16 @@ class DentalHistoryStoreService extends TreatmentSessionService
         $treatmentSession->updated_at = $data['date'];
         $treatmentSession->save();
 
+        if (isset($data['voice_note']) && $data['voice_note'] != "") {
+            $audioData = base64_decode($data['voice_note']);
+
+            // Add the voice note to the model using Spatie Media Library
+            $treatmentSession
+                ->addMediaFromString($audioData) // Use the Spatie method to directly upload
+                ->usingFileName('voice_note_' . time() . '.webm')
+                ->toMediaCollection('voice_notes');
+        }
+
         $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
             ->pluck('name')
             ->unique()

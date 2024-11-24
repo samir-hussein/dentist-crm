@@ -243,6 +243,37 @@
                                 <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
                                     <h6>Write Notes</h6>
                                     <textarea name="" dir="auto" class="form-control" id="notes-inp" cols="30" rows="10">{{ $data->session->data['notes'] }}</textarea>
+                                    <div class="form-row">
+                                        <!-- Voice Notes Section -->
+                                        <div class="form-group col-12">
+                                            <label for="voice_note">Notes (Voice)</label>
+                                            <div id="voice-recorder">
+                                                <button type="button" id="record-btn" class="btn btn-primary">Start
+                                                    Recording</button>
+                                                <button type="button" id="stop-btn" class="btn btn-danger"
+                                                    disabled>Stop Recording</button>
+
+                                                @if ($data->session->voiceNoteUrl)
+                                                    <div class="mt-2">
+                                                        <p>Previously Recorded Voice Note:</p>
+                                                        <audio id="existing-audio" class="mt-2" controls>
+                                                            <source src="{{ $data->session->voiceNoteUrl }}"
+                                                                type="audio/webm">
+                                                            Your browser does not support the audio element.
+                                                        </audio>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Audio Preview for New Recording -->
+                                                <audio id="audio-preview" class="mt-2" controls
+                                                    style="display:none;"></audio>
+                                                <input type="hidden" name="voice_note" id="voice-note-data">
+                                            </div>
+                                            @error('voice_note')
+                                                <p style="color: red">* {{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -784,6 +815,67 @@
             }
         });
 
+        function initializeRecordingButtons() {
+            const recordButton = document.getElementById('record-btn');
+            const stopButton = document.getElementById('stop-btn');
+            const audioPreview = document.getElementById('audio-preview');
+            const voiceNoteData = document.getElementById('voice-note-data');
+
+            let mediaRecorder;
+            let audioChunks = [];
+
+            // Initialize the record button functionality
+            recordButton.addEventListener('click', async () => {
+                // Request microphone access
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        audio: true
+                    });
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, {
+                            type: 'audio/webm'
+                        });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPreview.src = audioUrl;
+                        audioPreview.style.display = 'block';
+
+                        // Convert audioBlob to Base64 for form submission
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            voiceNoteData.value = reader.result.split(',')[
+                                1]; // Base64 string
+                        };
+                        reader.readAsDataURL(audioBlob);
+
+                        audioChunks = []; // Clear chunks for the next recording
+                    };
+
+                    mediaRecorder.start();
+                    recordButton.disabled = true;
+                    stopButton.disabled = false;
+                } catch (err) {
+                    alert('Could not access microphone: ' + err.message);
+                }
+            });
+
+            // Initialize the stop button functionality
+            stopButton.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                    recordButton.disabled = false;
+                    stopButton.disabled = true;
+                }
+            });
+        }
+
+        initializeRecordingButtons();
+
         // Use event delegation on the document or a static container
         document.addEventListener('click', function(event) {
             if (event.target.matches('input[type="radio"]')) {
@@ -972,6 +1064,7 @@
                 method: "PUT",
                 data: {
                     paid: paid,
+                    voice_note: $("#voice-note-data").val(),
                     doctor_id: $("#doctor_id").val(),
                     data: {
                         attr: selectedAttr,
@@ -1041,6 +1134,7 @@
                 data: {
                     paid: paid,
                     doctor_id: $("#doctor_id").val(),
+                    voice_note: $("#voice-note-data").val(),
                     data: {
                         attr: selectedAttr,
                         inputs: Object.keys(attrInputs).length > 0 ? attrInputs : null,

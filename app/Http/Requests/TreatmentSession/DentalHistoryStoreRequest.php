@@ -42,6 +42,7 @@ class DentalHistoryStoreRequest extends FormRequest
             "lab.work" => "sometimes|array",
             "lab.work.*" => "sometimes|string",
             "lab.custom_data" => "sometimes|nullable|array",
+            "voice_note" => "sometimes|nullable",
         ];
     }
 }

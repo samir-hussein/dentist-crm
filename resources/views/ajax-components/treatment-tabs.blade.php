@@ -92,6 +92,22 @@
         <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
             <h6>Write Notes</h6>
             <textarea name="" dir="auto" class="form-control" id="notes-inp" cols="30" rows="10"></textarea>
+
+            <div class="form-row">
+                <!-- Voice Notes Section -->
+                <div class="form-group col-12">
+                    <label for="voice_note">Notes (Voice)</label>
+                    <div id="voice-recorder">
+                        <button type="button" id="record-btn" class="btn btn-primary">Start Recording</button>
+                        <button type="button" id="stop-btn" class="btn btn-danger" disabled>Stop Recording</button>
+                        <audio id="audio-preview" class="mt-2" controls style="display:none;"></audio>
+                        <input type="hidden" name="voice_note" id="voice-note-data">
+                    </div>
+                    @error('voice_note')
+                        <p style="color: red">* {{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
         </div>
     </div>
 

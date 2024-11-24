@@ -70,14 +70,13 @@
                                 <th>Patient Id</th>
                                 <th>Patient Name</th>
                                 <th>Patient Phone</th>
-                                <th>Patient Phone 2</th>
                                 <th>Branch</th>
                                 <th>Dentist</th>
                                 <th>Services</th>
                                 <th>Appointment</th>
                                 <th>Notes</th>
                                 <th>Lab Orders</th>
-                                <th>Last Seen</th>
+                                <th>Lab Received</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -86,18 +85,46 @@
                                 <tr>
                                     <td>{{ $appointment->patient->code }}</td>
                                     <td>{{ $appointment->patient->name }}</td>
-                                    <td>{{ $appointment->patient->phone }}</td>
-                                    <td>{{ $appointment->patient->phone2 }}</td>
+                                    <td>
+                                        <span class="badge badge-info">{{ $appointment->patient->phone }}</span>
+                                        <span class="badge badge-info">{{ $appointment->patient->phone2 }}</span>
+                                    </td>
                                     <td>{{ $appointment->branch?->name }}</td>
                                     <td>{{ $appointment->doctor->name }}</td>
                                     <td>{{ $appointment->selectedServices }}</td>
-                                    <td>{{ $appointment->formatedTime }}</td>
-                                    <td>{{ $appointment->notes }}</td>
-                                    <td><span
-                                            class="badge badge-info">{{ $appointment->patient->labOrder ? 'sent to lab ' . $appointment->patient->labOrder->lab->name . ' at ' . $appointment->patient->labOrder->sent?->format('d-m-Y') . ' received at ' . $appointment->patient->labOrder->received?->format('d-m-Y') : 'No Orders' }}</span>
+                                    <td><span class="badge badge-warning">{{ $appointment->formatedTime }}</span>
+                                        <span
+                                            class="badge badge-danger">{{ $appointment->patient->latestTreatmentSession ? 'Last Seen : ' . $appointment->patient->latestTreatmentSession->updated_at->format('Y-m-d') : 'Last Seen : Not Found' }}</span>
                                     </td>
-                                    <td><span
-                                            class="badge badge-danger">{{ $appointment->patient->latestTreatmentSession?->updated_at->format('Y-m-d') ?? 'No Appointments Were Found' }}</span>
+                                    <td>{{ $appointment->notes }}
+                                        @if ($appointment->voiceNoteUrl)
+                                            <div style="display: inline-block; margin-top: 5px;">
+                                                <audio controls class="form-control form-control-sm" style="width: 118px;">
+                                                    <source src="{{ $appointment->voiceNoteUrl }}" type="audio/webm">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($appointment->patient->labOrder)
+                                            <span
+                                                class="badge badge-primary">{{ $appointment->patient->labOrder->lab->name }}</span>
+                                            <span
+                                                class="badge badge-warning">{{ $appointment->patient->labOrder->sent?->format('d-m-Y') }}</span>
+                                        @else
+                                            <span class="badge badge-warning">No Orders</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($appointment->patient->labOrder)
+                                            <input type="date"
+                                                value="{{ $appointment->patient->labOrder?->received?->format('Y-m-d') }}"
+                                                class="form-control date-change" data-name="received"
+                                                data-lab="{{ $appointment->patient->labOrder?->id }}" />
+                                        @else
+                                            <span class="badge badge-warning">No Orders</span>
+                                        @endif
                                     </td>
                                     <td>
                                         @if ($appointment->completed)
@@ -192,6 +219,26 @@
         $("#branch_id").change(function() {
             window.location.href = "{{ route('appointments.index') }}?from=" + start + "&to=" + end + "&doctor=" +
                 $("#doctor_id").val() + "&branch=" + $(this).val();
+        });
+
+        $(document).on("change", ".date-change", function() {
+            let name = $(this).data("name");
+            let value = $(this).val();
+            let labOrder = $(this).data("lab");
+
+            $.ajax({
+                url: "/lab-orders/" + labOrder,
+                type: 'PUT',
+                data: {
+                    [name]: value
+                },
+                success: function(response) {
+                    alert("Updated Successfully");
+                },
+                error: function(xhr, error, code) {
+                    console.log(xhr.responseText); // Log the error for debugging
+                }
+            });
         });
     </script>
 @endsection

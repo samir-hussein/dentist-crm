@@ -71,6 +71,18 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-12">
+                                <label for="finance">Access Finance</label>
+                                <select id="finance" name="finance" class="form-control">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                                @error('finance')
+                                    <p style="color: red">* {{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" value="{{ old('password') }}"
                                     name="password" dir="auto">

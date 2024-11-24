@@ -36,7 +36,8 @@ class AppointmentStoreRequest extends FormRequest
             "date_id" => "sometimes|nullable|exists:schdule_dates,id",
             "time_id" => "sometimes|nullable|exists:schdule_date_times,id",
             "service_ids" => "required|array",
-            "service_ids.*" => "required|exists:services,id"
+            "service_ids.*" => "required|exists:services,id",
+            "voice_note" => "sometimes|nullable",
         ];
     }
 }

@@ -59,19 +59,20 @@
                             <p class="text-muted mb-0">{{ $row->gender }}</p>
                             <p class="text-muted mb-0">{{ $row->email }}</p>
                             <p class="text-muted mb-0">{{ $row->unique_id }}</p>
+                            <p class="text-muted mb-0"><span class="badge badge-warning">Access Finance :
+                                    {{ $row->finance ? 'Yes' : 'No' }}</span></p>
                             <p><span class="badge badge-light text-muted">{{ $row->phone }}</span></p>
                         </div>
                     </div> <!-- ./card-text -->
                     <div class="card-footer">
                         <div class="row align-items-center justify-content-between">
-
-                            <div class="col-auto">
-                                <form action="{{ route('doctors.destroy', ['doctor' => $row->id]) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">Delete</button>
-                                </form>
-                            </div>
+                            <a href="{{ route('doctors.edit', ['doctor' => $row->id]) }}"
+                                class="btn btn-sm btn-primary">Edit</a>
+                            <form action="{{ route('doctors.destroy', ['doctor' => $row->id]) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </form>
                         </div>
                     </div> <!-- /.card-footer -->
                 </div>

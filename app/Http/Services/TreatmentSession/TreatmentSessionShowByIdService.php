@@ -20,6 +20,10 @@ class TreatmentSessionShowByIdService extends TreatmentSessionService
 
         $data->session = $model->load(['diagnose', 'invoice', 'labOrder']);
 
+        $voiceNoteUrl = $data->session->getFirstMediaUrl('voice_notes');
+
+        $data->session->voiceNoteUrl = $voiceNoteUrl;
+
         $data->treatments = DiagnosisTreatment::where("diagnosis_id", $data->session->diagnose_id)
             ->whereHas('treatmentType', function ($q) use ($data) {
                 $q->where("tooth_type", $data->session->tooth_type);

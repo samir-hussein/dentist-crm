@@ -101,6 +101,10 @@
                         </li>
                     </ul>
                     <div class="tab-content mb-1" id="pills-tabContent">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input lab-done" id="upper">
+                            <label class="custom-control-label" for="upper">Select Upper</label>
+                        </div> <!-- form-group -->
                         <div class="tab-pane fade show active" id="Permanent" role="tabpanel"
                             aria-labelledby="Permanent-tab">
                             <x-tooth-chart nameAttr="permanent" />
@@ -108,6 +112,10 @@
                         <div class="tab-pane fade" id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
                             <x-child-tooth-chart nameAttr="deciduous" />
                         </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input lab-done" id="lower">
+                            <label class="custom-control-label" for="lower">Select Lower</label>
+                        </div> <!-- form-group -->
                     </div>
                 </div>
                 <div class="card-body invisible pt-0 pb-0" id="div-diagnosis">
@@ -164,7 +172,7 @@
                             </div>
                             <div class="form-group col-4 col-md-3">
                                 <label for="paid">Date</label>
-                                <input type="date" id="history_date" class="form-control">
+                                <input type="date" id="history_date" max="{{ date('Y-m-d') }}" class="form-control">
                             </div>
                             <div class="form-group col-4 col-md-2 d-flex align-items-end justify-content-center">
                                 <button class="btn w-100 btn-primary" id="save">Save</button>
@@ -352,6 +360,10 @@
         let lab_id = null;
         let lab_done = false;
         let tooth_type = "permanent";
+        let upper_permanent = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+        let lower_permanent = [38, 37, 36, 35, 34, 33, 32, 31, 41, 42, 43, 44, 45, 46, 47, 48];
+        let upper_temporary = [55, 54, 53, 52, 51, 61, 62, 63, 64, 65];
+        let lower_temporary = [75, 74, 73, 72, 71, 81, 82, 83, 84, 85];
 
         $("#panorama-btn").click(function() {
             $("#panorama-inp").trigger("click");
@@ -389,6 +401,82 @@
                 }
             });
         });
+
+        $(document).on('click', "#upper", function() {
+            const checked = $(this).is(':checked');
+            let tooth = [];
+
+            if (tooth_type == "permanent") {
+                tooth = upper_permanent;
+            } else {
+                tooth = upper_temporary;
+            }
+
+            if (checked) {
+                for (let i = 0; i < tooth.length; i++) {
+                    if (!selectedTooth.includes(tooth[i])) {
+                        selectedTooth.push(tooth[i]);
+                    }
+                    $("polygon[data-key='" + tooth[i] + "']").addClass("selected");
+                    $("path[data-key='" + tooth[i] + "']").addClass("selected");
+                }
+            } else {
+                for (let i = 0; i < tooth.length; i++) {
+                    selectedTooth = selectedTooth.filter(num => num !== tooth[i]);
+                    $("polygon[data-key='" + tooth[i] + "']").removeClass("selected");
+                    $("path[data-key='" + tooth[i] + "']").removeClass("selected");
+                }
+            }
+
+            if (selectedTooth.length > 0) {
+                $("#div-diagnosis").removeClass("invisible");
+                $("#div-upload-tooth").removeClass("invisible");
+            } else {
+                $("#div-upload-tooth").addClass("invisible");
+                $("#div-diagnosis").addClass("invisible");
+            }
+
+            getTreatmentsTabs();
+            getToothPanorama(selectedTooth.join("-"));
+        })
+
+        $(document).on('click', "#lower", function() {
+            const checked = $(this).is(':checked');
+            let tooth = [];
+
+            if (tooth_type == "permanent") {
+                tooth = lower_permanent;
+            } else {
+                tooth = lower_temporary;
+            }
+
+            if (checked) {
+                for (let i = 0; i < tooth.length; i++) {
+                    if (!selectedTooth.includes(tooth[i])) {
+                        selectedTooth.push(tooth[i]);
+                    }
+                    $("polygon[data-key='" + tooth[i] + "']").addClass("selected");
+                    $("path[data-key='" + tooth[i] + "']").addClass("selected");
+                }
+            } else {
+                for (let i = 0; i < tooth.length; i++) {
+                    selectedTooth = selectedTooth.filter(num => num !== tooth[i]);
+                    $("polygon[data-key='" + tooth[i] + "']").removeClass("selected");
+                    $("path[data-key='" + tooth[i] + "']").removeClass("selected");
+                }
+            }
+
+            if (selectedTooth.length > 0) {
+                $("#div-diagnosis").removeClass("invisible");
+                $("#div-upload-tooth").removeClass("invisible");
+            } else {
+                $("#div-upload-tooth").addClass("invisible");
+                $("#div-diagnosis").addClass("invisible");
+            }
+
+            getTreatmentsTabs();
+            getToothPanorama(selectedTooth.join("-"));
+        })
 
         $("#tooth-inp").on("change", function() {
             let formData = new FormData();
@@ -568,6 +656,65 @@
             $("#treatment-tabs").html("");
         }
 
+        function initializeRecordingButtons() {
+            const recordButton = document.getElementById('record-btn');
+            const stopButton = document.getElementById('stop-btn');
+            const audioPreview = document.getElementById('audio-preview');
+            const voiceNoteData = document.getElementById('voice-note-data');
+
+            let mediaRecorder;
+            let audioChunks = [];
+
+            // Initialize the record button functionality
+            recordButton.addEventListener('click', async () => {
+                // Request microphone access
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        audio: true
+                    });
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, {
+                            type: 'audio/webm'
+                        });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPreview.src = audioUrl;
+                        audioPreview.style.display = 'block';
+
+                        // Convert audioBlob to Base64 for form submission
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            voiceNoteData.value = reader.result.split(',')[
+                                1]; // Base64 string
+                        };
+                        reader.readAsDataURL(audioBlob);
+
+                        audioChunks = []; // Clear chunks for the next recording
+                    };
+
+                    mediaRecorder.start();
+                    recordButton.disabled = true;
+                    stopButton.disabled = false;
+                } catch (err) {
+                    alert('Could not access microphone: ' + err.message);
+                }
+            });
+
+            // Initialize the stop button functionality
+            stopButton.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                    recordButton.disabled = false;
+                    stopButton.disabled = true;
+                }
+            });
+        }
+
         function getTreatmentsTabs() {
             const diagnose = $("#diagnose").val();
 
@@ -600,6 +747,8 @@
                         } else {
                             $('#lab-div').addClass('d-none');
                         }
+
+                        initializeRecordingButtons();
                     }
                 });
             }
@@ -848,6 +997,7 @@
                     tooth: selectedTooth,
                     tooth_type: tooth_type,
                     fees: fees,
+                    voice_note: $("#voice-note-data").val(),
                     date: sent,
                     doctor_id: doctor_id,
                     paid: paid,

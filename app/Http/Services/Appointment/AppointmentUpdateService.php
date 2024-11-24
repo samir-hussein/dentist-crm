@@ -68,6 +68,16 @@ class AppointmentUpdateService extends AppointmentService
 
             $appointment->update($data);
 
+            if (isset($data['voice_note']) && $data['voice_note'] != "") {
+                $audioData = base64_decode($data['voice_note']);
+
+                // Add the voice note to the model using Spatie Media Library
+                $appointment
+                    ->addMediaFromString($audioData) // Use the Spatie method to directly upload
+                    ->usingFileName('voice_note_' . time() . '.webm')
+                    ->toMediaCollection('voice_notes');
+            }
+
             $services = array_map(function ($service_id) use ($appointment) {
                 return [
                     'service_id' => $service_id,

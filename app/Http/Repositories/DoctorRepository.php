@@ -9,29 +9,26 @@ use App\Http\Services\Doctor\DoctorStoreService;
 use App\Http\Services\Doctor\DoctorDeleteService;
 use App\Http\Services\Doctor\DoctorGetAllService;
 use App\Http\Services\Doctor\DoctorListService;
+use App\Http\Services\Doctor\DoctorUpdateService;
 
 class DoctorRepository implements IDoctor
 {
-    private $doctorGetAllService;
-    private $doctorStoreService;
-    private $doctorDeleteService;
-    private $doctorListService;
-
     public function __construct(
-        DoctorGetAllService $doctorGetAllService,
-        DoctorStoreService $doctorStoreService,
-        DoctorDeleteService $doctorDeleteService,
-        DoctorListService $doctorListService
-    ) {
-        $this->doctorGetAllService = $doctorGetAllService;
-        $this->doctorStoreService = $doctorStoreService;
-        $this->doctorDeleteService = $doctorDeleteService;
-        $this->doctorListService = $doctorListService;
-    }
+        private DoctorGetAllService $doctorGetAllService,
+        private DoctorStoreService $doctorStoreService,
+        private DoctorDeleteService $doctorDeleteService,
+        private DoctorListService $doctorListService,
+        private DoctorUpdateService $doctorUpdateService
+    ) {}
 
     public function all(Request $request)
     {
         return $this->doctorGetAllService->boot($request);
+    }
+
+    public function update(User $doctor, array $data)
+    {
+        return $this->doctorUpdateService->boot($doctor, $data);
     }
 
     public function listService()

@@ -28,7 +28,8 @@ class User extends Authenticatable implements HasMedia
         'phone',
         'gender',
         'branch_id',
-        'unique_id'
+        'unique_id',
+        'finance'
     ];
 
     /**

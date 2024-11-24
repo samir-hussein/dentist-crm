@@ -10,7 +10,7 @@
         <a
             href="{{ route('appointments.treatment', ['patient' => $patient->id, 'appointment_id' => request('appointment_id')]) }}">
             <button type="button" class="btn mb-1 btn-primary">
-                <span class="fe fe-plus fe-12 mr-2"></span>Start New Session
+                <span class="fe fe-plus fe-12 mr-2"></span>New Session
             </button>
         </a>
 
@@ -145,7 +145,7 @@
                                     <x-child-tooth-chart nameAttr="deciduous" />
                                 </div>
                             </div>
-                            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                            @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
                                 <div>
                                     <button type="button" class="btn w-100 btn-info w-100" data-toggle="modal"
                                         data-target=".print-modal">Print Invoices</button>
@@ -169,6 +169,8 @@
                                                 aria-selected="true">Treatment
                                                 Sessions</a>
                                         </li>
+                                    @endif
+                                    @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
                                         <li class="nav-item">
                                             <a class="nav-link" id="invoices-tab" data-toggle="pill" href="#invoices"
                                                 role="tab" aria-controls="invoices" aria-selected="false">Invoices</a>
@@ -196,8 +198,11 @@
                                                                 <th>Tooth</th>
                                                                 <th>Diagnosis</th>
                                                                 <th>Treatment</th>
-                                                                <th>Fees</th>
-                                                                <th>Paid</th>
+                                                                <th>Voice Note</th>
+                                                                @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
+                                                                    <th>Fees</th>
+                                                                    <th>Paid</th>
+                                                                @endif
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -252,8 +257,10 @@
                                                             <th>Lab</th>
                                                             <th>Sent Date</th>
                                                             <th>Received Date</th>
-                                                            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
+                                                            @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
                                                                 <th>Cost</th>
+                                                            @endif
+                                                            @if (auth()->user()->is_admin || auth()->user()->is_doctor)
                                                                 <th>Done</th>
                                                             @endif
                                                         </tr>
@@ -336,6 +343,11 @@
 
 @section('script')
     <script>
+        const userStaff = @json(!auth()->user()->is_admin && !auth()->user()->is_doctor);
+        const accessFinance = @json(auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance));
+        let columns = [];
+        let treatmentColumns = [];
+
         // Set initial start and end dates
         var start = moment().startOf('month');
         var end = moment().endOf('month');
@@ -387,14 +399,148 @@
             $("path[data-key='" + tooth + "']").addClass("history");
         })
 
+        if (accessFinance) {
+            treatmentColumns.push({
+                data: 'created_at',
+                name: 'Date',
+            }, {
+                data: 'doctor',
+                name: 'Dentist',
+            }, {
+                data: 'tooth',
+                name: 'Tooth'
+            }, {
+                data: 'diagnose',
+                name: 'Diagnose'
+            }, {
+                data: 'treatment',
+                name: 'Treatment'
+            }, {
+                data: null, // New column for voice note
+                name: 'Voice Note',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    var voiceNoteUrl = row
+                        .voice_note_url; // Assuming 'voice_note_url' is passed in the row data
+
+                    if (voiceNoteUrl) {
+                        return `
+                <div style="display: inline-block; margin-top: 5px;">
+                                                <audio controls class="form-control form-control-sm" style="width: 118px;">
+                                                    <source src="${voiceNoteUrl}" type="audio/webm">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </div>
+            `;
+                    }
+
+                    return ''; // Return an empty string if there's no voice note
+                }
+            }, {
+                data: 'fees',
+                name: 'Fees'
+            }, {
+                data: 'paid',
+                name: 'Paid'
+            }, {
+                data: null, // No field in the database for this, render buttons dynamically
+                name: 'action',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    // Use JavaScript to construct URLs
+                    var url = "/treatment-session/" + row.id +
+                        "/{{ $patient->id }}?appointment_id={{ request('appointment_id') }}";
+                    var staff =
+                        "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
+
+                    var deleteUrl = "/treatment-session/" + row.id;
+
+                    if (staff) {
+                        return ``;
+                    }
+                    return `
+                            <a href="${url}" class="btn mb-2 btn-sm btn-warning">Follow Up</a>
+                            <form method="POST" action="${deleteUrl}" class="d-inline"">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger mb-2">Delete</button>
+                            </form>
+                            `;
+                }
+            });
+        } else {
+            treatmentColumns.push({
+                data: 'created_at',
+                name: 'Date',
+            }, {
+                data: 'doctor',
+                name: 'Dentist',
+            }, {
+                data: 'tooth',
+                name: 'Tooth'
+            }, {
+                data: 'diagnose',
+                name: 'Diagnose'
+            }, {
+                data: 'treatment',
+                name: 'Treatment'
+            }, {
+                data: null, // New column for voice note
+                name: 'Voice Note',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    var voiceNoteUrl = row
+                        .voice_note_url; // Assuming 'voice_note_url' is passed in the row data
+
+                    if (voiceNoteUrl) {
+                        return `
+                <div style="display: inline-block; margin-top: 5px;">
+                                                <audio controls class="form-control form-control-sm" style="width: 118px;">
+                                                    <source src="${voiceNoteUrl}" type="audio/webm">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </div>
+            `;
+                    }
+
+                    return ''; // Return an empty string if there's no voice note
+                }
+            }, {
+                data: null, // No field in the database for this, render buttons dynamically
+                name: 'action',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    // Use JavaScript to construct URLs
+                    var url = "/treatment-session/" + row.id +
+                        "/{{ $patient->id }}?appointment_id={{ request('appointment_id') }}";
+                    var staff =
+                        "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
+
+                    var deleteUrl = "/treatment-session/" + row.id;
+
+                    if (staff) {
+                        return ``;
+                    }
+                    return `
+                            <a href="${url}" class="btn mb-2 btn-sm btn-warning">Follow Up</a>
+                            <form method="POST" action="${deleteUrl}" class="d-inline"">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger mb-2">Delete</button>
+                            </form>
+                            `;
+                }
+            });
+        }
+
         function getTreatments(tooth = "") {
             if ($.fn.DataTable.isDataTable('#treatments')) {
                 $('#treatments').DataTable().destroy();
             }
-
-            console.log(start);
-            console.log(end);
-
 
             $('#treatments').DataTable({
                 processing: true,
@@ -408,60 +554,7 @@
                         console.log(xhr.responseText); // Log the error for debugging
                     }
                 },
-                columns: [{
-                        data: 'created_at',
-                        name: 'Date',
-                    }, {
-                        data: 'doctor',
-                        name: 'Dentist',
-                    }, {
-                        data: 'tooth',
-                        name: 'Tooth'
-                    },
-                    {
-                        data: 'diagnose',
-                        name: 'Diagnose'
-                    },
-                    {
-                        data: 'treatment',
-                        name: 'Treatment'
-                    },
-                    {
-                        data: 'fees',
-                        name: 'Fees'
-                    },
-                    {
-                        data: 'paid',
-                        name: 'Paid'
-                    },
-                    {
-                        data: null, // No field in the database for this, render buttons dynamically
-                        name: 'action',
-                        orderable: false, // Action buttons are not sortable
-                        searchable: false, // Action buttons are not searchable
-                        render: function(data, type, row) {
-                            // Use JavaScript to construct URLs
-                            var url = "/treatment-session/" + row.id +
-                                "/{{ $patient->id }}?appointment_id={{ request('appointment_id') }}";
-                            var staff =
-                                "{{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? true : false }}";
-
-                            var deleteUrl = "/treatment-session/" + row.id;
-
-                            if (staff) {
-                                return ``;
-                            }
-                            return `
-                            <a href="${url}" class="btn mb-2 btn-sm btn-warning">Follow Up</a>
-                            <form method="POST" action="${deleteUrl}" class="d-inline"">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger mb-2">Delete</button>
-                            </form>
-                            `;
-                        }
-                    }
-                ],
+                columns: treatmentColumns,
                 pageLength: 10, // You can change the default page size here
                 order: [] // Optional: Default sorting
             });
@@ -556,10 +649,6 @@
             });
         }
 
-        const userStaff = @json(!auth()->user()->is_admin && !auth()->user()->is_doctor);
-
-        let columns = [];
-
         if (userStaff) {
             columns.push({
                 data: 'id',
@@ -597,7 +686,7 @@
                     return `<input type="date" value="${date}" class="form-control date-change" data-name="received" data-lab="${id}"/>`;
                 }
             });
-        } else {
+        } else if (accessFinance) {
             columns.push({
                 data: 'id',
                 name: '#'
@@ -636,6 +725,54 @@
             }, {
                 data: 'cost',
                 name: 'Cost',
+            }, {
+                data: null,
+                name: 'Done',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    if (row.done) {
+                        return `<span class="badge badge-warning">Yes</span>`;
+                    }
+                    return `<span class="badge badge-success">No</span>`;
+                }
+            });
+        } else {
+            columns.push({
+                data: 'id',
+                name: '#'
+            }, {
+                data: 'work',
+                name: 'Work'
+            }, {
+                data: 'custom_data',
+                name: 'Extra Data'
+            }, {
+                data: 'tooth',
+                name: 'Tooth'
+            }, {
+                data: 'lab',
+                name: 'Lab'
+            }, {
+                data: null,
+                name: 'Sent Date',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    let date = row.sent;
+                    let id = row.id;
+                    return `<input type="date" value="${date}" class="form-control date-change" data-name="sent" data-lab="${id}"/>`;
+                }
+            }, {
+                data: null,
+                name: 'Received Date',
+                orderable: false, // Action buttons are not sortable
+                searchable: false, // Action buttons are not searchable
+                render: function(data, type, row) {
+                    let date = row.received;
+                    let id = row.id;
+                    return `<input type="date" value="${date}" class="form-control date-change" data-name="received" data-lab="${id}"/>`;
+                }
             }, {
                 data: null,
                 name: 'Done',

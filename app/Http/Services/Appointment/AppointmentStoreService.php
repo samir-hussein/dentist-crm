@@ -78,6 +78,16 @@ class AppointmentStoreService extends AppointmentService
 
             $appointment = $this->model->create($data);
 
+            if (isset($data['voice_note']) && $data['voice_note'] != "") {
+                $audioData = base64_decode($data['voice_note']);
+
+                // Add the voice note to the model using Spatie Media Library
+                $appointment
+                    ->addMediaFromString($audioData) // Use the Spatie method to directly upload
+                    ->usingFileName('voice_note_' . time() . '.webm')
+                    ->toMediaCollection('voice_notes');
+            }
+
             SchduleDateTime::where("id", $data['time_id'])->update([
                 "patient_id" => $data['patient_id'],
             ]);

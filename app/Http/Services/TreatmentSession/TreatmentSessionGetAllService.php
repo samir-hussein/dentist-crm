@@ -57,6 +57,16 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
             ->addColumn('created_at', function ($row) {
                 return $row->created_at->format("d-m-Y");
             })
+            ->addColumn('voice_note_url', function ($row) {
+                // Check if the voice note is available through Spatie Media Library
+                $media = $row->getMedia('voice_notes')->first(); // Assuming 'voice_notes' is the media collection name
+
+                if ($media) {
+                    return $media->getUrl(); // Return the URL of the media file
+                }
+
+                return null; // Return null if no media file exists
+            })
             ->filter(function ($query) use ($request, $tableName) {
                 if ($request->has('search') && !empty($request->search['value'])) {
                     $search = $request->search['value'];

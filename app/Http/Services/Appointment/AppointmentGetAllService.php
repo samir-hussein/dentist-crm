@@ -95,11 +95,21 @@ class AppointmentGetAllService extends AppointmentService
         }
 
         $data = $data->get()->map(function ($appointment) {
+            $voiceNote = $appointment->getMedia('voice_notes')->sortByDesc('created_at')->first();
+
             $appointment->selectedServices = $appointment->services->map(function ($service) {
                 return $service->name;
             })->implode(' - ');
 
             $appointment->formatedTime = $appointment->time?->manually_updated_time?->format("l d-m-Y h:i a") ?? $appointment->time?->time->format("l d-m-Y h:i a") ?? "";
+
+            if ($voiceNote) {
+                $voiceNoteUrl = $voiceNote->getUrl();
+            } else {
+                $voiceNoteUrl = null; // No voice note available
+            }
+
+            $appointment->voiceNoteUrl = $voiceNoteUrl;
 
             return $appointment;
         });

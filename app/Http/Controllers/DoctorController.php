@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Interfaces\IDoctor;
 use App\Http\Requests\Doctor\DoctorStoreRequest;
+use App\Http\Requests\Doctor\DoctorUpdateRequest;
 
 class DoctorController extends Controller
 {
@@ -57,17 +58,21 @@ class DoctorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $doctor)
     {
-        //
+        return $this->view("doctor.edit", ['data' => $doctor]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(DoctorUpdateRequest $request, User $doctor)
     {
-        //
+        $data = $request->validated();
+
+        $this->service->update($doctor, $data);
+
+        return $this->redirectWithSuccess("doctors.index");
     }
 
     /**

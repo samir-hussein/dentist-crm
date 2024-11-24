@@ -135,10 +135,26 @@
                             </div>
                         </div>
                         <div class="form-row">
+                            <!-- Text Notes Section -->
                             <div class="form-group col-12">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" class="form-control" id="" cols="30" rows="5">{{ old('notes') ?? $data->appointment->notes }}</textarea>
+                                <label for="notes">Notes (Text)</label>
+                                <textarea name="notes" class="form-control" id="notes" cols="30" rows="5">{{ old('notes') }}</textarea>
                                 @error('notes')
+                                    <p style="color: red">* {{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Voice Notes Section -->
+                            <div class="form-group col-12">
+                                <label for="voice_note">Notes (Voice)</label>
+                                <div id="voice-recorder">
+                                    <button type="button" id="record-btn" class="btn btn-primary">Start Recording</button>
+                                    <button type="button" id="stop-btn" class="btn btn-danger" disabled>Stop
+                                        Recording</button>
+                                    <audio id="audio-preview" class="mt-2" controls style="display:none;"></audio>
+                                    <input type="hidden" name="voice_note" id="voice-note-data">
+                                </div>
+                                @error('voice_note')
                                     <p style="color: red">* {{ $message }}</p>
                                 @enderror
                             </div>
@@ -290,6 +306,63 @@
                 $("#new-time-inp").addClass("d-none");
                 $("#new-div-time").removeClass("d-none");
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const recordButton = document.getElementById('record-btn');
+            const stopButton = document.getElementById('stop-btn');
+            const audioPreview = document.getElementById('audio-preview');
+            const voiceNoteData = document.getElementById('voice-note-data');
+
+            let mediaRecorder;
+            let audioChunks = [];
+
+            recordButton.addEventListener('click', async () => {
+                // Request microphone access
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        audio: true
+                    });
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, {
+                            type: 'audio/webm'
+                        });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPreview.src = audioUrl;
+                        audioPreview.style.display = 'block';
+
+                        // Convert audioBlob to Base64 for form submission
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            voiceNoteData.value = reader.result.split(',')[
+                                1]; // Base64 string
+                        };
+                        reader.readAsDataURL(audioBlob);
+
+                        audioChunks = []; // Clear chunks for the next recording
+                    };
+
+                    mediaRecorder.start();
+                    recordButton.disabled = true;
+                    stopButton.disabled = false;
+                } catch (err) {
+                    alert('Could not access microphone: ' + err.message);
+                }
+            });
+
+            stopButton.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                    recordButton.disabled = false;
+                    stopButton.disabled = true;
+                }
+            });
         });
     </script>
 @endsection
