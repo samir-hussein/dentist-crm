@@ -53,6 +53,33 @@
         #lab_sent_date {
             display: none;
         }
+
+        .tooth-chart-container {
+            position: relative;
+            text-align: center;
+        }
+
+        .upper-checkbox {
+            position: absolute;
+            top: 35%;
+            /* Adjust the value to center vertically relative to the upper teeth */
+            left: 50%;
+            font-size: 12px;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            /* Ensure it appears above the teeth chart */
+        }
+
+        .lower-checkbox {
+            position: absolute;
+            bottom: 35%;
+            font-size: 12px;
+            /* Adjust the value to center vertically relative to the lower teeth */
+            left: 50%;
+            transform: translate(-50%, 50%);
+            z-index: 10;
+            /* Ensure it appears above the teeth chart */
+        }
     </style>
 @endsection
 
@@ -100,10 +127,10 @@
                                 aria-selected="false">Deciduous</a>
                         </li>
                     </ul>
-                    <div class="tab-content mb-1" id="pills-tabContent">
-                        <div class="custom-control custom-checkbox">
+                    <div class="tab-content mb-1 tooth-chart-container" id="pills-tabContent">
+                        <div class="custom-control custom-checkbox upper-checkbox">
                             <input type="checkbox" class="custom-control-input lab-done" id="upper">
-                            <label class="custom-control-label" for="upper">Select Upper</label>
+                            <label class="custom-control-label" for="upper">Upper</label>
                         </div> <!-- form-group -->
                         <div class="tab-pane fade show active" id="Permanent" role="tabpanel"
                             aria-labelledby="Permanent-tab">
@@ -112,9 +139,9 @@
                         <div class="tab-pane fade" id="Deciduous" role="tabpanel" aria-labelledby="Deciduous-tab">
                             <x-child-tooth-chart nameAttr="deciduous" />
                         </div>
-                        <div class="custom-control custom-checkbox">
+                        <div class="custom-control custom-checkbox lower-checkbox">
                             <input type="checkbox" class="custom-control-input lab-done" id="lower">
-                            <label class="custom-control-label" for="lower">Select Lower</label>
+                            <label class="custom-control-label" for="lower">Lower</label>
                         </div> <!-- form-group -->
                     </div>
                 </div>

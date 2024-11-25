@@ -47,6 +47,8 @@
                             @endforeach
                         </select>
                     </div>
+                @else
+                    <input type="text" value="{{ auth()->id() }}" id="doctor_id" hidden>
                 @endif
 
                 <div class="form-group col-6 col-md-4">

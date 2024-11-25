@@ -336,16 +336,19 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="form-row">
-                            <div class="form-group col-6 col-md-3">
-                                <label for="fees">Fees</label>
-                                <input type="number" id="fees" class="form-control" min="0" disabled
-                                    value="{{ $data->session->invoice[0]->fees }}" step="100">
-                            </div>
-                            <div class="form-group col-6 col-md-3">
-                                <label for="paid">Down Payment ({{ $data->session->invoice->sum('paid') }})</label>
-                                <input type="number" id="paid" class="form-control" min="0" value="0"
-                                    step="100">
-                            </div>
+                            @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
+                                <div class="form-group col-6 col-md-3">
+                                    <label for="fees">Fees</label>
+                                    <input type="number" id="fees" class="form-control" min="0" disabled
+                                        value="{{ $data->session->invoice[0]->fees }}" step="100">
+                                </div>
+                                <div class="form-group col-6 col-md-3">
+                                    <label for="paid">Down Payment
+                                        ({{ $data->session->invoice->sum('paid') }})</label>
+                                    <input type="number" id="paid" class="form-control" min="0"
+                                        value="0" step="100">
+                                </div>
+                            @endif
                             @if (auth()->user()->is_admin)
                                 <div class="form-group col-6 col-md-3">
                                     <label for="paid">Dentist</label>
@@ -360,10 +363,12 @@
                                     </select>
                                 </div>
                             @endif
-                            <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
-                                <button class="btn w-100 btn-info" data-toggle="modal"
-                                    data-target=".invoices-modal">Invoices</button>
-                            </div>
+                            @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
+                                <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
+                                    <button class="btn w-100 btn-info" data-toggle="modal"
+                                        data-target=".invoices-modal">Invoices</button>
+                                </div>
+                            @endif
                             <div class="col-12 row">
                                 <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
                                     <button class="btn w-100 btn-warning" data-toggle="modal"
