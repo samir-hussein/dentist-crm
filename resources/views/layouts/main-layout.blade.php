@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="{{ asset('css/app-light.css') }}" id="lightTheme" disabled>
     <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme">
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/splide.min.css') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -139,6 +140,7 @@
     <script src='{{ asset('js/jquery.dataTables.min.js') }}'></script>
     <script src='{{ asset('js/dataTables.bootstrap4.min.js') }}'></script>
     <script src='{{ asset('js/select2.min.js') }}'></script>
+    <script src='{{ asset('js/splide.min.js') }}'></script>
     <script>
         $('.select2').select2({
             theme: 'bootstrap4',

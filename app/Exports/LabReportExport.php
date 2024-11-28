@@ -32,6 +32,24 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
 
     public function styles(Worksheet $sheet)
     {
+        // Set page layout to fit content on one page
+        $sheet->getPageSetup()
+            ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE) // Landscape orientation
+            ->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4) // A4 paper size
+            ->setFitToWidth(1) // Fit to one page wide
+            ->setFitToHeight(0); // Unlimited height (useful for long tables)
+
+        // Set margins
+        $sheet->getPageMargins()
+            ->setTop(0.5) // Top margin (in inches)
+            ->setBottom(0.5)
+            ->setLeft(0.3)
+            ->setRight(0.3);
+
+        // Center horizontally
+        $sheet->getPageSetup()
+            ->setHorizontalCentered(true);
+
         if (auth()->user()->is_doctor) {
             return $this->styleForDoctor($sheet);
         }

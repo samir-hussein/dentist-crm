@@ -73,6 +73,10 @@
         .tooth-chart {
             margin: auto;
         }
+
+        .splide img {
+            width: 100%;
+        }
     </style>
 @endsection
 
@@ -147,19 +151,39 @@
                             </div>
                             @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
                                 <div>
-                                    <button type="button" class="btn w-100 btn-info w-100" data-toggle="modal"
+                                    <button type="button" class="btn mb-2 w-100 btn-info w-100" data-toggle="modal"
                                         data-target=".print-modal">Print Invoices</button>
                                 </div>
                             @endif
+                            <div>
+                                <button type="button" class="btn w-100 btn-warning w-100" data-toggle="modal"
+                                    data-target="#panorama-modal">Panorama</button>
+                            </div>
                         </div>
                         <div class="col-12 col-md-10">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="reportrange">Filter By Date : </label>
-                                    <div id="reportrange" class="border px-2 py-2 bg-light">
-                                        <i class="fe fe-calendar fe-16 mx-2"></i>
-                                        <span id="date-range"></span>
+                                <div class="form-row">
+                                    <div class="form-group col-12 col-md-6">
+                                        <label for="reportrange">Filter By Date : </label>
+                                        <div id="reportrange" class="border px-2 py-2 bg-light">
+                                            <i class="fe fe-calendar fe-16 mx-2"></i>
+                                            <span id="date-range"></span>
+                                        </div>
                                     </div>
+                                    @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
+                                        <div class="col-6 col-md-3">
+                                            <label for="reportrange">Total Fees : </label>
+                                            <div class="alert alert-info" role="alert">
+                                                <span id="totalFees">0</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label for="reportrange">Total Paid : </label>
+                                            <div class="alert alert-info" role="alert">
+                                                <span id="totalPaid">0</span>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                                 <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                                     @if (auth()->user()->is_admin || auth()->user()->is_doctor)
@@ -173,7 +197,8 @@
                                     @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
                                         <li class="nav-item">
                                             <a class="nav-link" id="invoices-tab" data-toggle="pill" href="#invoices"
-                                                role="tab" aria-controls="invoices" aria-selected="false">Invoices</a>
+                                                role="tab" aria-controls="invoices"
+                                                aria-selected="false">Invoices</a>
                                         </li>
                                     @endif
                                     <li class="nav-item">
@@ -301,6 +326,38 @@
         </div>
     </div>
 
+    <div class="modal fade" id="panorama-modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-body">
+                                    <div id="panorama-uploaded" class="splide" role="group"
+                                        aria-label="Splide Basic HTML Example">
+                                        <div class="splide__track">
+                                            <ul class="splide__list" id="panorama-slider">
+                                                @if (count($panorama) > 0)
+                                                    @foreach ($panorama as $img)
+                                                        <li class="splide__slide" data-toggle="modal"
+                                                            data-target="#panorama{{ $img['id'] }}"><img
+                                                                src="{{ $img['url'] }}" alt=""></li>
+                                                    @endforeach
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> <!-- /. card-body -->
+                            </div> <!-- /. card -->
+                        </div> <!-- /. col -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- large modal -->
+
     <div id="print-area" style="display:none">
         <table style="width: 80%; margin-top:110px">
             <tbody>
@@ -343,6 +400,7 @@
 
 @section('script')
     <script>
+        new Splide('#panorama-uploaded').mount();
         const userStaff = @json(!auth()->user()->is_admin && !auth()->user()->is_doctor);
         const accessFinance = @json(auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance));
         let columns = [];
@@ -550,6 +608,15 @@
                     url: "{{ route('treatment.session.getAll', ['patient' => $patient->id]) }}" + "&tooth=" +
                         tooth + "&from=" + start + "&to=" + end, // Dynamically append tooth parameter
                     type: 'GET',
+                    dataSrc: function(json) {
+                        // Access total_fees and total_paid from the server response
+                        if (json.total_fees !== undefined && json.total_paid !== undefined) {
+                            // Update the total fees and total paid in the DOM
+                            $('#totalFees').text(json.total_fees);
+                            $('#totalPaid').text(json.total_paid);
+                        }
+                        return json.data; // Ensure DataTables uses the data array
+                    },
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
                     }

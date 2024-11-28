@@ -45,6 +45,8 @@ class LabOrderReportService extends LabOrderService
 
         $tableName = $this->model->getTable();
 
+        $total_cost = $data->sum("cost");
+
         return DataTables::of($data)
             ->addColumn('patient_name', function ($row) {
                 return $row->patient->name;
@@ -103,6 +105,9 @@ class LabOrderReportService extends LabOrderService
                     $query->orderBy($request->columns[$orderColumn]['data'], $orderDir);
                 }
             })
+            ->with([
+                "total_cost" => $total_cost
+            ])
             ->make(true);
     }
 }

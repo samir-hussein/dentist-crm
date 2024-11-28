@@ -26,7 +26,7 @@
         <!-- Small table -->
         <div class="col-md-12">
             <div class="form-row">
-                <div class="form-group col-6">
+                <div class="form-group col-12 col-md-4">
                     <label for="reportrange">Filter By Date : </label>
                     <div id="reportrange" class="border px-2 py-2 bg-light">
                         <i class="fe fe-calendar fe-16 mx-2"></i>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-6">
+                <div class="form-group col-6 col-md-4">
                     <label for="lab_id">Filter By Lab : </label>
                     <select id="lab_id" name="lab_id" class="form-control">
                         <option value="0">All Labs</option>
@@ -44,6 +44,13 @@
                             </option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <label for="reportrange">Total Cost : </label>
+                    <div class="alert alert-info" role="alert">
+                        <span id="totalCost">0</span>
+                    </div>
                 </div>
             </div>
             <div class="card shadow">
@@ -159,6 +166,14 @@
                     url: "{{ route('lab-order.report') }}?from=" + from + "&to=" + to +
                         "&lab=" + lab, // URL to fetch data
                     type: 'GET',
+                    dataSrc: function(json) {
+                        // Access total_fees and total_paid from the server response
+                        if (json.total_cost !== undefined) {
+                            // Update the total fees and total paid in the DOM
+                            $('#totalCost').text(json.total_cost);
+                        }
+                        return json.data; // Ensure DataTables uses the data array
+                    },
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
                     }

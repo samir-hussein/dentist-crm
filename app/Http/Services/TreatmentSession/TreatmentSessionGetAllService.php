@@ -38,6 +38,15 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
 
         $tableName = "treatment_details";
 
+        // Calculate total fees and total paid before pagination
+        $totalFees = $data->get()->sum(function ($row) {
+            return optional($row->invoice->first())->fees ?? 0;
+        });
+
+        $totalPaid = $data->get()->sum(function ($row) {
+            return $row->invoice()->sum("paid");
+        });
+
         return DataTables::of($data)
             ->addColumn('diagnose', function ($row) {
                 return $row->diagnose->name;
@@ -100,6 +109,10 @@ class TreatmentSessionGetAllService extends TreatmentSessionService
                     $query->orderBy($request->columns[$orderColumn]['data'], $orderDir);
                 }
             })
+            ->with([
+                'total_fees' => $totalFees,
+                'total_paid' => $totalPaid,
+            ])
             ->make(true);
     }
 }

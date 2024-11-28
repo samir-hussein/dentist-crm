@@ -38,7 +38,7 @@
                         </a>
                     </div>
                     <a href="{{ route('appointments.index') }}" class="text-decoration-none">
-                        <p>Appoinements</p>
+                        <p>Appointments</p>
                     </a>
                 </div>
 

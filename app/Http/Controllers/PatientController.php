@@ -33,7 +33,7 @@ class PatientController extends Controller
     public function profile(Patient $patient)
     {
         $data = $this->service->profile($patient);
-        return view("patient.profile", ['patient' => $patient, 'tooth' => $data]);
+        return view("patient.profile", ['patient' => $patient, 'tooth' => $data['distinctTeeth'], "panorama" => $data['panorama']]);
     }
 
     /**

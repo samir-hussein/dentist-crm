@@ -16,6 +16,16 @@ class PatientProfileService extends PatientService
             ->values()        // Re-index the array to get consecutive indices
             ->all();
 
-        return $distinctTeeth;
+        $panorama = $patient->getMedia('panorama')->sortByDesc('created_at')->map(function ($media) {
+            return [
+                "id" => $media->id,
+                "url" => $media->getUrl()
+            ];
+        });
+
+        return [
+            "distinctTeeth" => $distinctTeeth,
+            "panorama" => $panorama,
+        ];
     }
 }

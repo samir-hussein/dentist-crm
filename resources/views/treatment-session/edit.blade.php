@@ -355,7 +355,7 @@
                                     <select id="doctor_id" name="doctor_id" class="form-control">
                                         <option value="">Select Dentist</option>
                                         @foreach ($doctors as $doctor)
-                                            <option {{ request('doctor') == $doctor->id ? 'selected' : '' }}
+                                            <option {{ $data->session->doctor_id == $doctor->id ? 'selected' : '' }}
                                                 value="{{ $doctor->id }}">
                                                 {{ $doctor->name }}
                                             </option>

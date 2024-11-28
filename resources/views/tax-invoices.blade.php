@@ -26,7 +26,7 @@
         <!-- Small table -->
         <div class="col-md-12">
             <div class="form-row">
-                <div class="form-group col-6">
+                <div class="form-group col-6 col-md-4">
                     <label for="reportrange">Filter By Date : </label>
                     <div id="reportrange" class="border px-2 py-2 bg-light">
                         <i class="fe fe-calendar fe-16 mx-2"></i>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-6">
+                <div class="form-group col-6 col-md-4">
                     <label for="doctor_id">Filter By Dentist : </label>
                     <select id="doctor_id" name="doctor_id" class="form-control">
                         <option value="0">All Dentists</option>
@@ -44,6 +44,19 @@
                             </option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="col-6 col-md-2">
+                    <label for="reportrange">Total Fees : </label>
+                    <div class="alert alert-info" role="alert">
+                        <span id="totalFees">0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label for="reportrange">Total Paid : </label>
+                    <div class="alert alert-info" role="alert">
+                        <span id="totalPaid">0</span>
+                    </div>
                 </div>
             </div>
             <div class="card shadow">
@@ -158,6 +171,15 @@
                     url: "{{ route('invoices.tax') }}?from=" + from + "&to=" + to + "&doctor=" +
                         doctor, // URL to fetch data
                     type: 'GET',
+                    dataSrc: function(json) {
+                        // Access total_fees and total_paid from the server response
+                        if (json.total_fees !== undefined && json.total_paid !== undefined) {
+                            // Update the total fees and total paid in the DOM
+                            $('#totalFees').text(json.total_fees);
+                            $('#totalPaid').text(json.total_paid);
+                        }
+                        return json.data; // Ensure DataTables uses the data array
+                    },
                     error: function(xhr, error, code) {
                         console.log(xhr.responseText); // Log the error for debugging
                     }

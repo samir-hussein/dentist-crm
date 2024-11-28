@@ -49,6 +49,10 @@ class InvoiceTaxService extends InvoiceService
 
         $tableName = $this->model->getTable();
 
+        $totalFees = $data->sum("fees");
+
+        $totalPaid = $data->sum("paid");
+
         return DataTables::of($data)
             ->addColumn('patient_name', function ($row) {
                 return $row->patient->name;
@@ -89,6 +93,10 @@ class InvoiceTaxService extends InvoiceService
                     $query->orderBy($request->columns[$orderColumn]['data'], $orderDir);
                 }
             })
+            ->with([
+                'total_fees' => $totalFees,
+                'total_paid' => $totalPaid,
+            ])
             ->make(true);
     }
 }
