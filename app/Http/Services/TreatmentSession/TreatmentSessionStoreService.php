@@ -16,6 +16,15 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             ]);
         }
 
+        $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
+            ->with(['treatmentSection.treatmentType' => function ($q) {
+                $q->select(['treatment_types.id', 'name']);
+            }])
+            ->get()
+            ->pluck('treatmentSection.treatmentType.name')
+            ->unique()
+            ->implode(' - ');
+
         $treatmentSession = $this->model->create([
             'patient_id' => $patient->id,
             'diagnose_id' => $data['diagnose_id'],
@@ -23,6 +32,7 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             'data' => $data['data'],
             'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),
             'tooth_type' => $data['tooth_type'],
+            'treatment' => $treatment
         ]);
 
         if (isset($data['voice_note']) && $data['voice_note'] != "") {
@@ -35,10 +45,6 @@ class TreatmentSessionStoreService extends TreatmentSessionService
                 ->toMediaCollection('voice_notes');
         }
 
-        $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
-            ->pluck('name')
-            ->unique()
-            ->implode(' - ');
 
         $treatmentSession->invoice()->create([
             "fees" => $data['fees'],

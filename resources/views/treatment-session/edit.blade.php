@@ -145,7 +145,7 @@
                                 @foreach ($treatments as $treatment)
                                     <li class="nav-item tab-btn" data-needlab="{{ $treatment->treatmentType->need_labs }}"
                                         data-first="{{ $loop->first ? 1 : 0 }}">
-                                        <a class="nav-link {{ $loop->first ? 'active' : '' }}"
+                                        <a class="nav-link {{ $data->active_tab == $treatment->treatmentType->name ? 'active' : '' }}"
                                             id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab"
                                             data-toggle="pill"
                                             href="#{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
@@ -161,7 +161,7 @@
                             </ul>
                             <div class="tab-content mb-1" id="pills-tabContent">
                                 @foreach ($treatments as $treatment)
-                                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
+                                    <div class="tab-pane fade {{ $data->active_tab == $treatment->treatmentType->name ? 'show active' : '' }}"
                                         id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
                                         role="tabpanel"
                                         aria-labelledby="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab">

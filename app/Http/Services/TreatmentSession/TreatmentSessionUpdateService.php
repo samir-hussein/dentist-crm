@@ -17,9 +17,19 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
             ]);
         }
 
+        $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
+            ->with(['treatmentSection.treatmentType' => function ($q) {
+                $q->select(['treatment_types.id', 'name']);
+            }])
+            ->get()
+            ->pluck('treatmentSection.treatmentType.name')
+            ->unique()
+            ->implode(' - ');
+
         $treatmentDetail->update([
             'data' => $data['data'],
             'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),
+            'treatment' => $treatment
         ]);
 
         if (isset($data['voice_note']) && $data['voice_note'] != "") {

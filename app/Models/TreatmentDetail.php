@@ -18,7 +18,8 @@ class TreatmentDetail extends Model implements HasMedia
         'patient_id',
         'diagnose_id',
         'doctor_id',
-        'tooth_type'
+        'tooth_type',
+        'treatment'
     ];
 
     // Specify the data column as JSON cast

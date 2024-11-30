@@ -51,6 +51,9 @@ class TreatmentSessionShowByIdService extends TreatmentSessionService
             ])
             ->get();
 
+        $data->active_tab = explode(" - ", $data->session->treatment);
+        $data->active_tab = end($data->active_tab);
+
         $data->labs = Lab::all();
         $data->labsServices = LabService::all();
 

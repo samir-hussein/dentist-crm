@@ -8,6 +8,14 @@
 
 @section('settings-active', 'active-link')
 
+@section('style')
+    <style>
+        .card-body {
+            min-height: 278px;
+        }
+    </style>
+@endsection
+
 @section('buttons')
     <!-- Search Input and Button -->
     <div class="d-inline-block mr-2">

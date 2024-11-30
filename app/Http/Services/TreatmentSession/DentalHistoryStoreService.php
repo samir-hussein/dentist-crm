@@ -11,6 +11,15 @@ class DentalHistoryStoreService extends TreatmentSessionService
 {
     public function boot(Patient $patient, array $data)
     {
+        $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
+            ->with(['treatmentSection.treatmentType' => function ($q) {
+                $q->select(['treatment_types.id', 'name']);
+            }])
+            ->get()
+            ->pluck('treatmentSection.treatmentType.name')
+            ->unique()
+            ->implode(' - ');
+
         $treatmentSession = $this->model->create([
             'patient_id' => $patient->id,
             'diagnose_id' => $data['diagnose_id'],
@@ -18,6 +27,7 @@ class DentalHistoryStoreService extends TreatmentSessionService
             'data' => $data['data'],
             'doctor_id' => $data['doctor_id'],
             'tooth_type' => $data['tooth_type'],
+            'treatment' => $treatment
         ]);
 
         $treatmentSession->created_at = $data['date'];
@@ -34,10 +44,6 @@ class DentalHistoryStoreService extends TreatmentSessionService
                 ->toMediaCollection('voice_notes');
         }
 
-        $treatment = TreatmentSectionAttribute::whereIn("id", $data['data']['attr'])
-            ->pluck('name')
-            ->unique()
-            ->implode(' - ');
 
         $invoice = Invoice::create([
             "fees" => $data['fees'],
