@@ -60,7 +60,7 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
     private function styleForDoctor(Worksheet &$sheet)
     {
         // Style header row
-        $sheet->getStyle("A3:L3")->applyFromArray([
+        $sheet->getStyle("A3:K3")->applyFromArray([
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
                 'startColor' => ['argb' => Color::COLOR_DARKGREEN],
@@ -75,11 +75,11 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A1:L1');
+        $sheet->mergeCells('A1:K1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -97,11 +97,11 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A2:L2');
+        $sheet->mergeCells('A2:K2');
         $sheet->getStyle('A2')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -125,7 +125,7 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         $sheet->getStyle("A{$lastRow}:K{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -143,10 +143,10 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         ]);
 
         // Apply style for the total fees and paid columns (E and F)
-        $sheet->getStyle("E{$lastRow}:L{$lastRow}")->applyFromArray([
+        $sheet->getStyle("E{$lastRow}:K{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -167,7 +167,7 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
     private function styleForAdmin(Worksheet &$sheet)
     {
         // Style header row
-        $sheet->getStyle("A2:L2")->applyFromArray([
+        $sheet->getStyle("A2:K2")->applyFromArray([
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
                 'startColor' => ['argb' => Color::COLOR_DARKGREEN],
@@ -182,11 +182,11 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A1:L1');
+        $sheet->mergeCells('A1:K1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -210,7 +210,7 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         $sheet->getStyle("A{$lastRow}:K{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -228,10 +228,10 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         ]);
 
         // Apply style for the total fees and paid columns (E and F)
-        $sheet->getStyle("E{$lastRow}:L{$lastRow}")->applyFromArray([
+        $sheet->getStyle("E{$lastRow}:K{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -257,6 +257,9 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
                 'vertical' => Alignment::VERTICAL_CENTER,
                 'wrapText' => true,
             ],
+            'font' => [
+                'size' => 18,
+            ],
         ];
     }
 
@@ -280,7 +283,6 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
                     ->implode(', '),
                 'Tooth' => $order->tooth,
                 'Lab' => $order->lab->name,
-                'Sent Date' => $order->sent?->format("d-m-Y"),
                 'Received Date' => $order->received?->format("d-m-Y"),
                 'Done' => $order->done ? "YES" : "NO",
                 'Cost' => $order->cost,
@@ -298,7 +300,6 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
             'Extra Data' => "",
             'Tooth' => "",
             'Lab' => "",
-            'Sent Date' => "",
             'Received Date' => "",
             'Done' => "",
             'Cost' => $this->total_cost,
@@ -324,12 +325,10 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
                     '',
                     '',
                     '',
-                    '',
                     '' // Merging to span across 6 columns
                 ],
                 [
                     $period,
-                    '',
                     '',
                     '',
                     '',
@@ -350,7 +349,6 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
                     'Extra Data',
                     'Tooth',
                     'Lab',
-                    'Sent Date',
                     'Received Date',
                     'Done',
                     'Cost',
@@ -361,7 +359,6 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         return [
             [
                 $period,
-                '',
                 '',
                 '',
                 '',
@@ -382,7 +379,6 @@ class LabReportExport implements FromCollection, WithHeadings, ShouldAutoSize, W
                 'Extra Data',
                 'Tooth',
                 'Lab',
-                'Sent Date',
                 'Received Date',
                 'Done',
                 'Cost',

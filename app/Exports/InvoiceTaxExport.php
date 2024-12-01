@@ -19,7 +19,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     protected $from;
     protected $to;
     protected $total_fees;
-    protected $total_paid;
 
     public function __construct($data, $from = null, $to = null)
     {
@@ -27,7 +26,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         $this->from = $from;
         $this->to = $to;
         $this->total_fees = $data->sum("fees");
-        $this->total_paid = $data->sum("paid");
     }
 
     public function styles(Worksheet $sheet)
@@ -60,7 +58,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     private function styleForDoctor(Worksheet &$sheet)
     {
         // Style header row
-        $sheet->getStyle("A3:G3")->applyFromArray([
+        $sheet->getStyle("A3:F3")->applyFromArray([
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
                 'startColor' => ['argb' => Color::COLOR_DARKGREEN],
@@ -75,11 +73,11 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A1:G1');
+        $sheet->mergeCells('A1:F1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -97,11 +95,11 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A2:G2');
+        $sheet->mergeCells('A2:F2');
         $sheet->getStyle('A2')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -125,7 +123,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         $sheet->getStyle("A{$lastRow}:E{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -143,10 +141,10 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Apply style for the total fees and paid columns (E and F)
-        $sheet->getStyle("E{$lastRow}:G{$lastRow}")->applyFromArray([
+        $sheet->getStyle("E{$lastRow}:F{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -167,7 +165,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     private function styleForAdmin(Worksheet &$sheet)
     {
         // Style header row
-        $sheet->getStyle("A2:G2")->applyFromArray([
+        $sheet->getStyle("A2:F2")->applyFromArray([
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
                 'startColor' => ['argb' => Color::COLOR_DARKGREEN],
@@ -182,11 +180,11 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Merge cells for the period row (row 1)
-        $sheet->mergeCells('A1:G1');
+        $sheet->mergeCells('A1:F1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -210,7 +208,7 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         $sheet->getStyle("A{$lastRow}:E{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -228,10 +226,10 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         ]);
 
         // Apply style for the total fees and paid columns (E and F)
-        $sheet->getStyle("E{$lastRow}:G{$lastRow}")->applyFromArray([
+        $sheet->getStyle("E{$lastRow}:F{$lastRow}")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 14,
+                'size' => 18,
                 'color' => [
                     'rgb' => 'FFFFFF'
                 ]
@@ -255,7 +253,9 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,
-                'wrapText' => true,
+            ],
+            'font' => [
+                'size' => 18,
             ],
         ];
     }
@@ -273,7 +273,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 'Tooth' => $invoice->tooth,
                 'Treatment' => $invoice->treatment,
                 'Fees' => $invoice->fees,
-                'Paid' => $invoice->paid,
             ];
             $i++;
         }
@@ -286,7 +285,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
             'Tooth' => "",        // Empty cell
             'Treatment' => '',    // Empty cell
             'Fees' => $this->total_fees, // Total Fees
-            'Paid' => $this->total_paid, // Total Paid
         ];
 
         return collect($data);
@@ -305,7 +303,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     '',
                     '',
                     '',
-                    '' // Merging to span across 6 columns
                 ],
                 [
                     $period,
@@ -314,7 +311,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     '',
                     '',
                     '',
-                    '' // Merging to span across 6 columns
                 ],
                 [
                     'No.',
@@ -323,7 +319,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     'Tooth',
                     'Treatment',
                     'Fees',
-                    'Paid',
                 ],
             ];
         }
@@ -336,7 +331,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 '',
                 '',
                 '',
-                '' // Merging to span across 6 columns
             ],
             [
                 'No.',
@@ -345,7 +339,6 @@ class InvoiceTaxExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 'Tooth',
                 'Treatment',
                 'Fees',
-                'Paid',
             ],
         ];
     }

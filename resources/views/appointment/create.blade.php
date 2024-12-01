@@ -56,18 +56,18 @@
                                     Patient</a>
                             </li>
                         </ul>
-                        <div class="tab-content mb-1" id="pills-tabContent">
-                            <div class="tab-pane fade active show" id="pills-home" role="tabpanel"
-                                aria-labelledby="pills-home-tab">
-                                <div class="mb-4">
-                                    <div class="card-body">
-                                        <form action="{{ route('appointments.store') }}" method="post">
-                                            @csrf
+                        <form action="{{ route('appointments.store') }}" method="post">
+                            @csrf
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade active show" id="pills-home" role="tabpanel"
+                                    aria-labelledby="pills-home-tab">
+                                    <div>
+                                        <div class="card-body pb-0">
                                             <div class="form-row">
                                                 <div class="form-group col-6">
                                                     <label for="name">Full Name</label>
                                                     <input type="text" class="form-control" id="name"
-                                                        value="{{ old('name') }}" name="name" dir="auto">
+                                                        value="{{ old('name') }}" name="name" dir="auto" required>
                                                     @error('name')
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
@@ -645,7 +645,7 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="phone">Phone</label>
                                                     <input type="text" class="form-control" id="phone"
-                                                        value="{{ old('phone') }}" name="phone">
+                                                        value="{{ old('phone') }}" name="phone" required>
                                                     @error('phone')
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
@@ -653,7 +653,7 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="phone2">Phone 2</label>
                                                     <input type="text" class="form-control" id="phone2"
-                                                        value="{{ old('phone2') }}" name="phone2">
+                                                        value="{{ old('phone2') }}" name="phone2" required>
                                                     @error('phone2')
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
@@ -663,7 +663,8 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="date_of_birth">Date Of Birth</label>
                                                     <input type="date" class="form-control" id="date_of_birth"
-                                                        value="{{ old('date_of_birth') }}" name="date_of_birth">
+                                                        value="{{ old('date_of_birth') }}" name="date_of_birth"
+                                                        required>
                                                     @error('date_of_birth')
                                                         <p style="color: red">* {{ $message }}</p>
                                                     @enderror
@@ -679,131 +680,23 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="branch_id">Branch</label>
-                                                    <select onchange="changeBranch(this)"
-                                                        data-date-selector="new-sec-date"
-                                                        data-doctor-selector="new-sec-doctor"
-                                                        data-time-selector="new-sec-time" id="branch_id" name="branch_id"
-                                                        class="branchs form-control">
-                                                        <option data-doctors="{{ json_encode([]) }}"
-                                                            data-dates="{{ json_encode([]) }}" value="0">Select
-                                                            Branch</option>
-                                                        @foreach ($data->branches as $branch)
-                                                            <option data-dates="{{ json_encode($branch->schduleDates) }}"
-                                                                data-doctors="{{ json_encode($branch->doctors) }}"
-                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}
-                                                                value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('branch_id')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="doctor_id">Dentist</label>
-                                                    <select onchange="changeDoctor(this)"
-                                                        data-date-selector="new-sec-date"
-                                                        data-time-selector="new-sec-time" id="doctor_id" name="doctor_id"
-                                                        class="new-sec-doctor form-control">
-                                                    </select>
-                                                    @error('doctor_id')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-3">
-                                                    <label for="simple-select6">Date</label>
-                                                    <select onchange="chageDate(this)"
-                                                        data-doctor-selector="new-sec-doctor"
-                                                        data-time-selector="new-sec-time"
-                                                        class="new-sec-date form-control select2" id="simple-select6"
-                                                        name="date_id">
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="simple-select8">Time</label>
-                                                    <div id="new-div-time">
-                                                        <select class="new-sec-time form-control select2"
-                                                            id="simple-select8" name="time_id">
-                                                        </select>
-                                                    </div>
-                                                    <input name="urgent_time" id="new-time-inp" type="time"
-                                                        class="form-control d-none">
-                                                    <div class="custom-control custom-switch mt-2">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customSwitch1">
-                                                        <label class="custom-control-label"
-                                                            for="customSwitch1">Urgent</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="multi-select">Services</label>
-                                                    <select multiple name="service_ids[]"
-                                                        class="form-control select2-multi" id="multi-select">
-                                                        @foreach ($data->services as $service)
-                                                            <option value="{{ $service->id }}">{{ $service->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('service_ids')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                            </div>
-                                            <div class="form-row">
-                                                <!-- Text Notes Section -->
-                                                <div class="form-group col-12">
-                                                    <label for="notes">Notes (Text)</label>
-                                                    <textarea name="notes" class="form-control" id="notes" cols="30" rows="5">{{ old('notes') }}</textarea>
-                                                    @error('notes')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                                <!-- Voice Notes Section -->
-                                                <div class="form-group col-12">
-                                                    <label for="voice_note">Notes (Voice)</label>
-                                                    <div id="voice-recorder">
-                                                        <button type="button" id="record-btn"
-                                                            class="btn btn-primary">Start Recording</button>
-                                                        <button type="button" id="stop-btn" class="btn btn-danger"
-                                                            disabled>Stop Recording</button>
-                                                        <audio id="audio-preview" class="mt-2" controls
-                                                            style="display:none;"></audio>
-                                                        <input type="hidden" name="voice_note" id="voice-note-data">
-                                                    </div>
-                                                    @error('voice_note')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </form>
-                                    </div> <!-- /. card-body -->
-                                </div> <!-- /. card -->
-                            </div>
+                                        </div> <!-- /. card-body -->
+                                    </div> <!-- /. card -->
+                                </div>
 
 
 
 
-                            <div class="tab-pane fade" id="pills-profile" role="tabpanel"
-                                aria-labelledby="pills-profile-tab">
-                                <div class="mb-4">
-                                    <div class="card-body">
-                                        <form action="{{ route('appointments.store') }}" method="post">
-                                            @csrf
+                                <div class="tab-pane fade" id="pills-profile" role="tabpanel"
+                                    aria-labelledby="pills-profile-tab">
+                                    <div class="mb-4">
+                                        <div class="card-body pb-0">
                                             <div class="form-row">
                                                 <div class="form-group col-12">
                                                     <label for="simple-select2">Patient</label>
                                                     <select id="patient-list" class="form-control select2"
-                                                        id="simple-select2" name="patient_id">
-                                                        <option value="0">Select Patient</option>
+                                                        id="simple-select2" name="patient_id" required>
+                                                        <option value="">Select Patient</option>
                                                         @foreach ($data->patients as $patient)
                                                             <option
                                                                 data-last-appointment="{{ $patient->lastTreatmentUpdated }}"
@@ -817,112 +710,113 @@
                                                     </select>
                                                 </div> <!-- form-group -->
                                             </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="branch_id">Branch</label>
-                                                    <select onchange="changeBranch(this)"
-                                                        data-date-selector="old-sec-date"
-                                                        data-doctor-selector="old-sec-doctor"
-                                                        data-time-selector="old-sec-time" id="branch_id" name="branch_id"
-                                                        class="branchs form-control">
-                                                        <option data-doctors="{{ json_encode([]) }}"
-                                                            data-dates="{{ json_encode([]) }}" value="0">Select
-                                                            Branch</option>
-                                                        @foreach ($data->branches as $branch)
-                                                            <option data-dates="{{ json_encode($branch->schduleDates) }}"
-                                                                data-doctors="{{ json_encode($branch->doctors) }}"
-                                                                {{ old('branch_id') == $branch->id ? 'selected' : '' }}
-                                                                value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('branch_id')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="doctor_id">Dentist</label>
-                                                    <select onchange="changeDoctor(this)"
-                                                        data-date-selector="old-sec-date"
-                                                        data-time-selector="old-sec-time" id="doctor_id" name="doctor_id"
-                                                        class="old-sec-doctor form-control">
-                                                    </select>
-                                                    @error('doctor_id')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-3">
-                                                    <label for="simple-select16">Date</label>
-                                                    <select onchange="chageDate(this)"
-                                                        data-doctor-selector="old-sec-doctor"
-                                                        data-time-selector="old-sec-time"
-                                                        class="old-sec-date form-control select2" id="simple-select16"
-                                                        name="date_id">
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="simple-select18">Time</label>
-                                                    <div id="old-div-time">
-                                                        <select class="old-sec-time form-control select2"
-                                                            id="simple-select18" name="time_id">
-                                                        </select>
-                                                    </div>
-                                                    <input name="urgent_time" id="old-time-inp" type="time"
-                                                        class="form-control d-none">
-                                                    <div class="custom-control custom-switch mt-2">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customSwitch2">
-                                                        <label class="custom-control-label"
-                                                            for="customSwitch2">Urgent</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="multi-select2" class="d-block">Services</label>
-                                                    <select multiple name="service_ids[]"
-                                                        class="form-control select2-multi d-block w-100"
-                                                        id="multi-select2">
-                                                        @foreach ($data->services as $service)
-                                                            <option value="{{ $service->id }}">{{ $service->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <!-- Text Notes Section -->
-                                                <div class="form-group col-12">
-                                                    <label for="notes">Notes (Text)</label>
-                                                    <textarea name="notes" class="form-control" id="notes" cols="30" rows="5">{{ old('notes') }}</textarea>
-                                                    @error('notes')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                                <!-- Voice Notes Section -->
-                                                <div class="form-group col-12">
-                                                    <label for="voice_note">Notes (Voice)</label>
-                                                    <div id="voice-recorder">
-                                                        <button type="button" id="record-btn2"
-                                                            class="btn btn-primary">Start Recording</button>
-                                                        <button type="button" id="stop-btn2" class="btn btn-danger"
-                                                            disabled>Stop Recording</button>
-                                                        <audio id="audio-preview2" class="mt-2" controls
-                                                            style="display:none;"></audio>
-                                                        <input type="hidden" name="voice_note" id="voice-note-data2">
-                                                    </div>
-                                                    @error('voice_note')
-                                                        <p style="color: red">* {{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </form>
-                                    </div> <!-- /. card-body -->
-                                </div> <!-- /. card -->
+                                        </div> <!-- /. card-body -->
+                                    </div> <!-- /. card -->
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="card-body pt-0">
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="branch_id">Branch</label>
+                                        <select onchange="changeBranch(this)" data-date-selector="new-sec-date"
+                                            data-doctor-selector="new-sec-doctor" data-time-selector="new-sec-time"
+                                            id="branch_id" name="branch_id" class="branchs form-control" required>
+                                            <option data-doctors="{{ json_encode([]) }}"
+                                                data-dates="{{ json_encode([]) }}" value="">Select
+                                                Branch</option>
+                                            @foreach ($data->branches as $branch)
+                                                <option data-dates="{{ json_encode($branch->schduleDates) }}"
+                                                    data-doctors="{{ json_encode($branch->doctors) }}"
+                                                    {{ old('branch_id') == $branch->id ? 'selected' : '' }}
+                                                    value="{{ $branch->id }}">{{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('branch_id')
+                                            <p style="color: red">* {{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="doctor_id">Dentist</label>
+                                        <select onchange="changeDoctor(this)" data-date-selector="new-sec-date"
+                                            data-time-selector="new-sec-time" id="doctor_id" name="doctor_id"
+                                            class="new-sec-doctor form-control" required>
+                                        </select>
+                                        @error('doctor_id')
+                                            <p style="color: red">* {{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="simple-select6">Date</label>
+                                        <select onchange="chageDate(this)" data-doctor-selector="new-sec-doctor"
+                                            data-time-selector="new-sec-time" class="new-sec-date form-control select2"
+                                            id="simple-select6" name="date_id" required>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="simple-select8">Time</label>
+                                        <div id="new-div-time">
+                                            <select class="new-sec-time form-control select2" id="simple-select8"
+                                                name="time_id" required>
+                                            </select>
+                                        </div>
+                                        <input name="urgent_time" id="new-time-inp" type="time"
+                                            class="form-control d-none" required disabled>
+                                        <div class="custom-control custom-switch mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                            <label class="custom-control-label" for="customSwitch1">Urgent</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="multi-select">Services</label>
+                                        <select multiple name="service_ids[]" class="form-control select2-multi"
+                                            id="multi-select" required>
+                                            @foreach ($data->services as $service)
+                                                <option value="{{ $service->id }}">{{ $service->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('service_ids')
+                                            <p style="color: red">* {{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                    <!-- Text Notes Section -->
+                                    <div class="form-group col-12">
+                                        <label for="notes">Notes (Text)</label>
+                                        <textarea name="notes" class="form-control" id="notes" cols="30" rows="5">{{ old('notes') }}</textarea>
+                                        @error('notes')
+                                            <p style="color: red">* {{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Voice Notes Section -->
+                                    <div class="form-group col-12">
+                                        <label for="voice_note">Notes (Voice)</label>
+                                        <div id="voice-recorder">
+                                            <button type="button" id="record-btn" class="btn btn-primary">Start
+                                                Recording</button>
+                                            <button type="button" id="stop-btn" class="btn btn-danger" disabled>Stop
+                                                Recording</button>
+                                            <audio id="audio-preview" class="mt-2" controls
+                                                style="display:none;"></audio>
+                                            <input type="hidden" name="voice_note" id="voice-note-data">
+                                        </div>
+                                        @error('voice_note')
+                                            <p style="color: red">* {{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -968,14 +862,14 @@
             let time_selector = $(e).data("time-selector");
             branch = $(e).val();
 
-            let options = `<option value="0">Select Dentist</option>`;
+            let options = `<option value="">Select Dentist</option>`;
             $.each(doctors, function(index, value) {
                 options +=
                     `<option value="${value.id}" ${doctor == value.id?"selected":""}>${value.name}</option>`;
             });
             $("." + doctor_selector).html(options);
 
-            options = `<option value="0" data-day-id="0">Select Date</option>`;
+            options = `<option value="" data-day-id="0">Select Date</option>`;
             $.each(dates, function(index, value) {
                 options +=
                     `<option data-day-id="${value.schdule_day_id}" ${date == value.id?"selected":""} value="${value.id}">${value.dateFormated}</option>`;
@@ -990,10 +884,10 @@
             let time_selector = $(e).data("time-selector");
 
             $.ajax({
-                url: "/schdule-date-times/dates/" + branch + "/" + doctor,
+                url: "/schdule-date-times/dates/" + branch + "/" + (doctor == "" ? 0 : doctor),
                 type: "GET",
                 success: function(response) {
-                    options = `<option value="0" data-day-id="0">Select Date</option>`;
+                    options = `<option value="" data-day-id="0">Select Date</option>`;
                     $.each(response, function(index, value) {
                         options +=
                             `<option data-day-id="${value.schdule_day_id}" ${date == value.id?"selected":""} value="${value.id}">${value.dateFormated}</option>`;
@@ -1017,7 +911,7 @@
                 url: "/schdule-date-times/doctors/" + branch + "/" + day,
                 type: "GET",
                 success: function(response) {
-                    let options = `<option value="0">Select Dentist</option>`;
+                    let options = `<option value="">Select Dentist</option>`;
                     $.each(response, function(index, value) {
                         options +=
                             `<option value="${value.id}" ${doctor == value.id?"selected":""}>${value.name}</option>`;
@@ -1033,7 +927,8 @@
 
         function getTimes(time_selector) {
             $.ajax({
-                url: "/schdule-date-times/times/" + branch + "/" + doctor + "/" + date,
+                url: "/schdule-date-times/times/" + branch + "/" + (doctor == "" ? 0 : doctor) + "/" + (date == "" ?
+                    0 : date),
                 type: "GET",
                 success: function(response) {
                     let options = `<option value="">Select Time</option>`;
@@ -1053,21 +948,14 @@
             if ($(this).is(':checked')) {
                 $("#new-div-time").addClass("d-none");
                 $("#new-time-inp").removeClass("d-none");
+                $("#new-time-inp").prop("disabled", false);
                 $("#simple-select8").val("");
+                $("#simple-select8").prop("disabled", true);
             } else {
                 $("#new-time-inp").addClass("d-none");
+                $("#new-time-inp").prop("disabled", true);
                 $("#new-div-time").removeClass("d-none");
-            }
-        });
-
-        $('#customSwitch2').on('change', function() {
-            if ($(this).is(':checked')) {
-                $("#old-div-time").addClass("d-none");
-                $("#old-time-inp").removeClass("d-none");
-                $("#simple-select18").val("");
-            } else {
-                $("#old-time-inp").addClass("d-none");
-                $("#old-div-time").removeClass("d-none");
+                $("#simple-select8").prop("disabled", false);
             }
         });
 
@@ -1128,61 +1016,21 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const recordButton = document.getElementById('record-btn2');
-            const stopButton = document.getElementById('stop-btn2');
-            const audioPreview = document.getElementById('audio-preview2');
-            const voiceNoteData = document.getElementById('voice-note-data2');
+        $(document).ready(function() {
+            // Monitor tab clicks
+            $(".nav-link").on("click", function() {
+                // Get the active tab pane ID
+                let activeTab = $(this).attr("href");
 
-            let mediaRecorder;
-            let audioChunks = [];
+                // Disable inputs in all tabs
+                $(".tab-pane").find(":input").prop("disabled", true);
 
-            recordButton.addEventListener('click', async () => {
-                // Request microphone access
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        audio: true
-                    });
-                    mediaRecorder = new MediaRecorder(stream);
-
-                    mediaRecorder.ondataavailable = (event) => {
-                        audioChunks.push(event.data);
-                    };
-
-                    mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, {
-                            type: 'audio/webm'
-                        });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        audioPreview.src = audioUrl;
-                        audioPreview.style.display = 'block';
-
-                        // Convert audioBlob to Base64 for form submission
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                            voiceNoteData.value = reader.result.split(',')[
-                                1]; // Base64 string
-                        };
-                        reader.readAsDataURL(audioBlob);
-
-                        audioChunks = []; // Clear chunks for the next recording
-                    };
-
-                    mediaRecorder.start();
-                    recordButton.disabled = true;
-                    stopButton.disabled = false;
-                } catch (err) {
-                    alert('Could not access microphone: ' + err.message);
-                }
+                // Enable inputs only in the active tab
+                $(activeTab).find(":input").prop("disabled", false);
             });
 
-            stopButton.addEventListener('click', () => {
-                if (mediaRecorder && mediaRecorder.state === 'recording') {
-                    mediaRecorder.stop();
-                    recordButton.disabled = false;
-                    stopButton.disabled = true;
-                }
-            });
+            // Trigger a click event on the active tab to ensure the correct fields are enabled on page load
+            $(".nav-link.active").trigger("click");
         });
     </script>
 @endsection

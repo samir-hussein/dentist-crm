@@ -40,7 +40,7 @@ class AppointmentStoreService extends AppointmentService
                 $data['patient_id'] = $patient->id;
             }
 
-            if ($data['urgent_time'] && !$data['time_id']) {
+            if (isset($data['urgent_time']) && !isset($data['time_id'])) {
                 $date = SchduleDate::find($data['date_id']);
                 $time = Carbon::parse($date->date)->setTimeFromTimeString($data['urgent_time']);
                 $checkTime = SchduleDateTime::where("time", $time)->where("doctor_id", $data['doctor_id'])->first();
