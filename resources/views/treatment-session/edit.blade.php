@@ -366,7 +366,7 @@
                             @if (auth()->user()->is_admin || (auth()->user()->is_doctor && auth()->user()->finance))
                                 <div class="form-group col-6 col-md-3 d-flex align-items-end justify-content-center">
                                     <button class="btn w-100 btn-info" data-toggle="modal"
-                                        data-target=".invoices-modal">Invoices</button>
+                                        data-target=".invoices-modal">Payment Details</button>
                                 </div>
                             @endif
                             <div class="col-12 row">
