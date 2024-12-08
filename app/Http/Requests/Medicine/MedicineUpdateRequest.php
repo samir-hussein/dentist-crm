@@ -21,9 +21,9 @@ class MedicineUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $medicine = request()->route('medicine')?->name;
+        $medicine = request()->route('medicine')?->id;
         return [
-            "name" => "required|unique:medicines,name,$medicine,name",
+            "name" => "required|unique:medicines,name,$medicine,id",
             'description' => "sometimes|nullable|string",
             'medicine_type_id' => "required|exists:medicine_types,id"
         ];

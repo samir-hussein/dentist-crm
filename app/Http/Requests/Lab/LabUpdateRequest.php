@@ -21,9 +21,9 @@ class LabUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $labName = request()->route('lab')?->name;
+        $labName = request()->route('lab')?->id;
         return [
-            "name" => "required|unique:labs,name,$labName,name",
+            "name" => "required|unique:labs,name,$labName,id",
         ];
     }
 }

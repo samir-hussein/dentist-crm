@@ -21,10 +21,10 @@ class SchduleDayUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $schduleDay = request()->route('schdule_day')?->day;
+        $schduleDay = request()->route('schdule_day')?->id;
 
         return [
-            "day" => "required|unique:schdule_days,day,$schduleDay,day",
+            "day" => "required|unique:schdule_days,day,$schduleDay,id",
             "times" => "required|array",
             "times.*" => "required|array",
             "times.*.time" => "required",

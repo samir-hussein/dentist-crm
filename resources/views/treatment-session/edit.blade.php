@@ -143,14 +143,15 @@
                         @if (count($treatments) > 0)
                             <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
                                 @foreach ($treatments as $treatment)
-                                    <li class="nav-item tab-btn" data-needlab="{{ $treatment->treatmentType->need_labs }}"
+                                    <li class="nav-item tab-btn" data-tab_name="{{ $treatment->treatmentType->name }}"
+                                        data-needlab="{{ $treatment->treatmentType->need_labs }}"
                                         data-first="{{ $loop->first ? 1 : 0 }}">
                                         <a class="nav-link {{ $data->active_tab == $treatment->treatmentType->name ? 'active' : '' }}"
-                                            id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab"
+                                            id="{{ str_replace([' ', '.', '&', '-'], '_', $treatment->treatmentType->name) }}-tab"
                                             data-toggle="pill"
-                                            href="#{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
+                                            href="#{{ str_replace([' ', '.', '&', '-'], '_', $treatment->treatmentType->name) }}"
                                             role="tab"
-                                            aria-controls="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
+                                            aria-controls="{{ str_replace([' ', '.', '&', '-'], '_', $treatment->treatmentType->name) }}"
                                             aria-selected="true">{{ $treatment->treatmentType->name }}</a>
                                     </li>
                                 @endforeach
@@ -162,9 +163,9 @@
                             <div class="tab-content mb-1" id="pills-tabContent">
                                 @foreach ($treatments as $treatment)
                                     <div class="tab-pane fade {{ $data->active_tab == $treatment->treatmentType->name ? 'show active' : '' }}"
-                                        id="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}"
+                                        id="{{ str_replace([' ', '.', '&', '-'], '_', $treatment->treatmentType->name) }}"
                                         role="tabpanel"
-                                        aria-labelledby="{{ str_replace([' ', '.'], '_', $treatment->treatmentType->name) }}-tab">
+                                        aria-labelledby="{{ str_replace([' ', '.', '&', '-'], '_', $treatment->treatmentType->name) }}-tab">
                                         <div class="row">
                                             @foreach ($treatment->treatmentType->sections as $section)
                                                 <div class="card-body col-6">
@@ -173,7 +174,7 @@
                                                         @foreach ($section->attributes as $attribute)
                                                             <div class="custom-control custom-checkbox">
                                                                 <input type="checkbox" data-attr="{{ $attribute->id }}"
-                                                                    data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
+                                                                    data-id="{{ str_replace([' ', '.', '&', '-'], '_', $section->title) }}-{{ $attribute->id }}"
                                                                     class="checkbox-inp custom-control-input"
                                                                     id="{{ $section->id }}-{{ $attribute->id }}"
                                                                     {{ in_array($attribute->id, $data->session->data['attr']) ? 'checked' : '' }}>
@@ -182,7 +183,7 @@
                                                             </div>
                                                             @if ($attribute->has_inputs && count($attribute->inputs) > 0)
                                                                 <div class="mt-2 d-none"
-                                                                    id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}">
+                                                                    id="{{ str_replace([' ', '.', '&', '-'], '_', $section->title) }}-{{ $attribute->id }}">
                                                                     @foreach ($attribute->inputs as $input)
                                                                         <div class="form-group row">
                                                                             <label for="{{ $input->id }}"
@@ -205,7 +206,7 @@
                                                         @foreach ($section->attributes as $attribute)
                                                             <div class="custom-control custom-radio">
                                                                 <input type="radio" data-attr="{{ $attribute->id }}"
-                                                                    data-id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}"
+                                                                    data-id="{{ str_replace([' ', '.', '&', '-'], '_', $section->title) }}-{{ $attribute->id }}"
                                                                     id="{{ $section->id }}-{{ $attribute->id }}"
                                                                     name="customRadio{{ $section->id }}"
                                                                     class="custom-control-input"
@@ -214,8 +215,8 @@
                                                                     for="{{ $section->id }}-{{ $attribute->id }}">{{ $attribute->name }}</label>
                                                             </div>
                                                             @if ($attribute->has_inputs && count($attribute->inputs) > 0)
-                                                                <div class="mt-2 d-none {{ str_replace([' ', '.'], '_', $section->title) }}"
-                                                                    id="{{ str_replace([' ', '.'], '_', $section->title) }}-{{ $attribute->id }}">
+                                                                <div class="mt-2 d-none {{ str_replace([' ', '.', '&', '-'], '_', $section->title) }}"
+                                                                    id="{{ str_replace([' ', '.', '&', '-'], '_', $section->title) }}-{{ $attribute->id }}">
                                                                     @foreach ($attribute->inputs as $input)
                                                                         <div class="form-group row">
                                                                             <label for="{{ $input->id }}"
@@ -592,6 +593,22 @@
         let labData = {!! json_encode($data->session->labOrder?->custom_data ?? []) !!};
         let lab_id = {!! json_encode($data->session->labOrder?->lab_id ?? null) !!};
         let lab_done = {!! json_encode($data->session->labOrder?->done ?? false) !!};
+        let active_tab = "{{ $data->active_tab }}";
+
+        let check_need_lab = $("li[data-tab_name='" + active_tab + "']").data('needlab');
+
+        if (check_need_lab == 1) {
+            $('#lab-div').removeClass('d-none');
+        } else {
+
+            let need_lab = $("li[data-first='1']").data("needlab");
+
+            if (need_lab == 1) {
+                $('#lab-div').removeClass('d-none');
+            } else {
+                $('#lab-div').addClass('d-none');
+            }
+        }
 
         $("#panorama-btn").click(function() {
             $("#panorama-inp").trigger("click");
@@ -1161,16 +1178,8 @@
             });
         });
 
-        let need_lab = $("li[data-first='1']").data("needlab");
-
-        if (need_lab == 1) {
-            $('#lab-div').removeClass('d-none');
-        } else {
-            $('#lab-div').addClass('d-none');
-        }
-
         $(document).on('click', '.tab-btn', function() {
-            need_lab = $(this).data('needlab');
+            let need_lab = $(this).data('needlab');
 
             if (need_lab == 1) {
                 $('#lab-div').removeClass('d-none');

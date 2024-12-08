@@ -21,7 +21,6 @@ class PatientUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $patientPhone = request()->route("patient")?->phone;
         return [
             "name" => "required|string",
             "phone" => "required",

@@ -21,9 +21,9 @@ class ServiceUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $serviceName = request()->route('service')?->name;
+        $serviceName = request()->route('service')?->id;
         return [
-            "name" => "required|unique:services,name,$serviceName,name",
+            "name" => "required|unique:services,name,$serviceName,id",
             "description" => "sometimes|string|nullable",
         ];
     }

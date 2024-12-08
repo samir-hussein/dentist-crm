@@ -21,9 +21,9 @@ class DoseUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $dose = request()->route('dose')?->name;
+        $dose = request()->route('dose')?->id;
         return [
-            "dose" => "required|unique:doses,dose,$dose,dose",
+            "dose" => "required|unique:doses,dose,$dose,id",
         ];
     }
 }

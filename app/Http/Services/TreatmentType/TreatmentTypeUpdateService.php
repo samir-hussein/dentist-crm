@@ -28,34 +28,36 @@ class TreatmentTypeUpdateService extends TreatmentTypeService
 
         $sections = $data['sections'];
 
-        // Get existing section titles
-        $existingSections = $treatmentType->sections()->pluck('id', 'title')->toArray();
-
         // Prepare updated section titles
         $updatedSectionTitles = Arr::pluck($sections, 'title');
 
-        $sectionsToDelete = array_diff(array_keys($existingSections), $updatedSectionTitles);
-
-        $treatmentType->sections()->whereIn('title', $sectionsToDelete)->delete();
+        $treatmentType->sections()->whereNotIn('title', $updatedSectionTitles)->delete();
 
         foreach ($sections as $section) {
             $attributes = $section['attributes'];
+
+            $check = $treatmentType->sections()->where([
+                "title" => $section['title'],
+                "treatment_type_id" => $treatmentType->id,
+            ])->count();
+
+            if ($check > 1) {
+                $treatmentType->sections()->where([
+                    "title" => $section['title'],
+                    "treatment_type_id" => $treatmentType->id,
+                ])->limit(1)->delete();
+            }
 
             $section = $treatmentType->sections()->updateOrCreate([
                 "title" => $section['title'],
                 "treatment_type_id" => $treatmentType->id,
             ], $section);
 
-            $existingAttributes = $section->attributes()->pluck('id', 'name')->toArray();
-
             // Prepare updated attribute names
             $updatedAttributeNames = Arr::pluck($attributes, 'name');
 
-            // Find attributes to delete
-            $attributesToDelete = array_diff(array_keys($existingAttributes), $updatedAttributeNames);
-
             // Delete attributes that are not in the updated data
-            $section->attributes()->whereIn('name', $attributesToDelete)->delete();
+            $section->attributes()->whereNotIn('name', $updatedAttributeNames)->delete();
 
             foreach ($attributes as $attribute) {
                 $inputs = isset($attribute['inputs']) ? $attribute['inputs'] : null;
@@ -63,25 +65,43 @@ class TreatmentTypeUpdateService extends TreatmentTypeService
                     $attribute['has_inputs'] = true;
                 }
 
+                $check = $section->attributes()->where([
+                    "name" => $attribute['name'],
+                    "treatment_section_id" => $section->id
+                ])->count();
+
+                if ($check > 1) {
+                    $section->attributes()->where([
+                        "name" => $attribute['name'],
+                        "treatment_section_id" => $section->id
+                    ])->limit(1)->delete();
+                }
+
                 $attribute = $section->attributes()->updateOrCreate([
                     "name" => $attribute['name'],
                     "treatment_section_id" => $section->id
                 ], $attribute);
 
-                // Get existing input names for the attribute
-                $existingInputs = $attribute->inputs()->pluck('id', 'name')->toArray();
-
                 // Prepare updated input names
                 $updatedInputNames = $inputs ? Arr::pluck($inputs, 'name') : [];
 
-                // Find inputs to delete
-                $inputsToDelete = array_diff(array_keys($existingInputs), $updatedInputNames);
-
                 // Delete inputs that are not in the updated data
-                $attribute->inputs()->whereIn('name', $inputsToDelete)->delete();
+                $attribute->inputs()->whereNotIn('name', $updatedInputNames)->delete();
 
                 if ($inputs && count($inputs) > 0) {
                     foreach ($inputs as $input) {
+                        $check = $attribute->inputs()->where([
+                            "name" => $input['name'],
+                            "treatment_section_attribute_id" => $attribute->id,
+                        ])->count();
+
+                        if ($check > 1) {
+                            $attribute->inputs()->where([
+                                "name" => $input['name'],
+                                "treatment_section_attribute_id" => $attribute->id,
+                            ])->limit(1)->delete();
+                        }
+
                         $input = $attribute->inputs()->updateOrCreate([
                             "name" => $input['name'],
                             "treatment_section_attribute_id" => $attribute->id,

@@ -21,9 +21,9 @@ class BranchUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $branchName = request()->route('branch')?->name;
+        $branchName = request()->route('branch')?->id;
         return [
-            "name" => "required|unique:branches,name,$branchName,name",
+            "name" => "required|unique:branches,name,$branchName,id",
         ];
     }
 }

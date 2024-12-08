@@ -21,9 +21,9 @@ class AssistantUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $name = request()->route('assistant')?->name;
+        $name = request()->route('assistant')?->id;
         return [
-            "name" => "required|unique:assistants,name,$name,name",
+            "name" => "required|unique:assistants,name,$name,id",
             "phone" => "sometimes|nullable"
         ];
     }

@@ -22,9 +22,9 @@ class DiagnosisUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $diagnosisId = request()->route("diagnosi");
+        $diagnosisId = request()->route("diagnosi")?->id;
         return [
-            "name" => "required|unique:diagnoses,name,$diagnosisId",
+            "name" => "required|unique:diagnoses,name,$diagnosisId,id",
             "description" => "sometimes|nullable|string",
         ];
     }
