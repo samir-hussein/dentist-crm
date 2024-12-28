@@ -167,7 +167,7 @@ trait HelperFunctions
         ];
 
         // Loop through the next 30 days
-        for ($i = 0; $i <= 30; $i++) {
+        for ($i = 0; $i <= 150; $i++) {
             $date = $today->copy()->addDays($i);
 
             if ($date->dayOfWeek === $daysMap[$day]) {

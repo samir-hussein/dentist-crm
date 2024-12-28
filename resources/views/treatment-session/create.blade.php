@@ -302,6 +302,7 @@
                                             <div class="form-group col-md-4">
                                                 <label>Type</label>
                                                 <select class="types form-control select2" name="patient_id">
+                                                    <option value=""></option>
                                                     @foreach ($data->medicines as $medicine)
                                                         <option value="{{ $medicine->name }}"
                                                             data-medicines="{{ json_encode($medicine->medicine) }}">
@@ -313,6 +314,7 @@
                                             <div class="form-group col-md-4">
                                                 <label>Medicine</label>
                                                 <select class="form-control select2 medicines-options" name="medicines">
+                                                    <option value=""></option>
                                                     @foreach ($data->medicines[0]->medicine as $medicine)
                                                         <option value="{{ $medicine }}">
                                                             {{ $medicine }}
@@ -323,6 +325,7 @@
                                             <div class="form-group col-md-4">
                                                 <label>Dose</label>
                                                 <select class="form-control select2 dose" name="doses">
+                                                    <option value=""></option>
                                                     @foreach ($data->doses as $dose)
                                                         <option value="{{ $dose }}">
                                                             {{ $dose }}
@@ -341,7 +344,7 @@
                                         <table style="width: 80%; margin-top:110px">
                                             <tbody>
                                                 <tr>
-                                                    <td style="padding-bottom: 5px;font-size: 19px;">
+                                                    <td style="padding-bottom: 5px;font-size: 19px; width: 20%">
                                                         Date</td>
                                                     <td style="padding-bottom: 5px;font-size: 19px;">:
                                                     </td>
@@ -891,7 +894,7 @@
             // Get the data-medicines attribute as a JSON object
             let medicinesData = selectedOption.data('medicines');
 
-            let html = "";
+            let html = "<option value=''></option>";
 
             medicinesData.forEach(function(medicine) {
                 html += `<option value="${medicine}">${medicine}</option>`;
@@ -910,6 +913,7 @@
                         <div class="form-group col-md-4">
                             <label>Type</label>
                             <select class="types form-control select2" name="patient_id">
+                                <option value=""></option>
                                 @foreach ($data->medicines as $medicine)
                                     <option value="{{ $medicine->name }}"
                                         data-medicines="{{ json_encode($medicine->medicine) }}">
@@ -921,6 +925,7 @@
                         <div class="form-group col-md-4">
                             <label>Medicine</label>
                             <select class="form-control medicines-options select2" name="medicines">
+                                <option value=""></option>
                                 @foreach ($data->medicines[0]->medicine as $medicine)
                                     <option value="{{ $medicine }}">
                                         {{ $medicine }}
@@ -931,6 +936,7 @@
                         <div class="form-group col-md-4">
                             <label>Dose</label>
                             <select class="form-control select2 dose" name="doses">
+                                <option value=""></option>
                                 @foreach ($data->doses as $dose)
                                     <option value="{{ $dose }}">
                                         {{ $dose }}
@@ -965,7 +971,8 @@
                         .trim();
                     const dose = $(this).find(".dose option:selected").text().trim();
                     medicineList +=
-                        `<tr><td style="padding-bottom: 5px;font-size: 19px;width:72%">${medicine}</td><td style="padding-bottom: 5px;font-size: 19px;"> ${dose}</td></tr>`;
+                        `<tr><td style="padding-bottom: 5px;font-size: 19px;width:60%">${medicine}</td>
+                            <td style="padding-bottom: 5px;font-size: 16px;"> ${dose}</td></tr>`;
                 });
                 $("#print-medicines-list").html(medicineList);
 

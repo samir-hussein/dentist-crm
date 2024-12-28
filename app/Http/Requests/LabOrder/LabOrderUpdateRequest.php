@@ -22,8 +22,8 @@ class LabOrderUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "sent" => "sometimes|date",
-            "received" => "sometimes|date",
+            "sent" => "sometimes|date|nullable",
+            "received" => "sometimes|date|nullable",
         ];
     }
 }

@@ -57,6 +57,24 @@
         .card-body::-webkit-scrollbar {
             display: none;
         }
+
+        table.datatables {
+            width: 100% !important;
+            overflow-x: scroll !important;
+        }
+
+        .dataTables_wrapper td {
+            white-space: normal !important;
+            /* Allow wrapping for small screens */
+            overflow: visible !important;
+            /* Ensure nothing is hidden */
+        }
+
+        .dataTables_wrapper td:last-child {
+            position: relative;
+            z-index: 10;
+            /* Make sure it's on top */
+        }
     </style>
 
     @yield('style')
@@ -338,6 +356,37 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstRow = document.querySelector('.dataTables_wrapper .row:first-of-type');
+            if (firstRow) {
+                const columns = firstRow.querySelectorAll('.col-sm-12.col-md-6');
+                if (columns.length >= 2) {
+                    columns[0].classList.remove('col-sm-12', 'col-md-6');
+                    columns[0].classList.add('col-5');
+
+                    columns[1].classList.remove('col-sm-12', 'col-md-6');
+                    columns[1].classList.add('col-7');
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            // Listen for DataTable draw events globally
+            $(document).on('draw.dt', function() {
+                $('.dataTables_wrapper').each(function() {
+                    const firstRow = $(this).find('.row')
+                        .first(); // Get the first .row in the wrapper
+                    const columns = firstRow.find(
+                        '.col-sm-12.col-md-6'); // Target columns with specific classes
+                    if (columns.length >= 2) {
+                        // Adjust the classes dynamically
+                        $(columns[0]).removeClass('col-sm-12 col-md-6').addClass('col-5');
+                        $(columns[1]).removeClass('col-sm-12 col-md-6').addClass('col-7');
+                    }
+                });
+            });
         });
     </script>
 

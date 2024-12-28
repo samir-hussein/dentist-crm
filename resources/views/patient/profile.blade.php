@@ -99,15 +99,18 @@
                     <div class="row">
                         <div class="col-12">
                             @if ($patient->medical_history)
-                                <div class="alert alert-danger" role="alert">
-                                    <span class="fe fe-minus-circle fe-16 mr-2"></span>Medical History >>
+                                <div class="alert alert-danger" style="font-weight: bolder;font-size:16px" role="alert">
+                                    <span class="fe fe-minus-circle fe-16 mr-2"></span>Medical
+                                    History >>
                                     {{ $patient->medical_history }}
                                 </div>
                             @endif
 
                             <div class="alert alert-info" role="alert">
                                 <div class="row">
-                                    <p class="col-12 col-md-10 mb-0">#{{ $patient->code }} | {{ $patient->name }} |
+                                    <p style="font-weight: bolder;font-size:16px" class="col-12 col-md-10 mb-0">
+                                        #{{ $patient->code }} |
+                                        {{ $patient->name }} |
                                         {{ $patient->age }} years old | {{ $patient->nationality }} |
                                         {{ $patient->phone }} | {{ $patient->phone2 }}</p>
                                     <div class="col-md-2 col-12">
@@ -160,8 +163,8 @@
                                     data-target="#panorama-modal">Panorama</button>
                             </div>
                         </div>
-                        <div class="col-12 col-md-10">
-                            <div class="card-body">
+                        <div class="col-12 col-md-10 pr-0 pl-0">
+                            <div class="card-body pr-0 pl-0">
                                 <div class="form-row">
                                     <div class="form-group col-12 col-md-6">
                                         <label for="reportrange">Filter By Date : </label>
@@ -212,10 +215,10 @@
                                         <div class="tab-pane fade show active" id="treatment" role="tabpanel"
                                             aria-labelledby="treatment-tab">
                                             <!-- Small table -->
-                                            <div class="col-md-12">
-                                                <div class="card-body">
+                                            <div class="col-md-12 pr-0 pl-0">
+                                                <div class="card-body pr-0 pl-0">
                                                     <!-- table -->
-                                                    <table class="table datatables" id="treatments">
+                                                    <table class="table datatables w-100" id="treatments">
                                                         <thead>
                                                             <tr>
                                                                 <th>Date</th>
@@ -241,10 +244,10 @@
                                         <div class="tab-pane fade" id="invoices" role="tabpanel"
                                             aria-labelledby="invoices-tab">
                                             <!-- Small table -->
-                                            <div class="col-md-12">
-                                                <div class="card-body">
+                                            <div class="col-md-12 pr-0 pl-0">
+                                                <div class="card-body pr-0 pl-0">
                                                     <!-- table -->
-                                                    <table class="table datatables" id="invoices-table">
+                                                    <table class="table datatables w-100" id="invoices-table">
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -269,10 +272,10 @@
                                     <div class="tab-pane fade {{ !auth()->user()->is_admin && !auth()->user()->is_doctor ? 'show active' : '' }}"
                                         id="lab" role="tabpanel" aria-labelledby="lab-tab">
                                         <!-- Small table -->
-                                        <div class="col-md-12">
-                                            <div class="card-body">
+                                        <div class="col-md-12 pr-0 pl-0">
+                                            <div class="card-body pr-0 pl-0">
                                                 <!-- table -->
-                                                <table class="table datatables" id="lab-orders-table">
+                                                <table class="table datatables w-100" id="lab-orders-table">
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>

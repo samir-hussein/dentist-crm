@@ -189,6 +189,7 @@
                 'Tomorrow': [moment().add(1, 'days'), moment().add(1, 'days')], // Tomorrow
                 'Next 7 Days': [moment(), moment().add(7, 'days')], // 7 days in the future
                 'Next 30 Days': [moment(), moment().add(30, 'days')], // 30 days in the future
+                'Next 150 Days': [moment(), moment().add(150, 'days')], // 150 days in the future
                 'This Month': [moment().startOf('month'), moment().endOf(
                     'month')], // This Month (next)
                 'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf(
