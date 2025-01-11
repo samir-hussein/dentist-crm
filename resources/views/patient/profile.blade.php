@@ -410,12 +410,14 @@
         let treatmentColumns = [];
 
         // Set initial start and end dates
-        var start = moment().startOf('month');
-        var end = moment().endOf('month');
+        var start = 0; // Start from the earliest possible date
+        var end = moment(); // Set the end date to the current date
 
         // Callback function to display selected range
         function cb(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            var startDateDisplay = start === 0 ? "ALL" : start.format('MMMM D, YYYY');
+            var endDateDisplay = end.format('MMMM D, YYYY');
+            $('#reportrange span').html(startDateDisplay + ' - ' + endDateDisplay);
         }
 
         // Initialize date range picker
