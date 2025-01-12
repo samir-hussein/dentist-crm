@@ -50,7 +50,7 @@ class TreatmentSessionUpdateService extends TreatmentSessionService
                 "paid" => $data['paid'],
                 "tooth" => $treatmentDetail->tooth,
                 "treatment" => "Follow Up For Date : " . $treatmentDetail->updated_at->format("d-m-Y"),
-                "tax_invoice" => $patient->need_invoice,
+                "tax_invoice" => 0,
                 'patient_id' => $patient->id,
                 "treatment_detail_id" => $treatmentDetail->id,
                 'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),

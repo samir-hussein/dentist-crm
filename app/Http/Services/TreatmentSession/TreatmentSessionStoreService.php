@@ -51,7 +51,7 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             "paid" => $data['paid'],
             "tooth" => $data['tooth'],
             "treatment" => $treatment,
-            "tax_invoice" => $patient->need_invoice,
+            "tax_invoice" => 0,
             'patient_id' => $patient->id,
             "treatment_detail_id" => $treatmentSession->id,
             'doctor_id' => isset($data['doctor_id']) ? $data['doctor_id'] : auth()->id(),
