@@ -14,7 +14,7 @@ class InvoiceTaxService extends InvoiceService
     public function boot()
     {
         // Fetch all columns from your model's table
-        $data = $this->model->where("tax_invoice", 1)->latest()->select('*');
+        $data = $this->model->where("tax_invoice", 1)->select('*');
         $from = null;
         $to = null;
 

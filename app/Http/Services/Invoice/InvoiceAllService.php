@@ -14,7 +14,7 @@ class InvoiceAllService extends InvoiceService
     public function boot()
     {
         // Fetch all columns from your model's table
-        $data = $this->model->latest()->select('*');
+        $data = $this->model->select('*');
         $from = null;
         $to = null;
 

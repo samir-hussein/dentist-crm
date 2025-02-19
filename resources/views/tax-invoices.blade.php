@@ -96,7 +96,7 @@
 
         $("#doctor_id").change(function() {
             doctor = $(this).val();
-            getData();
+            getData(start, end);
         })
 
         // Callback function to display selected range
