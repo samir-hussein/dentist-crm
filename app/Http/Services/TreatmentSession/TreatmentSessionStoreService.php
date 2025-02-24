@@ -62,7 +62,7 @@ class TreatmentSessionStoreService extends TreatmentSessionService
             $treatmentSession->labOrder()->create([
                 'work' => implode(" - ", $lab['work']),
                 'cost' => isset($lab['cost']) ? $lab['cost'] : "",
-                'done' => $lab['done'],
+                'done' => $lab['done'] ?? 0,
                 'custom_data' => $lab['custom_data'],
                 'tooth' => $data['tooth'],
                 'sent' => $lab['sent'],

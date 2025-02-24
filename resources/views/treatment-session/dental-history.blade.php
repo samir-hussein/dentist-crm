@@ -1019,7 +1019,8 @@
             $.ajax({
                 url: "{{ route('appointments.dental.history.store', ['patient' => $data->patient->id]) }}",
                 method: "POST",
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     diagnose_id: diagnose,
                     tooth: selectedTooth,
                     tooth_type: tooth_type,
@@ -1034,7 +1035,7 @@
                         notes: $("#notes-inp").val() || null,
                     },
                     lab: Object.keys(lab).length > 0 ? lab : null,
-                },
+                }),
                 success: function(response) {
                     if (response.status == "success") {
                         window.location.href =

@@ -1091,7 +1091,8 @@
             $.ajax({
                 url: "{{ route('treatment.session.update', ['treatment_detail' => $data->session->id, 'patient' => $data->patient->id]) }}",
                 method: "PUT",
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     paid: paid,
                     voice_note: $("#voice-note-data").val(),
                     doctor_id: $("#doctor_id").val(),
@@ -1101,7 +1102,7 @@
                         notes: $("#notes-inp").val() || null,
                     },
                     lab: Object.keys(lab).length > 0 ? lab : null,
-                },
+                }),
                 success: function(response) {
                     if (response.status == "success") {
                         window.location.href =
@@ -1160,7 +1161,8 @@
             $.ajax({
                 url: "{{ route('treatment.session.update', ['treatment_detail' => $data->session->id, 'patient' => $data->patient->id, 'appointment_id' => request('appointment_id')]) }}",
                 method: "PUT",
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     paid: paid,
                     doctor_id: $("#doctor_id").val(),
                     voice_note: $("#voice-note-data").val(),
@@ -1170,7 +1172,7 @@
                         notes: $("#notes-inp").val() || null,
                     },
                     lab: Object.keys(lab).length > 0 ? lab : null,
-                },
+                }),
                 success: function(response) {
                     if (response.status == "success") {
                         window.location.href =
